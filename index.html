@@ -61,14 +61,6 @@
   .center .body { margin-left: auto; margin-right: auto; }
   .body b { color: var(--ink); font-weight: 600; }
 
-  .gear { margin: 80px auto 0; text-align: center; user-select: none; }
-  .gear .num { font-size: clamp(140px, 24vw, 280px); font-weight: 700; letter-spacing: -.06em; line-height: .9; font-variant-numeric: tabular-nums; }
-  .gear .num small { font-size: .22em; color: var(--faint); letter-spacing: -.02em; font-weight: 600; }
-  .gear .dots { display: flex; gap: 6px; justify-content: center; margin-top: 28px; }
-  .gear .dots i { width: 8px; height: 22px; border-radius: 4px; background: #222226; transition: background .25s; }
-  .gear .dots i.on { background: var(--accent); }
-  .gear .hint { margin-top: 24px; font-size: 15px; color: var(--faint); }
-  .gear kbd { font-family: inherit; border: 1px solid var(--faint); border-radius: 6px; padding: 1px 7px; font-size: 13px; }
 
   .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 80px; }
   .three h3 { font-size: 28px; letter-spacing: -.03em; margin: 0 0 10px; font-weight: 700; }
@@ -101,6 +93,30 @@
   footer a { color: var(--soft); margin-right: 18px; }
   footer a:hover { color: var(--ink); }
 
+
+  .frame.live .bar { position: relative; }
+  .livetag { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; letter-spacing: .2px; }
+  .livetag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #33C77B; box-shadow: 0 0 0 0 rgba(51,199,123,.6); animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(51,199,123,.55); } 70% { box-shadow: 0 0 0 8px rgba(51,199,123,0); } 100% { box-shadow: 0 0 0 0 rgba(51,199,123,0); } }
+  .stage { position: relative; width: 100%; aspect-ratio: 1440 / 900; overflow: hidden; background: #17181B; }
+  .stage iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0; }
+  .demohint .t { display: none; } @media (hover: none) { .demohint .k { display: none; } .demohint .t { display: inline; } }
+  .demohint { text-align: center; font-size: 15px; color: var(--faint); margin: 22px 0 0; }
+  kbd { font-family: inherit; border: 1px solid var(--faint); border-radius: 6px; padding: 1px 7px; font-size: 13px; color: var(--soft); }
+
+  .bars { max-width: 860px; margin: 72px auto 0; display: grid; gap: 18px; text-align: left; }
+  .bars .row { display: grid; grid-template-columns: 150px 1fr 70px; align-items: center; gap: 20px; font-size: 17px; }
+  .bars .n { color: var(--soft); }
+  .bars .v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .bars .track { height: 14px; border-radius: 7px; background: #161618; overflow: hidden; }
+  .bars .track i { display: block; height: 100%; border-radius: 7px; background: #3A3A3F; transform-origin: left; transform: scaleX(0); transition: transform 1.4s cubic-bezier(.2,.7,.2,1); }
+  .bars.in .track i { transform: scaleX(1); }
+  .bars .row:nth-child(2) i { transition-delay: .08s; } .bars .row:nth-child(3) i { transition-delay: .16s; } .bars .row:nth-child(4) i { transition-delay: .24s; } .bars .row:nth-child(5) i { transition-delay: .5s; }
+  .bars .us .n, .bars .us .v { color: var(--ink); font-weight: 700; }
+  .bars .us .track i { background: var(--accent); min-width: 14px; }
+  .note { max-width: 680px; margin: 40px auto 0; text-align: center; font-size: 13px; color: var(--faint); line-height: 1.6; }
+  @media (max-width: 560px) { .bars .row { grid-template-columns: 96px 1fr 50px; gap: 12px; font-size: 15px; } .demohint { font-size: 13px; } }
+
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
   .reveal.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
@@ -113,7 +129,7 @@
     .hero { padding-top: 72px; }
     .shot { margin-top: 64px; }
   }
-  @media (max-width: 560px) { body { font-size: 17px; } .eyebrow { font-size: 14px; } .hero .actions { gap: 20px; } .wrap { padding: 0 16px; } .frame .bar { display: none; } .gear .dots i { width: 6px; height: 16px; gap: 4px; } }
+  @media (max-width: 560px) { body { font-size: 17px; } .eyebrow { font-size: 14px; } .hero .actions { gap: 20px; } .wrap { padding: 0 16px; } .frame .bar { display: none; } }
 </style>
 </head>
 <body>
@@ -132,21 +148,17 @@
       <a class="more" href="ride/?demo=1">Try the demo</a>
     </div>
     <div class="shot reveal">
-      <div class="frame">
-        <div class="bar"><i></i><i></i><i></i><span>pedalcraft.online/ride</span></div>
-        <img src="img/dashboard-en.png" alt="PedalCraft riding screen with watts, cadence, gear and an animated rider" width="2360" height="1480">
+      <div class="frame live">
+        <div class="bar"><i></i><i></i><i></i><span>pedalcraft.online/ride</span><b class="livetag">Live demo</b></div>
+        <div class="stage" id="stage"><iframe id="demo" src="ride/?embed=1" title="PedalCraft live demo" loading="eager" tabindex="-1"></iframe></div>
       </div>
+      <p class="demohint">This is the real app running a demo ride. <span class="k">Shift with <kbd>↑</kbd> <kbd>↓</kbd> or the + and − buttons.</span><span class="t">Tap + or − to shift.</span></p>
     </div>
   </header>
 
   <section class="center">
     <h2 class="reveal">Shift with your Click.<br><span style="color:var(--faint)">Not with a subscription.</span></h2>
     <p class="body reveal">Zwift Click, Play and Ride connect straight to your browser. On a KICKR CORE 2 the trainer itself shifts, exactly like in Zwift.</p>
-    <div class="gear reveal" aria-hidden="true">
-      <div class="num"><span id="g">14</span><small>/24</small></div>
-      <div class="dots" id="dots"></div>
-      <div class="hint">Try it: <kbd>↑</kbd> <kbd>↓</kbd></div>
-    </div>
   </section>
 
   <section>
@@ -171,6 +183,19 @@
       </div>
       <div class="frame reveal"><img src="img/workout-en.png" alt="Workout in ERG mode in the PedalCraft Mac app" width="2480" height="1600" loading="lazy"></div>
     </div>
+  </section>
+
+  <section id="compare" class="center">
+    <h2 class="center reveal">Everyone else<br><span style="color:var(--faint)">charges every month.</span></h2>
+    <p class="body reveal">What three winters on the trainer cost.</p>
+    <div class="bars reveal">
+      <div class="row"><span class="n">TrainerRoad</span><span class="track"><i style="width:100%"></i></span><span class="v">$630</span></div>
+      <div class="row"><span class="n">Zwift</span><span class="track"><i style="width:95.2%"></i></span><span class="v">$600</span></div>
+      <div class="row"><span class="n">Rouvy</span><span class="track"><i style="width:85.7%"></i></span><span class="v">$540</span></div>
+      <div class="row"><span class="n">Wahoo SYSTM</span><span class="track"><i style="width:85.7%"></i></span><span class="v">$540</span></div>
+      <div class="row us"><span class="n">PedalCraft</span><span class="track"><i style="width:4.8%"></i></span><span class="v">$30</span></div>
+    </div>
+    <p class="note reveal">Three years on each app's annual plan, US list prices checked October 2026: TrainerRoad $209.99, Zwift $199.99, Rouvy $179.99, Wahoo SYSTM Pro $179.99 per year. They offer more than PedalCraft, like virtual worlds and training plans. This compares the price, nothing else. The browser version of PedalCraft is free.</p>
   </section>
 
   <section>
@@ -220,19 +245,17 @@
   </footer>
 </div>
 <script>
-  // Gang-Demo: Pfeiltasten oder automatisch
+  // Live-Demo: echte App skalieren, Pfeiltasten weitergeben
   (function () {
-    var g = 14, n = document.getElementById('g'), d = document.getElementById('dots'), touched = false;
-    for (var i = 0; i < 24; i++) d.appendChild(document.createElement('i'));
-    function draw() { n.textContent = g; [].forEach.call(d.children, function (el, i) { el.className = i < g ? 'on' : ''; }); }
-    function shift(x) { g = Math.max(1, Math.min(24, g + x)); draw(); }
-    draw();
+    var stage = document.getElementById('stage'), f = document.getElementById('demo');
+    function fit() { f.style.transform = 'scale(' + (stage.clientWidth / 1440) + ')'; }
+    fit(); window.addEventListener('resize', fit);
+    var visible = false;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: .4 }).observe(stage);
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { touched = true; shift(1); e.preventDefault(); }
-      if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { touched = true; shift(-1); e.preventDefault(); }
+      if (!visible || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
+      e.preventDefault(); f.contentWindow.postMessage({ shift: e.key === 'ArrowUp' ? 1 : -1 }, location.origin);
     });
-    var seq = [1, 1, 1, -1, -1, -1, -1, 1], k = 0;
-    setInterval(function () { if (!touched) { shift(seq[k++ % seq.length]); } }, 1100);
   })();
   // Einblenden beim Scrollen
   (function () {

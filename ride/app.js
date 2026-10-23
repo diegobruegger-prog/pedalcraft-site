@@ -329,8 +329,9 @@ function safe(fn) { return async () => { try { await fn(); } catch (e) { if (e &
 
 // Anonymous usage counter (no personal data, no cookies): one ping per event type and session.
 const pinged = new Set();
+const EMBED = new URLSearchParams(location.search).has('embed'); // live demo on the home page
 function ping(ev) {
-  if (pinged.has(ev) || location.hostname === 'localhost') return; pinged.add(ev);
+  if (EMBED || pinged.has(ev) || location.hostname === 'localhost') return; pinged.add(ev);
   fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/' + ev, { mode: 'no-cors', keepalive: true }).catch(() => {});
 }
 
@@ -514,6 +515,13 @@ $('close').onclick = closeWelcome;
 if (!hasBT) { $('nobt').classList.remove('hidden'); $('start').classList.add('hidden'); }
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-if (new URLSearchParams(location.search).has('demo')) { closeWelcome(); startDemo(); }
+if (EMBED) {
+  // Embedded on the home page: links and connect buttons open the real app in the main window.
+  document.body.classList.add('embed');
+  document.querySelectorAll('a[href]').forEach(a => a.target = '_top');
+  for (const id of ['c-trainer', 'c-ctrl', 'c-hr']) $(id).onclick = () => { window.top.location.href = '/ride/'; };
+  window.addEventListener('message', e => { if (e.origin === location.origin && e.data && 'shift' in e.data) shift(e.data.shift > 0); });
+  closeWelcome(); startDemo();
+} else if (new URLSearchParams(location.search).has('demo')) { closeWelcome(); startDemo(); }
 render();
 requestAnimationFrame(frame);
