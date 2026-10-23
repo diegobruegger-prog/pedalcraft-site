@@ -4,7 +4,7 @@ Jede Seite: eigener Ordner mit index.html, Titel/Description, FAQ als JSON-LD, L
 Aufruf: python3 tools/build_guides.py  (aus dem Repo-Ordner)"""
 import json, os, html
 
-BUY = "https://pedalcraftapp.gumroad.com/l/pedalcraft-mac"
+BUY = "https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH"
 SITE = "https://pedalcraft.online"
 
 GUIDES = [
