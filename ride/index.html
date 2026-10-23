@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PedalCraft Ride · free in your browser</title>
+<meta name="description" content="Ride your smart trainer in the browser for free. Shift with Zwift Click, see your watts, cadence and heart rate live. No account, nothing is saved.">
+<link rel="icon" href="../img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #17181B; --card: #212226; --line: rgba(255,255,255,.07); --ink: #E8EAEE; --soft: rgba(232,234,238,.55);
+    --accent: #3D8BFF; --accent-deep: #2F74E0; --raise: #2C2E34; --ok: #33C77B; --warn: #F2A93B;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); height: 100%; }
+  body { font-family: "Inter", system-ui, -apple-system, sans-serif; font-size: 15px; }
+  button { font: inherit; cursor: pointer; border: 0; }
+  a { color: var(--accent); }
+  .app { display: grid; grid-template-rows: auto 1fr auto; gap: 14px; padding: 16px; min-height: 100%; max-width: 1400px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  header .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; color: var(--ink); text-decoration: none; margin-right: auto; }
+  header .brand img { width: 30px; height: 30px; }
+  .chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); font-weight: 600; font-size: 13px; color: var(--ink); }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: #6B6F78; }
+  .chip.on .dot { background: var(--ok); }
+  .chip.connect { cursor: pointer; }
+  .chip.connect:hover { border-color: rgba(61,139,255,.6); }
+  .btn { padding: 9px 15px; border-radius: 999px; font-weight: 700; font-size: 14px; background: var(--card); color: var(--ink); border: 1px solid var(--line); text-decoration: none; display: inline-block; }
+  .btn.primary { background: var(--accent); color: #fff; border-color: transparent; }
+  .btn.primary:hover { background: var(--accent-deep); }
+  main { display: grid; grid-template-columns: 1fr 380px; gap: 14px; min-height: 0; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+  .scene { display: flex; flex-direction: column; min-height: 0; }
+  canvas { width: 100%; flex: 1; min-height: 300px; display: block; border-radius: 10px; margin: 10px 10px 0; width: calc(100% - 20px); }
+  .gearbar { display: flex; align-items: center; gap: 14px; padding: 14px 20px 18px; }
+  .shift { width: 96px; height: 80px; border-radius: 10px; background: var(--raise); color: var(--ink); display: grid; place-items: center; font-weight: 700; font-size: 12px; }
+  .shift b { font-size: 32px; line-height: 1; }
+  .shift.up { background: var(--accent); color: #fff; }
+  .gear { flex: 1; text-align: center; }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--soft); }
+  .gear .num { font-size: 60px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; }
+  .gear .num small { font-size: 18px; color: var(--soft); font-weight: 600; }
+  .dots { display: flex; gap: 3px; justify-content: center; align-items: flex-end; height: 22px; margin-top: 6px; }
+  .dots i { width: 6px; border-radius: 3px; background: rgba(61,139,255,.15); }
+  .dots i.on { background: var(--accent); }
+  .side { display: grid; grid-template-rows: auto auto auto 1fr; gap: 14px; min-height: 0; }
+  .tile { padding: 14px 16px; }
+  .val { font-size: 38px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .val small { font-size: 14px; color: var(--soft); font-weight: 600; margin-left: 3px; }
+  .big .val { font-size: 68px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .zones { display: flex; gap: 4px; align-items: center; margin-top: 6px; }
+  .zones i { width: 18px; height: 7px; border-radius: 4px; opacity: .18; }
+  .zones i.on { opacity: 1; }
+  .zones span { font-size: 13px; font-weight: 700; margin-left: 6px; }
+  .grade { display: flex; align-items: center; gap: 8px; }
+  .round { width: 32px; height: 32px; border-radius: 50%; background: var(--raise); color: var(--ink); font-weight: 800; font-size: 18px; }
+  .upsell { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .upsell h3 { margin: 0; font-size: 16px; }
+  .upsell ul { margin: 0; padding-left: 18px; color: var(--soft); font-size: 13.5px; line-height: 1.55; }
+  footer.bottom { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .note { color: var(--soft); font-size: 12.5px; }
+  .overlay { position: fixed; inset: 0; background: rgba(10,11,13,.82); display: grid; place-items: center; z-index: 10; padding: 16px; }
+  .overlay .box { max-width: 560px; padding: 26px; }
+  .overlay h2 { margin: 0 0 8px; }
+  .overlay p { color: var(--soft); line-height: 1.55; }
+  .overlay .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .hidden { display: none !important; }
+  .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--raise); border: 1px solid var(--line); padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 14px; z-index: 20; }
+  @media (max-width: 980px) { main { grid-template-columns: 1fr; } footer.bottom { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .big .val { font-size: 52px; } .gear .num { font-size: 46px; } .shift { width: 72px; } header .brand span { display: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <a class="brand" href="../"><img src="../img/icon.png" alt=""><span>PedalCraft Ride</span></a>
+    <button class="chip connect" id="c-trainer"><i class="dot"></i><span>Connect trainer</span></button>
+    <button class="chip connect" id="c-ctrl"><i class="dot"></i><span>Connect Click</span></button>
+    <button class="chip connect" id="c-hr"><i class="dot"></i><span>Heart rate</span></button>
+    <a class="btn primary" href="../#mac">Get the Mac app</a>
+  </header>
+
+  <main>
+    <section class="panel scene">
+      <canvas id="scene" aria-label="Animated rider"></canvas>
+      <div class="gearbar">
+        <button class="shift" id="down"><b>−</b>easier</button>
+        <div class="gear">
+          <div class="label">Gear</div>
+          <div class="num"><span id="gear">12</span><small>/24</small></div>
+          <div class="dots" id="dots"></div>
+        </div>
+        <button class="shift up" id="up"><b>+</b>harder</button>
+      </div>
+    </section>
+
+    <section class="side">
+      <div class="panel tile big"><div class="label">Watts</div><div class="val"><span id="power">0</span><small>W</small></div>
+        <div class="zones" id="zones"></div></div>
+      <div class="row2">
+        <div class="panel tile"><div class="label">Cadence</div><div class="val"><span id="cad">0</span><small>rpm</small></div></div>
+        <div class="panel tile"><div class="label">Speed</div><div class="val"><span id="speed">0.0</span><small>km/h</small></div></div>
+      </div>
+      <div class="row2">
+        <div class="panel tile"><div class="label">Heart rate</div><div class="val"><span id="hr">–</span><small>bpm</small></div></div>
+        <div class="panel tile"><div class="label">Grade</div>
+          <div class="grade"><button class="round" id="gminus">−</button><div class="val"><span id="grade">0.0</span><small>%</small></div><button class="round" id="gplus">+</button></div></div>
+      </div>
+      <div class="panel upsell">
+        <h3>Want more? PedalCraft for Mac</h3>
+        <ul>
+          <li>FTP ramp test, power &amp; heart rate zones</li>
+          <li>Workout library with ERG, 20 min to 2 h</li>
+          <li>Ride log, summary images, Strava upload</li>
+          <li>Mini window over Netflix, your own faces</li>
+        </ul>
+        <a class="btn primary" href="../#mac" style="align-self:flex-start">$30 once · Mac app</a>
+        <div class="note">This free version shows your ride live. Nothing is saved, nothing leaves your browser.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom">
+    <div class="panel tile"><div class="label">Time</div><div class="val" style="font-size:28px"><span id="time">0:00</span></div></div>
+    <div class="panel tile"><div class="label">Distance</div><div class="val" style="font-size:28px"><span id="dist">0.00</span><small>km</small></div></div>
+    <div class="panel tile"><div class="label">Avg watts</div><div class="val" style="font-size:28px"><span id="avg">0</span><small>W</small></div></div>
+    <div class="panel tile"><div class="label">Work</div><div class="val" style="font-size:28px"><span id="kj">0</span><small>kJ</small></div></div>
+  </footer>
+</div>
+
+<div class="overlay" id="welcome">
+  <div class="panel box">
+    <h2>Ride in your browser</h2>
+    <p>Connect your smart trainer and Zwift Click via Bluetooth. Shift with the Clicks (or ↑ ↓), change the grade with ← →. Free, no account. Nothing is saved when you close the tab.</p>
+    <p id="nobt" class="hidden" style="color:var(--warn)">Your browser can't use Bluetooth. Please open this page in <b>Chrome</b> or <b>Edge</b> on a computer or Android phone. Safari and iPhone don't support Web Bluetooth.</p>
+    <p class="note">Before you start: quit Zwift on all devices, and press each Click once so it wakes up.</p>
+    <div class="actions">
+      <button class="btn primary" id="start">Connect trainer</button>
+      <button class="btn" id="demo">Try the demo</button>
+      <button class="btn" id="close">Just look around</button>
+    </div>
+  </div>
+</div>
+<div class="toast hidden" id="toast"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

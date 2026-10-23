@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PedalCraft · free indoor cycling for Mac</title>
+<meta name="description" content="A free, open-source indoor cycling app for macOS. Smart trainer, Zwift Click shifting, workouts, FTP test. No subscription.">
+<meta property="og:title" content="PedalCraft · free indoor cycling for Mac">
+<meta property="og:description" content="Smart trainer, Zwift Click shifting, FTP test and workouts. Free and open source.">
+<meta property="og:image" content="img/dashboard-en.png">
+<link rel="icon" href="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #17181B; --card: #212226; --line: rgba(255,255,255,.07); --ink: #E8EAEE; --soft: rgba(232,234,238,.58);
+    --rose: #3D8BFF; --rose-deep: #2F74E0; --peach: #575C68; --sage: #33C77B; --sky: #23262C;
+    --shadow: 0 8px 24px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font-family: "Inter", system-ui, -apple-system, sans-serif; line-height: 1.55; font-size: 17px; }
+  a { color: var(--rose-deep); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; gap: 12px; }
+  nav .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 20px; text-decoration: none; color: var(--ink); }
+  nav .brand img { width: 36px; height: 36px; }
+  nav .right { display: flex; gap: 8px; align-items: center; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 9px 16px; font-weight: 800;
+          text-decoration: none; background: var(--card); color: var(--ink); border: 0; cursor: pointer; font: inherit; font-weight: 800; font-size: 15px; }
+  .pill.primary { background: var(--rose); color: #fff; }
+  .pill.primary:hover { background: var(--rose-deep); }
+  .hero { text-align: center; padding: 36px 0 20px; }
+  .hero img.icon { width: 120px; height: 120px; }
+  .hero h1 { font-size: clamp(40px, 7vw, 64px); line-height: 1.05; margin: 14px 0 10px; font-weight: 800; letter-spacing: -1.5px; }
+  .hero p.lead { font-size: clamp(18px, 2.4vw, 22px); color: var(--soft); max-width: 640px; margin: 0 auto 24px; font-weight: 600; }
+  .hero .cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .hero .cta .pill { font-size: 17px; padding: 14px 24px; }
+  .tags { margin-top: 16px; color: var(--soft); font-weight: 700; font-size: 14px; }
+  .shot { margin: 34px auto 10px; border-radius: 12px; border: 1px solid var(--line); overflow: hidden; box-shadow: var(--shadow); background: var(--card); }
+  .shot img { display: block; width: 100%; height: auto; }
+  section { padding: 44px 0; }
+  h2 { font-size: clamp(28px, 4vw, 38px); margin: 0 0 8px; font-weight: 900; text-align: center; }
+  .sub { text-align: center; color: var(--soft); margin: 0 auto 28px; max-width: 620px; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 22px; box-shadow: var(--shadow); }
+  .card h3 { margin: 6px 0 6px; font-size: 19px; font-weight: 900; }
+  .card p { margin: 0; color: var(--soft); font-size: 15.5px; font-weight: 600; }
+  .dot { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; font-weight: 900; color: #fff; }
+  .two { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; }
+  .two img { width: 100%; border-radius: 12px; border: 1px solid var(--line); box-shadow: var(--shadow); display: block; }
+  .faces { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 10px 0 0; }
+  .faces figure { margin: 0; text-align: center; font-weight: 800; color: var(--soft); font-size: 14px; }
+  .faces img { width: 92px; height: 92px; display: block; margin: 0 auto 6px; }
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  ol.steps li { counter-increment: s; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px 16px 62px; position: relative; box-shadow: var(--shadow); font-weight: 600; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 16px; top: 14px; width: 32px; height: 32px; border-radius: 50%;
+                        background: var(--rose); color: #fff; display: grid; place-items: center; font-weight: 900; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; box-shadow: var(--shadow); margin-bottom: 12px; }
+  summary { font-weight: 800; cursor: pointer; }
+  details p { color: var(--soft); font-weight: 600; margin: 10px 0 0; }
+  footer { text-align: center; color: var(--soft); padding: 40px 0 60px; font-size: 14px; font-weight: 600; }
+  .note { background: var(--card); border-left: 5px solid var(--peach); border-radius: 14px; padding: 14px 18px; font-weight: 600; color: var(--soft); margin: 20px auto 0; max-width: 760px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr 1fr; } .two { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } nav .hide-sm { display: none; } body { font-size: 16px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="#"><img src="img/icon.png" alt="">PedalCraft</a>
+    <div class="right">
+      <a class="pill hide-sm" href="https://github.com/diegobruegger-prog/pedalcraft">GitHub</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <img class="icon" src="img/icon.png" alt="PedalCraft icon">
+    <h1><span>Indoor cycling.<br>No subscription.</span></h1>
+    <p class="lead">
+      <span>A free, open-source Mac app for your smart trainer. Shift with your Zwift Click, test your FTP and ride structured workouts with ERG. Everything stays on your Mac.</span>
+      
+    </p>
+    <div class="cta">
+      <a class="pill primary" href="ride/">▶ Ride free in your browser</a>
+      <a class="pill" href="#mac">Mac app</a>
+    </div>
+    <div class="tags"><span>Browser version free in Chrome &amp; Edge · Mac app with workouts &amp; ride log · Open source (MIT)</span></div>
+    <div class="shot">
+      <img src="img/dashboard-en.png" alt="PedalCraft dashboard">
+      </div>
+  </header>
+
+  <section>
+    <h2><span>The tools you need. Nothing else.</span></h2>
+    <p class="sub"><span>Built for the Wahoo KICKR CORE 2 with Zwift Click, and most Bluetooth FTMS trainers.</span></p>
+    <div class="grid">
+      <div class="card"><div class="dot" style="background:var(--rose)">+</div>
+        <h3><span>Click shifting</span></h3>
+        <p><span>Zwift Click, Play and Ride work without the Zwift app. On Zwift-Cog trainers the firmware shifts, just like in Zwift.</span></p></div>
+      <div class="card"><div class="dot" style="background:var(--peach)">◐</div>
+        <h3><span>Effort at a glance</span></h3>
+        <p><span>A rider that pedals at your cadence, with four expressions for four effort levels. Use your own photos if you like.</span></p></div>
+      <div class="card"><div class="dot" style="background:var(--sage)">⚡</div>
+        <h3><span>FTP test &amp; zones</span></h3>
+        <p><span>A proper ramp test: 10 minute warm-up, +20 W per minute, you decide when to stop. Zones are set for you.</span></p></div>
+      <div class="card"><div class="dot" style="background:#7DB3E0">≋</div>
+        <h3><span>Workout library</span></h3>
+        <p><span>20, 30, 45, 60 or 120 minutes. Recovery to sprints, ERG mode, cadence hints and 3-2-1 beeps. Import free .zwo files too.</span></p></div>
+      <div class="card"><div class="dot" style="background:#F2C14E">▢</div>
+        <h3><span>Mini mode</span></h3>
+        <p><span>A tiny floating window with your numbers, on top of Netflix even in full screen.</span></p></div>
+      <div class="card"><div class="dot" style="background:#9B6BD6">✓</div>
+        <h3><span>Ride log &amp; Strava</span></h3>
+        <p><span>Rate each ride, get a summary image with your stats, an FTP suggestion when you got stronger, and optional Strava upload.</span></p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="two">
+      <img src="img/workout-en.png" alt="Workout in progress">
+      <div>
+        <h2 style="text-align:left"><span>Train, don't fiddle</span></h2>
+        <p style="color:var(--soft);font-weight:600"><span>In ERG mode your trainer holds the target watts. You just pedal, PedalCraft tells you when to speed up your cadence and beeps before every change.</span></p>
+        <div class="faces">
+          <figure><img src="img/face0.png" alt=""><span>easy</span></figure>
+          <figure><img src="img/face1.png" alt=""><span>good</span></figure>
+          <figure><img src="img/face2.png" alt=""><span>hard</span></figure>
+          <figure><img src="img/face3.png" alt=""><span>maxed out</span></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mac">
+  </section>
+  <section id="install">
+    <h2><span>Install in a minute</span></h2>
+    <p class="sub"><span>PedalCraft is not notarized by Apple (that costs a yearly fee), so macOS asks once.</span></p>
+    <ol class="steps" style="max-width:760px;margin:0 auto">
+      <li><span>Download <a href="https://github.com/diegobruegger-prog/pedalcraft/releases/latest/download/PedalCraft.zip">PedalCraft.zip</a> and double-click it.</span></li>
+      <li><span>In the new folder, double-click <b>Install.command</b>.</span></li>
+      <li><span>macOS blocks it the first time: click <b>Done</b>, open <b>System Settings → Privacy &amp; Security</b> and click <b>Open Anyway</b>.</span></li>
+      <li><span>Allow Bluetooth. Done. Updates install from inside the app.</span></li>
+    </ol>
+    <div class="note"><span><b>Alpha.</b> PedalCraft is young. Tell us what works with your trainer in the <a href="https://github.com/diegobruegger-prog/pedalcraft/issues">issues</a>.</span></div>
+  </section>
+
+  <section>
+    <h2>FAQ</h2>
+    <div style="max-width:760px;margin:20px auto 0">
+      <details><summary><span>Do I need a Zwift account?</span></summary>
+        <p><span>No. PedalCraft talks to your trainer and shifters directly over Bluetooth.</span></p></details>
+      <details><summary><span>My Click v2 «−» stops working after a minute</span></summary>
+        <p><span>Zwift locks the left puck unless you rode in Zwift recently. PedalCraft restarts it every 50 seconds, so «easier» may pause for a second now and then. The right puck is never locked.</span></p></details>
+      <details><summary><span>Which trainers work?</span></summary>
+        <p><span>It is built for the KICKR CORE 2. Trainers with Zwift virtual shifting get firmware shifting, other Bluetooth FTMS trainers get grade-based gears and ERG workouts.</span></p></details>
+      <details><summary><span>What about my data?</span></summary>
+        <p><span>Everything stays on your Mac. No account, no tracking, no server. Strava upload is optional and uses your own Strava keys.</span></p></details>
+    </div>
+  </section>
+
+  <footer>
+    <span>Built for everyone who just wants to ride. MIT licensed.</span><br>
+    <span>Not affiliated with Zwift, Wahoo or Strava. Thanks to the community who reverse-engineered the protocols in the open.</span><br>
+    <a href="https://github.com/diegobruegger-prog/pedalcraft">GitHub</a>
+  </footer>
+</div>
+
+</body>
+</html>
