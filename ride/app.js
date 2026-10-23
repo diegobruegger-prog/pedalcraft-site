@@ -468,6 +468,32 @@ function drawFace(level, size) {
   if (level >= 2) { ctx.fillStyle = '#8CBFFF'; for (const [x, y] of level === 3 ? [[0.36, -0.1], [-0.38, -0.02]] : [[0.36, -0.1]]) { ctx.beginPath(); ctx.moveTo(x * s, (y - 0.07) * s); ctx.quadraticCurveTo((x + 0.07) * s, (y + 0.03) * s, x * s, (y + 0.05) * s); ctx.quadraticCurveTo((x - 0.07) * s, (y + 0.03) * s, x * s, (y - 0.07) * s); ctx.fill(); } }
 }
 
+// ---------- Pro features (shown locked in the free version) ----------
+const PRO = {
+  workout: ['Workouts with ERG', 'Pick 20, 30, 45, 60 or 120 minutes: recovery, endurance, sweet spot, threshold, intervals or sprints. Your trainer holds the watts, you get cadence hints and 3-2-1 beeps.'],
+  ftp: ['FTP ramp test', '10 minute warm-up, then +20 W every minute until you stop. Your FTP and all your training zones are set automatically.'],
+  save: ['Save your rides', 'Every ride is saved with a summary image, your rating and an FTP suggestion when you got stronger. This ride would be: ' ],
+  strava: ['Strava upload', 'Every saved ride goes to Strava automatically, with watts, heart rate and cadence.'],
+  mini: ['Mini window', 'A small floating window with your numbers on top of Netflix or YouTube, even in full screen.'],
+};
+function showPro(f) {
+  const [t, txt] = PRO[f];
+  $('pro-title').textContent = t;
+  let extra = '';
+  if (f === 'save') extra = ride.elapsed > 0 ? `${Math.floor(ride.elapsed / 60)} min, ${(ride.dist / 1000).toFixed(1)} km, ${Math.round(ride.kj)} kJ.` : 'still empty, start pedalling.';
+  $('pro-text').textContent = txt + extra;
+  $('pro').classList.remove('hidden');
+  ping('pro-' + f);
+}
+document.querySelectorAll('.lock').forEach(b => b.onclick = () => showPro(b.dataset.f));
+$('pro-close').onclick = () => $('pro').classList.add('hidden');
+$('pro-buy').onclick = () => ping('buy-click');
+// Nach 10 und 30 Minuten echter Fahrt freundlich daran erinnern, dass die Fahrt nicht gespeichert wird
+let nudged = new Set();
+setInterval(() => {
+  for (const m of [10, 30]) if (!ride.demo && ride.elapsed >= m * 60 && !nudged.has(m)) { nudged.add(m); toast(`${m} minutes in. This ride won't be saved here; the Mac app keeps every ride.`, 7000); }
+}, 5000);
+
 // ---------- Wire up ----------
 $('up').onclick = () => shift(true); $('down').onclick = () => shift(false);
 $('gplus').onclick = () => changeGrade(0.5); $('gminus').onclick = () => changeGrade(-0.5);

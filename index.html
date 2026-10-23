@@ -83,7 +83,7 @@
     <p class="lead">Ride your smart trainer free in your browser and shift with your Zwift Click. When you want workouts, an FTP test and a ride log, get the Mac app for $30, once.</p>
     <div class="cta">
       <a class="pill primary" href="ride/">▶ Ride free in your browser</a>
-      <a class="pill" href="#mac">Mac app · $30</a>
+      <a class="pill" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac">Get the Mac app · $30</a>
     </div>
     <div class="tags">No account · No tracking · Works with Wahoo KICKR CORE 2 + Zwift Click</div>
     <div class="shot"><img src="img/dashboard-en.png" alt="PedalCraft dashboard"></div>
@@ -117,7 +117,7 @@
           <li>Ride log with summary images, ride rating, FTP suggestions</li>
           <li>Strava upload, mini window over Netflix, your own faces</li>
         </ul>
-        <a class="pill primary disabled" id="buy" href="#">Available very soon</a>
+        <a class="pill primary disabled" id="buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac">Buy for $30</a>
       </div>
     </div>
   </section>
@@ -147,7 +147,7 @@
 
   <section id="install">
     <h2>Installing the Mac app</h2>
-    <p class="sub">After buying you get a download link by email.</p>
+    <p class="sub">After buying you get a download link by email and in your Gumroad library.</p>
     <ol class="steps">
       <li>Unzip <b>PedalCraft.zip</b> and double-click <b>Install.command</b>.</li>
       <li>The first time, macOS asks once: click <b>Done</b>, then <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</li>
@@ -178,7 +178,7 @@
 </div>
 <script>
   // Kaufknopf: sobald der Gumroad-Link gesetzt ist, wird er aktiv.
-  var GUMROAD = "";
+  var GUMROAD = "https://pedalcraftapp.gumroad.com/l/pedalcraft-mac";
   if (GUMROAD) { var b = document.getElementById('buy'); b.href = GUMROAD; b.textContent = 'Buy for $30'; b.classList.remove('disabled'); }
   fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
 </script>
