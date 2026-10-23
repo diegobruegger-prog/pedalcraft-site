@@ -514,5 +514,6 @@ $('close').onclick = closeWelcome;
 if (!hasBT) { $('nobt').classList.remove('hidden'); $('start').classList.add('hidden'); }
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
+if (new URLSearchParams(location.search).has('demo')) { closeWelcome(); startDemo(); }
 render();
 requestAnimationFrame(frame);
