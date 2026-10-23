@@ -325,7 +325,7 @@ async function connectController() {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const bytesOf = v => Array.from(new Uint8Array(v.buffer, v.byteOffset, v.byteLength));
 function setChip(id, on, text) { const el = document.getElementById(id); el.classList.toggle('on', on); el.querySelector('span').textContent = text; }
-function safe(fn) { return async () => { try { await fn(); } catch (e) { if (e && e.name !== 'NotFoundError') toast(e.message || String(e), 5000); } }; }
+function safe(fn) { return async () => { try { await fn(); } catch (e) { ping(e && e.name === 'NotFoundError' ? 'bt-cancel' : 'bt-error'); if (e && e.name !== 'NotFoundError') toast(e.message || String(e), 5000); } }; }
 
 // Anonymous usage counter (no personal data, no cookies): one ping per event type and session.
 const pinged = new Set();
@@ -504,7 +504,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'ArrowRight') changeGrade(0.5); else if (e.key === 'ArrowLeft') changeGrade(-0.5);
 });
 const hasBT = !!(navigator.bluetooth && navigator.bluetooth.requestDevice);
-const needBT = fn => safe(async () => { if (!hasBT) { $('welcome').classList.remove('hidden'); return; } await fn(); });
+const needBT = fn => safe(async () => { ping('connect-tap'); if (!hasBT) { $('welcome').classList.remove('hidden'); return; } await fn(); });
 $('c-trainer').onclick = needBT(connectTrainer);
 $('c-ctrl').onclick = needBT(connectController);
 $('c-hr').onclick = needBT(connectHR);
@@ -515,6 +515,7 @@ $('close').onclick = closeWelcome;
 if (!hasBT) { $('nobt').classList.remove('hidden'); $('start').classList.add('hidden'); }
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
+if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
   document.body.classList.add('embed');
