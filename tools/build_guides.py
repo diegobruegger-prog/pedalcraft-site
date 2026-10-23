@@ -77,6 +77,57 @@ GUIDES = [
             ("Does it work offline?", "The page needs to load once; after that the Bluetooth connection is local between your browser and the trainer."),
         ],
     },
+    {
+        "slug": "zwift-click-mac",
+        "title": "Use the Zwift Click on a Mac without Zwift",
+        "desc": "Shift your smart trainer with a Zwift Click on your Mac, no Zwift subscription. Free in Chrome, or as a native Mac app with ERG workouts and an FTP test for $30 once.",
+        "h1": "Zwift Click on your Mac, without Zwift",
+        "lead": "On a Mac you have two ways to ride with your Zwift Click and no subscription: the free browser version in Chrome, or the PedalCraft Mac app with workouts, an FTP test and a ride log.",
+        "sections": [
+            ("Free: in Chrome or Edge", "<ol><li>Quit Zwift on all devices.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge. Safari does not support Web Bluetooth.</li><li>Connect your trainer, then your Click, and shift.</li></ol>"),
+            ("The Mac app", f"<p>The <a href=\"{BUY}\">PedalCraft Mac app</a> runs natively on macOS 14 or later, Apple Silicon and Intel. It keeps the Click connected in the background, holds your watts in ERG workouts from 20 minutes to 2 hours, runs an FTP ramp test, saves every ride and uploads it to Strava. A mini window shows your numbers on top of Netflix or YouTube, even in full screen. $30 once, all updates included.</p>"),
+            ("Which Click works", "<p>Zwift Click v1 and v2, Zwift Play and Zwift Ride. On Zwift Cog trainers such as the Wahoo KICKR CORE 2 or Zwift Hub, the trainer firmware shifts, just like in Zwift.</p>"),
+        ],
+        "faq": [
+            ("Does the Zwift Click work on a Mac without the Zwift app?", "Yes. PedalCraft connects the Click over Bluetooth, in Chrome or in the native Mac app, without Zwift or an account."),
+            ("Does it work in Safari?", "No. Safari has no Web Bluetooth. Use Chrome or Edge, or the Mac app."),
+            ("Is the Mac app a subscription?", "No. It costs $30 once and includes all future updates."),
+        ],
+    },
+    {
+        "slug": "indoor-cycling-app-mac",
+        "title": "An indoor cycling app for Mac without a subscription",
+        "desc": "PedalCraft is a native Mac app for smart trainers: ERG workouts, FTP ramp test, ride log, Strava upload and Zwift Click shifting. $30 once instead of a monthly subscription.",
+        "h1": "An indoor cycling app for your Mac. No subscription.",
+        "lead": "Most training apps cost $18 to $22 every month. PedalCraft for Mac costs $30 once and does the essentials well: ride, shift, train with ERG, test your FTP, keep a log.",
+        "sections": [
+            ("What it does", "<ul><li>Connects your smart trainer, Zwift Click and heart rate over Bluetooth</li><li>ERG workouts from 20 minutes to 2 hours, recovery to VO2max, with cadence hints and 3-2-1 beeps</li><li>FTP ramp test: 10 minute warm-up, +20 W per minute, zones set for you</li><li>Ride log with summary images, ride rating and FTP suggestions</li><li>Strava upload and a mini window over Netflix or YouTube</li></ul>"),
+            ("What it costs compared to the others", "<p>Three years on an annual plan cost about $630 for TrainerRoad, $600 for Zwift and $540 for Rouvy or Wahoo SYSTM (US list prices, October 2026). Those apps offer more, such as virtual worlds and adaptive plans. PedalCraft costs $30, once.</p>"),
+            ("Try before you buy", "<p>The <a href=\"/ride/\">browser version</a> is free and uses the same trainer and Click connection. If it works with your setup, the Mac app will too.</p>"),
+        ],
+        "faq": [
+            ("Which Macs are supported?", "macOS 14 or later, on Apple Silicon and Intel."),
+            ("Which trainers work?", "It is built for the Wahoo KICKR CORE 2 and works with most Bluetooth FTMS smart trainers."),
+            ("Can I get a refund?", "Yes. If it doesn't work with your trainer, write within 30 days of buying and you get your money back."),
+        ],
+    },
+    {
+        "slug": "zwift-price",
+        "title": "How much does Zwift cost in 2026, and the cheaper options",
+        "desc": "Zwift costs $19.99 a month or $199.99 a year in 2026. What TrainerRoad, Rouvy and Wahoo SYSTM cost, and how to ride your trainer for free or for $30 once.",
+        "h1": "What Zwift costs in 2026",
+        "lead": "Zwift costs $19.99 a month or $199.99 a year in the US. Here is what the other big apps charge, and how to keep riding your smart trainer if you don't want another subscription.",
+        "sections": [
+            ("Prices in 2026", "<ul><li><b>Zwift</b>: $19.99 a month or $199.99 a year</li><li><b>TrainerRoad</b>: $21.99 a month or $209.99 a year</li><li><b>Rouvy</b>: $19.99 a month or $179.99 a year</li><li><b>Wahoo SYSTM</b> (Pro): $17.99 a month or $179.99 a year</li></ul><p>US list prices, checked October 2026. Prices differ by country and change; check each app before you subscribe.</p>"),
+            ("Over three years", "<p>On annual plans, three winters cost about $600 for Zwift, $630 for TrainerRoad and $540 for Rouvy or Wahoo SYSTM.</p>"),
+            ("The no-subscription way", f"<p>If you mainly want to ride, shift with your Zwift Click and see your watts, the <a href=\"/ride/\">PedalCraft browser version</a> is free. The <a href=\"{BUY}\">Mac app</a> adds ERG workouts, an FTP test, a ride log and Strava upload for $30 once. It has no virtual world and no group rides.</p>"),
+        ],
+        "faq": [
+            ("How much is Zwift per month in 2026?", "$19.99 a month in the US, or $199.99 a year on the annual plan."),
+            ("Can I use my Zwift Click without paying for Zwift?", "Yes. PedalCraft connects the Click and your trainer in Chrome or Edge for free."),
+            ("Is there a free Zwift alternative?", "MyWhoosh is free with a virtual world. PedalCraft is free in the browser without one, and focuses on riding, shifting and training."),
+        ],
+    },
 ]
 
 PAGE = """<!doctype html>
@@ -93,23 +144,23 @@ PAGE = """<!doctype html>
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/img/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">{faqld}</script>
 <style>
-  :root {{ --bg:#17181B; --card:#212226; --line:rgba(255,255,255,.07); --ink:#E8EAEE; --soft:rgba(232,234,238,.62); --accent:#3D8BFF; }}
+  :root {{ --bg:#0A0A0B; --card:#141416; --line:rgba(255,255,255,.08); --ink:#F5F5F7; --soft:#8E8E93; --accent:#3D8BFF; }}
   * {{ box-sizing: border-box; }} html,body {{ margin:0; background:var(--bg); color:var(--ink); }}
-  body {{ font-family:"Inter",system-ui,-apple-system,sans-serif; line-height:1.65; font-size:17px; }}
+  body {{ font-family:"Inter",system-ui,-apple-system,sans-serif; line-height:1.65; font-size:18px; -webkit-font-smoothing:antialiased; }}
   a {{ color:var(--accent); }} .wrap {{ max-width:760px; margin:0 auto; padding:0 20px; }}
   nav {{ display:flex; justify-content:space-between; align-items:center; padding:18px 0; }}
-  nav a.brand {{ display:flex; gap:10px; align-items:center; font-weight:800; color:var(--ink); text-decoration:none; font-size:19px; }}
-  nav img {{ width:32px; height:32px; }}
-  .pill {{ display:inline-block; border-radius:999px; padding:11px 20px; font-weight:700; text-decoration:none; background:var(--accent); color:#fff; }}
-  .pill.ghost {{ background:var(--card); color:var(--ink); border:1px solid var(--line); }}
-  h1 {{ font-size:clamp(32px,6vw,48px); line-height:1.1; letter-spacing:-1px; margin:24px 0 12px; }}
-  h2 {{ font-size:24px; margin:36px 0 8px; }} .lead {{ color:var(--soft); font-size:19px; }}
+  nav a.brand {{ display:flex; gap:10px; align-items:center; font-weight:600; color:var(--ink); text-decoration:none; font-size:17px; }}
+  nav img {{ width:26px; height:26px; }}
+  .pill {{ display:inline-block; border-radius:999px; padding:13px 24px; font-weight:600; text-decoration:none; background:var(--ink); color:#000; }}
+  .pill.ghost {{ background:none; color:var(--accent); padding:13px 8px; }} nav .pill {{ background:none; color:var(--soft); padding:0; font-weight:500; font-size:15px; }}
+  h1 {{ font-size:clamp(38px,7vw,64px); line-height:1.02; letter-spacing:-.04em; font-weight:700; margin:64px 0 18px; }}
+  h2 {{ font-size:28px; letter-spacing:-.03em; margin:56px 0 10px; }} .lead {{ color:var(--soft); font-size:19px; }}
   .cta {{ display:flex; gap:10px; flex-wrap:wrap; margin:22px 0 8px; }}
   .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; margin-top:28px; }}
-  details {{ background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:10px; }}
+  details {{ border-top:1px solid var(--line); padding:18px 0; }}
   summary {{ font-weight:700; cursor:pointer; }} details p {{ color:var(--soft); margin:8px 0 0; }}
   li {{ margin:4px 0; }} footer {{ color:var(--soft); font-size:14px; padding:48px 0 60px; }}
   footer a {{ margin-right:14px; }}
@@ -120,7 +171,7 @@ PAGE = """<!doctype html>
 <main>
 <h1>{h1}</h1>
 <p class="lead">{lead}</p>
-<div class="cta"><a class="pill" href="/ride/">▶ Open PedalCraft in your browser</a><a class="pill ghost" href="/ride/?demo=1">Try the demo</a></div>
+<div class="cta"><a class="pill" href="/ride/">Start riding</a><a class="pill ghost" href="/ride/?demo=1">Try the demo ›</a></div>
 {sections}
 <div class="card"><b>PedalCraft for Mac</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log, Strava upload. <a href="{buy}">$30 once, no subscription</a>.</div>
 <h2>FAQ</h2>
