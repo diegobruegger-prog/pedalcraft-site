@@ -140,7 +140,7 @@ PAGE = """<!doctype html>
 <link rel="canonical" href="{url}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
-<meta property="og:image" content="{site}/img/og.jpg">
+<meta property="og:image" content="{site}/img/og.jpg?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/img/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
