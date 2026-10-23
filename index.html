@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PedalCraft · ride your smart trainer in your browser, free</title>
-<meta name="description" content="Ride your smart trainer free in the browser and shift with your Zwift Click. Upgrade to the Mac app for workouts, FTP test and ride log: $30 once, no subscription.">
-<meta property="og:title" content="PedalCraft · indoor cycling without a subscription">
+<meta name="description" content="Ride your smart trainer free in the browser and shift with your Zwift Click. No install, no account, no subscription. Mac app with workouts, FTP test and ride log: $30 once.">
+<meta property="og:title" content="PedalCraft · your trainer, in your browser">
 <meta property="og:description" content="Ride free in the browser, shift with Zwift Click. Mac app with workouts, FTP test and ride log for $30 once.">
 <meta property="og:image" content="https://pedalcraft.online/img/og.jpg">
+<meta name="theme-color" content="#0A0A0B">
 <link rel="icon" href="img/icon.png">
 <link rel="canonical" href="https://pedalcraft.online/">
 <meta name="twitter:card" content="summary_large_image">
@@ -15,180 +16,233 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PedalCraft","operatingSystem":"macOS, Web","applicationCategory":"HealthApplication","description":"Ride your smart trainer free in the browser and shift with Zwift Click. Mac app with FTP test, ERG workouts, ride log and Strava upload.","offers":[{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Browser version"},{"@type":"Offer","price":"30","priceCurrency":"USD","name":"Mac app"}],"url":"https://pedalcraft.online/"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg: #17181B; --card: #212226; --line: rgba(255,255,255,.07); --ink: #E8EAEE; --soft: rgba(232,234,238,.58);
-          --accent: #3D8BFF; --accent-deep: #2F74E0; --ok: #33C77B; --shadow: 0 8px 24px rgba(0,0,0,.35); }
+  :root { --bg: #0A0A0B; --ink: #F5F5F7; --soft: #8E8E93; --faint: #48484D; --line: rgba(255,255,255,.08); --accent: #3D8BFF; }
   * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
   html, body { margin: 0; background: var(--bg); color: var(--ink); }
-  body { font-family: "Inter", system-ui, -apple-system, sans-serif; line-height: 1.55; font-size: 17px; }
-  a { color: var(--accent); }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
-  nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; gap: 12px; }
-  nav .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; text-decoration: none; color: var(--ink); }
-  nav .brand img { width: 34px; height: 34px; }
-  .pill { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 10px 18px; font-weight: 700; font-size: 15px;
-          text-decoration: none; background: var(--card); color: var(--ink); border: 1px solid var(--line); }
-  .pill.primary { background: var(--accent); color: #fff; border-color: transparent; }
-  .pill.primary:hover { background: var(--accent-deep); }
-  .pill.disabled { opacity: .55; pointer-events: none; }
-  .hero { text-align: center; padding: 30px 0 10px; }
-  .herobg { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); padding: 64px 20px 56px; margin-bottom: 8px;
-            background:
-              radial-gradient(ellipse 70% 60% at 50% 0%, rgba(61,139,255,.16), transparent 70%),
-              radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.4px) 0 0/22px 22px,
-              #1B1C20; }
-  .hero img.icon { width: 104px; height: 104px; }
-  .hero h1 { font-size: clamp(40px, 7vw, 66px); line-height: 1.04; margin: 12px 0 12px; font-weight: 800; letter-spacing: -1.5px; }
-  .lead { font-size: clamp(18px, 2.3vw, 21px); color: var(--soft); max-width: 660px; margin: 0 auto 24px; }
-  .cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  .cta .pill { font-size: 17px; padding: 14px 24px; }
-  .tags { margin-top: 14px; color: var(--soft); font-weight: 600; font-size: 14px; }
-  .shot { margin: 32px auto 0; border-radius: 12px; border: 1px solid var(--line); overflow: hidden; box-shadow: var(--shadow); }
-  .shot img { display: block; width: 100%; height: auto; }
-  section { padding: 52px 0; }
-  h2 { font-size: clamp(28px, 4vw, 38px); margin: 0 0 8px; font-weight: 800; text-align: center; letter-spacing: -.5px; }
-  .sub { text-align: center; color: var(--soft); margin: 0 auto 28px; max-width: 640px; }
-  .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 880px; margin: 0 auto; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; box-shadow: var(--shadow); }
-  .plan h3 { margin: 0; font-size: 20px; }
-  .price { font-size: 40px; font-weight: 800; margin: 6px 0 2px; letter-spacing: -1px; }
-  .price small { font-size: 15px; color: var(--soft); font-weight: 600; letter-spacing: 0; }
-  .plan ul { list-style: none; padding: 0; margin: 16px 0 20px; }
-  .plan li { padding: 6px 0 6px 26px; position: relative; color: var(--soft); font-size: 15.5px; }
-  .plan li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); font-weight: 800; }
-  .plan li.no::before { content: "–"; color: var(--soft); }
-  .plan.featured { border-color: rgba(61,139,255,.55); }
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .grid .card h3 { margin: 4px 0 6px; font-size: 18px; }
-  .grid .card p { margin: 0; color: var(--soft); font-size: 15.5px; }
-  .two { display: grid; grid-template-columns: 1.25fr 1fr; gap: 26px; align-items: center; }
-  .two img { width: 100%; border-radius: 12px; border: 1px solid var(--line); display: block; }
-  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0 auto; display: grid; gap: 12px; max-width: 760px; }
-  ol.steps li { counter-increment: s; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px 16px 62px; position: relative; }
-  ol.steps li::before { content: counter(s); position: absolute; left: 16px; top: 14px; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-weight: 800; }
-  details { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; }
-  summary { font-weight: 700; cursor: pointer; }
-  details p { color: var(--soft); margin: 10px 0 0; }
-  footer { text-align: center; color: var(--soft); padding: 40px 0 60px; font-size: 14px; }
-  @media (max-width: 860px) { .grid { grid-template-columns: 1fr 1fr; } .two, .plans { grid-template-columns: 1fr; } }
-  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } body { font-size: 16px; } nav .pill { padding: 8px 14px; font-size: 14px; } }
+  body { font-family: "Inter", system-ui, -apple-system, sans-serif; font-size: 19px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; letter-spacing: -.2px; }
+  .brand img { width: 26px; height: 26px; }
+  nav .link { font-size: 15px; color: var(--soft); }
+  nav .link:hover { color: var(--ink); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; height: 52px; padding: 0 28px; border-radius: 999px;
+         background: var(--ink); color: #000; font-weight: 600; font-size: 17px; letter-spacing: -.2px; transition: transform .15s ease, opacity .15s; }
+  .btn:hover { transform: scale(1.02); }
+  .btn:active { transform: scale(.98); }
+  .more { color: var(--accent); font-size: 17px; font-weight: 500; }
+  .more:hover { text-decoration: underline; }
+  .more::after { content: " ›"; }
+
+  .hero { text-align: center; padding: 120px 0 0; }
+  .eyebrow { font-size: 17px; font-weight: 600; color: var(--soft); margin: 0 0 18px; letter-spacing: -.1px; }
+  h1 { font-size: clamp(52px, 9.4vw, 112px); line-height: .98; letter-spacing: -.045em; font-weight: 700; margin: 0; }
+  h1 .dim { color: var(--faint); }
+  .hero p.lead { font-size: clamp(19px, 2.2vw, 24px); color: var(--soft); max-width: 620px; margin: 28px auto 40px; letter-spacing: -.2px; line-height: 1.4; }
+  .hero .actions { display: flex; gap: 28px; justify-content: center; align-items: center; flex-wrap: wrap; }
+  .shot { margin: 96px auto 0; max-width: 1040px; position: relative; }
+  .shot::before { content: ""; position: absolute; inset: 8% 10% -6%; background: radial-gradient(closest-side, rgba(61,139,255,.28), transparent); filter: blur(40px); z-index: 0; }
+  .frame { position: relative; z-index: 1; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #141416; box-shadow: 0 40px 120px rgba(0,0,0,.6); }
+  .frame .bar { height: 30px; display: flex; align-items: center; gap: 7px; padding: 0 12px; border-bottom: 1px solid var(--line); }
+  .frame .bar i { width: 10px; height: 10px; border-radius: 50%; background: #2C2C30; }
+  .frame .bar span { margin-left: 10px; font-size: 12px; color: var(--faint); }
+  .frame img { display: block; width: 100%; height: auto; }
+
+  section { padding: 180px 0 0; }
+  h2 { font-size: clamp(40px, 6.4vw, 76px); line-height: 1.02; letter-spacing: -.04em; font-weight: 700; margin: 0; }
+  .center { text-align: center; }
+  .body { font-size: clamp(19px, 2vw, 22px); color: var(--soft); max-width: 600px; margin: 24px 0 0; letter-spacing: -.2px; line-height: 1.45; }
+  .center .body { margin-left: auto; margin-right: auto; }
+  .body b { color: var(--ink); font-weight: 600; }
+
+  .gear { margin: 80px auto 0; text-align: center; user-select: none; }
+  .gear .num { font-size: clamp(140px, 24vw, 280px); font-weight: 700; letter-spacing: -.06em; line-height: .9; font-variant-numeric: tabular-nums; }
+  .gear .num small { font-size: .22em; color: var(--faint); letter-spacing: -.02em; font-weight: 600; }
+  .gear .dots { display: flex; gap: 6px; justify-content: center; margin-top: 28px; }
+  .gear .dots i { width: 8px; height: 22px; border-radius: 4px; background: #222226; transition: background .25s; }
+  .gear .dots i.on { background: var(--accent); }
+  .gear .hint { margin-top: 24px; font-size: 15px; color: var(--faint); }
+  .gear kbd { font-family: inherit; border: 1px solid var(--faint); border-radius: 6px; padding: 1px 7px; font-size: 13px; }
+
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 80px; }
+  .three h3 { font-size: 28px; letter-spacing: -.03em; margin: 0 0 10px; font-weight: 700; }
+  .three p { margin: 0; color: var(--soft); font-size: 17px; line-height: 1.5; }
+
+  .split { display: grid; grid-template-columns: 1fr 1.35fr; gap: 64px; align-items: center; }
+  .split ul { list-style: none; padding: 0; margin: 32px 0 0; }
+  .split li { padding: 14px 0; border-top: 1px solid var(--line); font-size: 17px; color: var(--soft); }
+  .split li b { color: var(--ink); font-weight: 600; }
+
+  .price { display: grid; grid-template-columns: 1fr 1fr; margin-top: 80px; border-top: 1px solid var(--line); }
+  .price > div { padding: 48px 40px 0 0; }
+  .price > div + div { padding-left: 40px; border-left: 1px solid var(--line); }
+  .price .what { font-size: 17px; color: var(--soft); font-weight: 500; }
+  .price .amt { font-size: clamp(56px, 8vw, 88px); font-weight: 700; letter-spacing: -.05em; line-height: 1; margin: 12px 0 8px; }
+  .price .amt small { font-size: 20px; color: var(--soft); letter-spacing: -.2px; font-weight: 500; }
+  .price p { color: var(--soft); font-size: 17px; margin: 0 0 32px; max-width: 360px; }
+
+  .faq { max-width: 760px; margin: 64px auto 0; }
+  details { border-top: 1px solid var(--line); padding: 22px 0; }
+  details:last-child { border-bottom: 1px solid var(--line); }
+  summary { font-weight: 600; font-size: 19px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 20px; letter-spacing: -.2px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--soft); font-weight: 400; font-size: 24px; line-height: 1; transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { color: var(--soft); margin: 12px 0 0; font-size: 17px; }
+
+  .final { text-align: center; padding: 200px 0 0; }
+  footer { margin-top: 160px; padding: 32px 0 56px; border-top: 1px solid var(--line); font-size: 13px; color: var(--faint); line-height: 1.7; }
+  footer a { color: var(--soft); margin-right: 18px; }
+  footer a:hover { color: var(--ink); }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (max-width: 860px) {
+    .three, .split { grid-template-columns: 1fr; gap: 40px; }
+    .price { grid-template-columns: 1fr; }
+    .price > div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); margin-top: 48px; }
+    section { padding-top: 120px; }
+    .hero { padding-top: 72px; }
+    .shot { margin-top: 64px; }
+  }
+  @media (max-width: 560px) { body { font-size: 17px; } .eyebrow { font-size: 14px; } .hero .actions { gap: 20px; } .wrap { padding: 0 16px; } .frame .bar { display: none; } .gear .dots i { width: 6px; height: 16px; gap: 4px; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <nav>
     <a class="brand" href="./"><img src="img/icon.png" alt="">PedalCraft</a>
-    <a class="pill primary" href="ride/">Ride free</a>
+    <a class="link" href="ride/">Ride free</a>
   </nav>
 
   <header class="hero">
-    <div class="herobg">
-    <img class="icon" src="img/icon.png" alt="PedalCraft icon">
-    <h1>Ride your trainer<br>in your browser.</h1>
-    <p class="lead">No app to install, no account, no subscription. Open the page, connect your smart trainer and Zwift Click, and ride. When you want workouts, an FTP test and a ride log, get the Mac app for $30, once.</p>
-    <div class="cta">
-      <a class="pill primary" href="ride/">▶ Ride free in your browser</a>
-      <a class="pill" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac">Get the Mac app · $30</a>
+    <p class="eyebrow">Smart trainer + Zwift Click, no Zwift needed</p>
+    <h1>Your trainer.<br><span class="dim">In your browser.</span></h1>
+    <p class="lead">Open a tab, connect your trainer and Click, ride. No install, no account, no subscription. Free.</p>
+    <div class="actions">
+      <a class="btn" href="ride/">Start riding</a>
+      <a class="more" href="ride/?demo=1">Try the demo</a>
     </div>
-    <div class="tags">No account · No tracking · Works with Wahoo KICKR CORE 2 + Zwift Click</div>
+    <div class="shot reveal">
+      <div class="frame">
+        <div class="bar"><i></i><i></i><i></i><span>pedalcraft.online/ride</span></div>
+        <img src="img/dashboard-en.png" alt="PedalCraft riding screen with watts, cadence, gear and an animated rider" width="2360" height="1480">
+      </div>
     </div>
-    <div class="shot"><img src="img/dashboard-en.png" alt="PedalCraft dashboard"></div>
   </header>
 
-  <section>
-    <h2>Start free. Upgrade once.</h2>
-    <p class="sub">The browser version is free forever. The Mac app adds everything you need to actually train.</p>
-    <div class="plans">
-      <div class="card plan">
-        <h3>Browser</h3>
-        <div class="price">Free</div>
-        <div style="color:var(--soft);font-size:14px">Chrome or Edge · Mac, Windows, Android</div>
-        <ul>
-          <li>Connect your smart trainer, Zwift Click and heart rate</li>
-          <li>Virtual shifting with the Click (or arrow keys)</li>
-          <li>Live watts, power zones, cadence, speed, grade</li>
-          <li>Animated rider that pedals at your cadence</li>
-          <li class="no">Nothing is saved when you close the tab</li>
-        </ul>
-        <a class="pill primary" href="ride/">Ride free now</a>
-      </div>
-      <div class="card plan featured" id="mac">
-        <h3>Mac app</h3>
-        <div class="price">$30 <small>one-time</small></div>
-        <div style="color:var(--soft);font-size:14px">macOS 14+ · all future updates included</div>
-        <ul>
-          <li>Everything in the browser version</li>
-          <li>FTP ramp test, power &amp; heart rate zones</li>
-          <li>Workout library with ERG: 20, 30, 45, 60 and 120 min</li>
-          <li>Ride log with summary images, ride rating, FTP suggestions</li>
-          <li>Strava upload, mini window over Netflix, your own faces</li>
-        </ul>
-        <a class="pill primary disabled" id="buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac">Buy for $30</a>
-      </div>
+  <section class="center">
+    <h2 class="reveal">Shift with your Click.<br><span style="color:var(--faint)">Not with a subscription.</span></h2>
+    <p class="body reveal">Zwift Click, Play and Ride connect straight to your browser. On a KICKR CORE 2 the trainer itself shifts, exactly like in Zwift.</p>
+    <div class="gear reveal" aria-hidden="true">
+      <div class="num"><span id="g">14</span><small>/24</small></div>
+      <div class="dots" id="dots"></div>
+      <div class="hint">Try it: <kbd>↑</kbd> <kbd>↓</kbd></div>
     </div>
   </section>
 
   <section>
-    <h2>The tools you need. Nothing else.</h2>
-    <p class="sub">Built for the Wahoo KICKR CORE 2 with Zwift Click, and most Bluetooth FTMS trainers.</p>
-    <div class="grid">
-      <div class="card"><h3>Click shifting</h3><p>Zwift Click, Play and Ride work without the Zwift app. On Zwift-Cog trainers the firmware shifts, just like in Zwift.</p></div>
-      <div class="card"><h3>FTP test &amp; zones</h3><p>A proper ramp test: 10 minute warm-up, +20 W per minute, you decide when to stop. Zones are set for you.</p></div>
-      <div class="card"><h3>Workouts with ERG</h3><p>Recovery to sprints, 20 minutes to 2 hours. The trainer holds the watts, you get cadence hints and 3-2-1 beeps.</p></div>
-      <div class="card"><h3>Effort at a glance</h3><p>A rider that pedals at your cadence, with four expressions for four effort levels. Use your own photos if you like.</p></div>
-      <div class="card"><h3>Mini window</h3><p>Your numbers in a small window on top of Netflix or YouTube, even in full screen.</p></div>
-      <div class="card"><h3>Ride log &amp; Strava</h3><p>Rate each ride, get a summary image, an FTP suggestion when you got stronger, and optional Strava upload.</p></div>
+    <div class="three">
+      <div class="reveal"><h3>Nothing to install.</h3><p>It runs in Chrome or Edge on Mac, Windows and Android. Bookmark it, done.</p></div>
+      <div class="reveal"><h3>Nothing to sign up for.</h3><p>No account, no email, no tracking. Close the tab and nothing is left behind.</p></div>
+      <div class="reveal"><h3>Nothing to pay.</h3><p>Watts, cadence, speed, zones, gears and heart rate. Free, and it stays free.</p></div>
+    </div>
+  </section>
+
+  <section id="mac">
+    <div class="split">
+      <div class="reveal">
+        <h2 style="font-size:clamp(40px,5vw,60px)">When you want to train.</h2>
+        <p class="body">The Mac app adds everything you need for a plan, not just a ride.</p>
+        <ul>
+          <li><b>FTP ramp test.</b> Zones set for you.</li>
+          <li><b>Workouts with ERG.</b> 20 minutes to 2 hours.</li>
+          <li><b>Ride log.</b> Ratings, summaries, FTP suggestions.</li>
+          <li><b>Strava upload.</b> And a mini window over Netflix.</li>
+        </ul>
+      </div>
+      <div class="frame reveal"><img src="img/workout-en.png" alt="Workout in ERG mode in the PedalCraft Mac app" width="2480" height="1600" loading="lazy"></div>
     </div>
   </section>
 
   <section>
-    <div class="two">
-      <img src="img/workout-en.png" alt="Workout in progress">
+    <h2 class="center reveal">Free. Or $30, once.</h2>
+    <div class="price reveal">
       <div>
-        <h2 style="text-align:left">Train, don't fiddle</h2>
-        <p style="color:var(--soft)">In ERG mode your trainer holds the target watts. You just pedal. PedalCraft tells you when to raise your cadence and beeps before every change.</p>
+        <div class="what">Browser</div>
+        <div class="amt">Free</div>
+        <p>Ride and shift in Chrome or Edge. Nothing is saved when you close the tab.</p>
+        <a class="btn" href="ride/">Start riding</a>
+      </div>
+      <div>
+        <div class="what">Mac app</div>
+        <div class="amt">$30 <small>one-time</small></div>
+        <p>Workouts, FTP test, ride log and Strava. macOS 14 or later. All updates included.</p>
+        <a class="btn" id="buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac">Buy the Mac app</a>
       </div>
     </div>
   </section>
 
-  <section id="install">
-    <h2>Installing the Mac app</h2>
-    <p class="sub">After buying you get a download link by email and in your Gumroad library.</p>
-    <ol class="steps">
-      <li>Unzip <b>PedalCraft.zip</b> and double-click <b>Install.command</b>.</li>
-      <li>The first time, macOS asks once: click <b>Done</b>, then <b>System Settings → Privacy &amp; Security → Open Anyway</b>.</li>
-      <li>Allow Bluetooth. Done. Updates are announced inside the app.</li>
-    </ol>
-  </section>
-
-  <section>
-    <h2>FAQ</h2>
-    <div style="max-width:760px;margin:20px auto 0">
+  <section id="faq">
+    <h2 class="center reveal">Questions.</h2>
+    <div class="faq">
       <details><summary>Do I need a Zwift account?</summary>
-        <p>No. PedalCraft talks to your trainer and shifters directly over Bluetooth. Please quit Zwift on all devices before riding.</p></details>
-      <details><summary>Does it work on Windows or iPhone?</summary>
-        <p>The free browser version works in Chrome and Edge on Windows, Mac and Android. iPhone and Safari don't support Web Bluetooth. The full app is Mac only for now.</p></details>
-      <details><summary>My Click v2 «−» stops working after a minute</summary>
-        <p>Zwift locks the left puck unless you rode in Zwift recently. PedalCraft restarts it every 50 seconds, so «easier» may pause for a second now and then. The right puck is never locked.</p></details>
+        <p>No. PedalCraft talks to your trainer and shifters directly over Bluetooth. Quit Zwift on all devices before riding.</p></details>
       <details><summary>Which trainers work?</summary>
-        <p>It is built for the KICKR CORE 2. Trainers with Zwift virtual shifting get firmware shifting, other Bluetooth FTMS trainers get grade-based gears and ERG workouts.</p></details>
+        <p>It is built for the Wahoo KICKR CORE 2. Trainers with Zwift virtual shifting get firmware shifting, other Bluetooth FTMS trainers get grade-based gears and ERG workouts.</p></details>
+      <details><summary>Windows, iPhone, Safari?</summary>
+        <p>The browser version works in Chrome and Edge on Windows, Mac and Android. iPhone and Safari don't support Web Bluetooth. The full app is Mac only for now.</p></details>
+      <details><summary>My Click v2 “−” stops after a minute.</summary>
+        <p>Zwift locks the left puck unless you rode in Zwift recently. PedalCraft restarts it every 50 seconds, so “easier” may pause for a second now and then. The right puck is never locked.</p></details>
+      <details id="install"><summary>How do I install the Mac app?</summary>
+        <p>After buying you get a download link by email and in your Gumroad library. Unzip PedalCraft.zip and double-click Install.command. The first time, macOS asks once: click Done, then System Settings → Privacy &amp; Security → Open Anyway. Allow Bluetooth, done.</p></details>
       <details><summary>What about my data?</summary>
         <p>No account, no tracking. The browser version keeps nothing. The Mac app stores rides only on your Mac. We count anonymous page visits and connections, nothing else.</p></details>
     </div>
   </section>
 
+  <div class="final">
+    <h2 class="reveal">Just ride.</h2>
+    <p style="margin-top:36px" class="reveal"><a class="btn" href="ride/">Start riding</a></p>
+  </div>
+
   <footer>
-    <a href="/zwift-click-without-zwift/">Zwift Click without Zwift</a> · <a href="/kickr-core-2-without-zwift/">KICKR CORE 2 without Zwift</a> · <a href="/free-zwift-alternative/">Free Zwift alternative</a> · <a href="/web-bluetooth-smart-trainer/">Smart trainer in the browser</a><br><br>
-    PedalCraft · ride your smart trainer in your browser<br>
-    Not affiliated with Zwift, Wahoo or Strava. Compatibility is based on Bluetooth protocols documented in the open by the indoor-cycling community.
+    <div><a href="/zwift-click-without-zwift/">Zwift Click without Zwift</a><a href="/kickr-core-2-without-zwift/">KICKR CORE 2 without Zwift</a><a href="/free-zwift-alternative/">Free Zwift alternative</a><a href="/web-bluetooth-smart-trainer/">Smart trainer in the browser</a></div>
+    <div style="margin-top:14px">PedalCraft. Not affiliated with Zwift, Wahoo or Strava. Compatibility is based on Bluetooth protocols documented in the open by the indoor-cycling community.</div>
   </footer>
 </div>
 <script>
-  // Kaufknopf: sobald der Gumroad-Link gesetzt ist, wird er aktiv.
-  var GUMROAD = "https://pedalcraftapp.gumroad.com/l/pedalcraft-mac";
-  if (GUMROAD) { var b = document.getElementById('buy'); b.href = GUMROAD; b.textContent = 'Buy for $30'; b.classList.remove('disabled'); }
-  fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
+  // Gang-Demo: Pfeiltasten oder automatisch
+  (function () {
+    var g = 14, n = document.getElementById('g'), d = document.getElementById('dots'), touched = false;
+    for (var i = 0; i < 24; i++) d.appendChild(document.createElement('i'));
+    function draw() { n.textContent = g; [].forEach.call(d.children, function (el, i) { el.className = i < g ? 'on' : ''; }); }
+    function shift(x) { g = Math.max(1, Math.min(24, g + x)); draw(); }
+    draw();
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { touched = true; shift(1); e.preventDefault(); }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { touched = true; shift(-1); e.preventDefault(); }
+    });
+    var seq = [1, 1, 1, -1, -1, -1, -1, 1], k = 0;
+    setInterval(function () { if (!touched) { shift(seq[k++ % seq.length]); } }, 1100);
+  })();
+  // Einblenden beim Scrollen
+  (function () {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+  if (location.hostname !== 'localhost') fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
+  document.getElementById('buy').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
 </script>
 </body>
 </html>
