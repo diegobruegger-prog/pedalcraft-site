@@ -45,5 +45,5 @@ for k, land, ride, tr, buy in sorted(rows, key=lambda r: -r[1]):
 
 print("\nGesamt (alle Besucher):")
 for k in ["home", "visit", "demo", "connect-tap", "nobt", "nobt-ios", "bt-cancel", "trainer", "click", "shifts-1", "shifts-10", "shifts-50", "ride-1m", "ride-3m",
-          "ride-5m", "ride-10m", "ride-20m", "ride-30m", "ride-60m", "offer-ride10", "buy-ride10", "buy-click"]:
+          "ride-5m", "ride-10m", "ride-20m", "ride-30m", "ride-60m", "offer-ride10", "buy-ride10", "subscribe-ride", "subscribe-home", "subscribe-guide", "buy-click"]:
     print(f"  {k:14s} {ALL.get(k, 0)}")
