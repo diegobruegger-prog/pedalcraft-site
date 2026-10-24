@@ -106,7 +106,9 @@ function report({ power, cadence, speed, hr }) {
   if (hr) { ride.hr = hr; ride.t.hr = now; }
 }
 
+let shiftCount = 0;
 function shift(up) {
+  if (!ride.demo) { shiftCount++; for (const n of [1, 10, 50]) if (shiftCount === n) ping('shifts-' + n); }
   const next = ride.gear + (up ? 1 : -1);
   if (next < 0 || next >= GEARS.length) { beep(220, 0.08); return; }
   ride.gear = next;
@@ -506,7 +508,7 @@ $('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride1
 let nudged = new Set();
 setInterval(() => {
   // Anonyme Fahrdauer-Stufen (nur echte Fahrten): zeigt, wie lange Leute wirklich trainieren
-  for (const m of [5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
+  for (const m of [1, 3, 5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
   if (!ride.demo && !EMBED && ride.elapsed >= 600 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
   if (!ride.demo && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
 }, 5000);
