@@ -146,7 +146,7 @@
     <p class="lead">Open a tab, connect your trainer and Click, ride. No install, no account, no subscription. Free.</p>
     <div class="actions">
       <a class="btn" href="ride/">Start riding</a>
-      <a class="more" href="ride/?demo=1">Try the demo</a>
+      <a class="more" id="buy-top" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Mac app, $20 launch price</a>
     </div>
     <div class="shot reveal">
       <div class="frame live">
@@ -267,6 +267,7 @@
     els.forEach(function (e) { io.observe(e); });
   })();
   if (location.hostname !== 'localhost') fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
+  document.getElementById('buy-top').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
   document.getElementById('buy').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
 </script>
 </body>
