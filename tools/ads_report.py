@@ -23,21 +23,34 @@ def slug(s):
     return (re.sub(r"[^a-z0-9äöü]+", "-", s.lower()).strip("-")[:40]) or "x"
 
 
-def get(key):
-    try:
-        with urllib.request.urlopen(BASE + urllib.parse.quote(key), timeout=10) as r:
-            return json.load(r).get("value", 0)
-    except Exception:
-        return 0
+def get(key, tries=4):
+    import time
+    for i in range(tries):
+        try:
+            with urllib.request.urlopen(BASE + urllib.parse.quote(key), timeout=10) as r:
+                return json.load(r).get("value", 0)
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                return 0          # Zähler existiert noch nicht
+            time.sleep(1.2)       # 429: Dienst bremst, kurz warten
+        except Exception:
+            time.sleep(1.2)
+    return "?"
 
 
 import urllib.parse  # noqa: E402
 
-keys = ["ad-" + e for e in EVENTS] + [f"ad-{d}-{e}" for d in DEVICES for e in EVENTS]
+import urllib.error  # noqa: E402
 kws = sorted({k.strip() for k in KEYWORDS.replace("\n", "").split("|") if k.strip()})
-keys += [f"adkw-{slug(k)}-{e}" for k in kws for e in ("land", "ride", "trainer", "buy")]
-with ThreadPoolExecutor(16) as ex:
+keys = ["ad-" + e for e in EVENTS] + [f"ad-{d}-{e}" for d in DEVICES for e in EVENTS]
+with ThreadPoolExecutor(2) as ex:
     val = dict(zip(keys, ex.map(get, keys)))
+kwkeys = [f"adkw-{slug(k)}-{e}" for k in kws for e in ("land", "ride", "trainer", "buy")]
+if val["ad-land"] not in (0, "?"):   # Suchbegriffe nur abfragen, wenn es Anzeigen-Besuche gibt
+    with ThreadPoolExecutor(2) as ex:
+        val.update(zip(kwkeys, ex.map(get, kwkeys)))
+else:
+    val.update({k: 0 for k in kwkeys})
 
 print("Alle Anzeigen:  " + "  ".join(f"{e}={val['ad-' + e]}" for e in EVENTS))
 for d, name in DEVICES.items():
