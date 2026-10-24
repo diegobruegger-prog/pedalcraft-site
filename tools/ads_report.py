@@ -6,7 +6,7 @@ import json, re, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 BASE = "https://abacus.jasoncameron.dev/get/pedalcraft-online/"
-EVENTS = ["land", "ride", "demo", "connect-tap", "nobt-ios", "nobt", "trainer", "click", "buy"]
+EVENTS = ["land", "ride", "demo", "connect-tap", "nobt-ios", "nobt", "trainer", "click", "ride-10m", "ride-30m", "buy"]
 DEVICES = {"c": "Computer", "m": "Handy", "t": "Tablet"}
 KEYWORDS = """zwift click without zwift|zwift click without subscription|use zwift click without zwift|zwift click other apps|
 zwift click mac|zwift click on mac|kickr core 2 without zwift|kickr core 2 without subscription|zwift cog without zwift|
