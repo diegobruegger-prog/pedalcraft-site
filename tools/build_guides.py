@@ -9,6 +9,26 @@ SITE = "https://pedalcraft.online"
 
 GUIDES = [
     {
+        "slug": "de/zwift-click-ohne-abo",
+        "lang": "de",
+        "title": "Mit dem Zwift Click schalten, ohne Zwift-Abo",
+        "desc": "So schaltest du mit dem Zwift Click ohne Zwift-Abo: Trainer und Click in Chrome verbinden und gratis fahren. Kein Konto, keine Installation. Mac-App mit ERG und FTP-Test.",
+        "h1": "Mit dem Zwift Click schalten. Ohne Abo.",
+        "lead": "Dein Zwift Click funktioniert auch ohne Zwift. PedalCraft verbindet Trainer und Click direkt im Browser und übernimmt das virtuelle Schalten. Gratis, ohne Konto, ohne Installation.",
+        "sections": [
+            ("Was du brauchst", "<ul><li>Einen Zwift Click (v1 oder v2), Zwift Play oder Zwift Ride</li><li>Einen Bluetooth-Smart-Trainer, zum Beispiel den Wahoo KICKR CORE 2</li><li>Chrome oder Edge auf Mac, Windows oder Android</li></ul>"),
+            ("So verbindest du ihn", "<ol><li>Zwift auf allen Geräten beenden, auch auf dem Handy. Nur eine App kann den Trainer steuern.</li><li><a href=\"/ride/\">pedalcraft.online/ride</a> öffnen und auf <b>Connect trainer</b> klicken.</li><li>Auf jedem Click einmal drücken, damit er aufwacht, dann <b>Connect Click</b> wählen.</li><li>Losfahren. <b>+</b> schaltet schwerer, <b>−</b> leichter.</li></ol>"),
+            ("Wie das Schalten ohne Zwift funktioniert", "<p>Auf Trainern mit Zwift-Cog (zum Beispiel KICKR CORE 2 oder Zwift Hub) schickt PedalCraft den Gang an den Trainer, und die Trainer-Firmware ändert den Widerstand, genau wie in Zwift. Andere Bluetooth-FTMS-Trainer bekommen pro Gang eine simulierte Steigung.</p>"),
+            ("Kein Zwift-Ersatz", "<p>PedalCraft hat keine virtuelle Welt, keine Rennen und keine Gruppenfahrten. Es ist ein einfaches Werkzeug zum Fahren, Schalten und Trainieren, ohne monatliche Kosten.</p>"),
+            ("Wenn du trainieren willst", f"<p>Die <a href=\"{BUY}\">Mac-App</a> bringt ERG-Workouts von 20 Minuten bis 2 Stunden, einen FTP-Rampentest, ein Fahrtenbuch und Strava-Upload. Einmal $30, zum Start $20, alle Updates inklusive. Läuft auf Apple Silicon und Intel ab macOS 14. Funktioniert sie mit deinem Trainer nicht, gibt es das Geld zurück.</p>"),
+        ],
+        "faq": [
+            ("Brauche ich ein Zwift-Abo, um mit dem Click zu schalten?", "Nein. PedalCraft verbindet den Click direkt über Bluetooth, ohne Zwift-App und ohne Konto."),
+            ("Geht das auf dem iPhone?", "Im Browser nicht: Safari und iPhone können kein Web Bluetooth. Nimm Chrome oder Edge auf einem Computer oder Android-Gerät."),
+            ("Was kostet es?", "Die Browser-Version ist gratis. Die Mac-App kostet einmal $30, zum Start $20."),
+        ],
+    },
+    {
         "slug": "zwift-click-without-zwift",
         "title": "How to use the Zwift Click without Zwift",
         "desc": "Use your Zwift Click shifters without a Zwift subscription: connect them in your browser and shift your smart trainer for free. No install, no account.",
@@ -132,7 +152,7 @@ GUIDES = [
 ]
 
 PAGE = """<!doctype html>
-<html lang="en">
+<html lang="{lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -173,9 +193,9 @@ PAGE = """<!doctype html>
 <main>
 <h1>{h1}</h1>
 <p class="lead">{lead}</p>
-<div class="cta"><a class="pill" href="/ride/">Start riding</a><a class="pill ghost" href="/ride/?demo=1">Try the demo ›</a></div>
+<div class="cta"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
 {sections}
-<div class="card"><b>PedalCraft for Mac</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log, Strava upload. <a href="{buy}">$30 once, no subscription</a>.</div>
+<div class="card">{maccard}</div>
 <h2>FAQ</h2>
 {faq}
 </main>
@@ -198,7 +218,10 @@ def main():
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in g["faq"]]})
         out = PAGE.format(title=html.escape(g["title"]), desc=html.escape(g["desc"]), url=url, site=SITE, faqld=faqld,
                           h1=html.escape(g["h1"]), lead=html.escape(g["lead"]), sections=sections, faq=faq, buy=BUY,
-                          links=links, slug=g["slug"])
+                          links=links, slug=g["slug"].replace("/", "-"), lang=g.get("lang", "en"),
+                          cta1="Jetzt gratis fahren" if g.get("lang") == "de" else "Start riding",
+                          cta2="Demo ansehen ›" if g.get("lang") == "de" else "Try the demo ›",
+                          maccard=(f'<b>PedalCraft für Mac</b>: FTP-Rampentest, ERG-Workouts von 20 Minuten bis 2 Stunden, Fahrtenbuch, Strava-Upload. <a href="{BUY}">Einmal $30, zum Start $20, kein Abo</a>.' if g.get("lang") == "de" else f'<b>PedalCraft for Mac</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log, Strava upload. <a href="{BUY}">$30 once, $20 at launch, no subscription</a>.'))
         os.makedirs(g["slug"], exist_ok=True)
         open(os.path.join(g["slug"], "index.html"), "w").write(out)
     # Sitemap
