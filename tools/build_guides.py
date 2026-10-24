@@ -182,6 +182,7 @@ PAGE = """<!doctype html>
   h2 {{ font-size:28px; letter-spacing:-.03em; margin:56px 0 10px; }} .lead {{ color:var(--soft); font-size:19px; }}
   .cta {{ display:flex; gap:10px; flex-wrap:wrap; margin:22px 0 8px; }}
   .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; margin-top:28px; }}
+  .sub {{ display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 6px; }} .sub input {{ flex:1 1 200px; min-width:0; height:44px; padding:0 14px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:#0A0A0B; color:#F5F5F7; font:inherit; font-size:16px; }} .sub button {{ height:44px; padding:0 18px; border-radius:999px; border:0; background:#F5F5F7; color:#000; font:inherit; font-weight:600; cursor:pointer; }} .subnote {{ font-size:13px; color:#8E8E93; margin:0; }}
   details {{ border-top:1px solid var(--line); padding:18px 0; }}
   summary {{ font-weight:700; cursor:pointer; }} details p {{ color:var(--soft); margin:8px 0 0; }}
   li {{ margin:4px 0; }} footer {{ color:var(--soft); font-size:14px; padding:48px 0 60px; }}
@@ -196,6 +197,12 @@ PAGE = """<!doctype html>
 <div class="cta"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
 {sections}
 <div class="card">{maccard}</div>
+<div class="card"><b>{subhead}</b><form class="sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{{mode:'no-cors',keepalive:true}})}}catch(e){{}}" data-src="guide">
+  <input type="hidden" name="seller_id" value="7781126287159">
+  <input type="email" name="email" required placeholder="you@example.com" aria-label="Email">
+  <button type="submit">Email me the link</button>
+</form>
+<p class="subnote">We send you the link and the $29 launch code. Unsubscribe anytime.</p></div>
 <h2>FAQ</h2>
 {faq}
 </main>
@@ -219,9 +226,12 @@ def main():
         out = PAGE.format(title=html.escape(g["title"]), desc=html.escape(g["desc"]), url=url, site=SITE, faqld=faqld,
                           h1=html.escape(g["h1"]), lead=html.escape(g["lead"]), sections=sections, faq=faq, buy=BUY,
                           links=links, slug=g["slug"].replace("/", "-"), lang=g.get("lang", "en"),
+                          subhead="Nicht am Computer? Link per Mail:" if g.get("lang") == "de" else "Not at your computer? Get the link by email:",
                           cta1="Jetzt gratis fahren" if g.get("lang") == "de" else "Start riding",
                           cta2="Demo ansehen ›" if g.get("lang") == "de" else "Try the demo ›",
                           maccard=(f'<b>PedalCraft für Mac</b>: FTP-Rampentest, ERG-Workouts von 20 Minuten bis 2 Stunden, Fahrtenbuch, Strava-Upload. <a href="{BUY}">Einmal $39, zum Start $29, kein Abo</a>.' if g.get("lang") == "de" else f'<b>PedalCraft for Mac</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log, Strava upload. <a href="{BUY}">$39 once, $29 at launch, no subscription</a>.'))
+        if g.get("lang") == "de":
+            out = out.replace("Email me the link", "Link per Mail senden").replace("We send you the link and the $29 launch code. Unsubscribe anytime.", "Wir schicken dir den Link und den $29-Launch-Code. Abmeldung jederzeit.")
         os.makedirs(g["slug"], exist_ok=True)
         open(os.path.join(g["slug"], "index.html"), "w").write(out)
     # Sitemap

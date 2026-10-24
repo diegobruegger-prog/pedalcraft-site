@@ -118,6 +118,12 @@
   .note { max-width: 680px; margin: 40px auto 0; text-align: center; font-size: 13px; color: var(--faint); line-height: 1.6; }
   @media (max-width: 560px) { .bars .row { grid-template-columns: 96px 1fr 50px; gap: 12px; font-size: 15px; } .demohint { font-size: 13px; } }
 
+
+  .sub { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 6px; }
+  .sub input { flex:1 1 200px; min-width:0; height:46px; padding:0 16px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:#141416; color:#F5F5F7; font:inherit; font-size:16px; }
+  .sub button { height:46px; padding:0 20px; border-radius:999px; border:0; background:#F5F5F7; color:#000; font:inherit; font-weight:600; font-size:15px; cursor:pointer; }
+  .subnote { font-size:13px; color:#8E8E93; margin:0; }
+  .subwrap { max-width:560px; margin:64px auto 0; text-align:center; } .subwrap h3 { margin:0; font-size:22px; letter-spacing:-.02em; } .subwrap .sub { justify-content:center; }
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
   .reveal.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
@@ -152,7 +158,7 @@
     <div class="shot reveal">
       <div class="frame live">
         <div class="bar"><i></i><i></i><i></i><span>pedalcraft.online/ride</span><b class="livetag">Live demo</b></div>
-        <div class="stage" id="stage"><iframe id="demo" src="ride/?embed=1&amp;v=11" title="PedalCraft live demo" loading="eager" tabindex="-1"></iframe></div>
+        <div class="stage" id="stage"><iframe id="demo" src="ride/?embed=1&amp;v=12" title="PedalCraft live demo" loading="eager" tabindex="-1"></iframe></div>
       </div>
       <p class="demohint">This is the real app running a demo ride. <span class="k">Shift with <kbd>↑</kbd> <kbd>↓</kbd> or the + and − buttons.</span><span class="t">Tap + or − to shift.</span></p>
     </div>
@@ -217,6 +223,12 @@
         <a class="btn" id="buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Buy for $29</a>
       </div>
     </div>
+    <div class="subwrap reveal"><h3>Not at your computer right now?</h3><form class="sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{mode:'no-cors',keepalive:true})}catch(e){}" data-src="home">
+  <input type="hidden" name="seller_id" value="7781126287159">
+  <input type="email" name="email" required placeholder="you@example.com" aria-label="Email">
+  <button type="submit">Email me the link</button>
+</form>
+<p class="subnote">We send you the link and the $29 launch code. One email, unsubscribe anytime.</p></div>
   </section>
 
   <section id="faq">
