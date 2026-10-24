@@ -2,7 +2,7 @@
 // Keine Cookies, keine persönlichen Daten: zählt pro Suchbegriff und Gerät, wie weit Besucher kommen.
 (function () {
   function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9äöü]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'x'; }
-  function send(key) { fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/' + key, { mode: 'no-cors', keepalive: true }).catch(function () {}); }
+  function send(key) { fetch('https://pedalcraft-stats.pages.dev/hit/' + key, { mode: 'no-cors', keepalive: true }).catch(function () {}); }
   function hit(ev) {
     try {
       var kw = sessionStorage.getItem('pc_kw'), dev = sessionStorage.getItem('pc_dev');

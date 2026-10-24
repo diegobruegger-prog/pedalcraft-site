@@ -132,7 +132,7 @@
   }
   @media (max-width: 560px) { body { font-size: 17px; } .eyebrow { font-size: 14px; } .hero .actions { gap: 20px; } .wrap { padding: 0 16px; } .frame .bar { display: none; } }
 </style>
-<script src="/ad.js?v=3"></script>
+<script src="/ad.js?v=4"></script>
 </head>
 <body>
 <div class="wrap">
@@ -152,7 +152,7 @@
     <div class="shot reveal">
       <div class="frame live">
         <div class="bar"><i></i><i></i><i></i><span>pedalcraft.online/ride</span><b class="livetag">Live demo</b></div>
-        <div class="stage" id="stage"><iframe id="demo" src="ride/?embed=1&amp;v=9" title="PedalCraft live demo" loading="eager" tabindex="-1"></iframe></div>
+        <div class="stage" id="stage"><iframe id="demo" src="ride/?embed=1&amp;v=10" title="PedalCraft live demo" loading="eager" tabindex="-1"></iframe></div>
       </div>
       <p class="demohint">This is the real app running a demo ride. <span class="k">Shift with <kbd>↑</kbd> <kbd>↓</kbd> or the + and − buttons.</span><span class="t">Tap + or − to shift.</span></p>
     </div>
@@ -267,9 +267,9 @@
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
     els.forEach(function (e) { io.observe(e); });
   })();
-  if (location.hostname !== 'localhost') fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
-  document.getElementById('buy-top').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
-  document.getElementById('buy').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
+  if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
+  document.getElementById('buy-top').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
+  document.getElementById('buy').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
 </script>
 </body>
 </html>

@@ -334,7 +334,7 @@ function ping(ev) {
   if (EMBED) return;
   if (window.pcAd && ev !== 'buy-click') window.pcAd(ev === 'visit' ? 'ride' : ev);
   if (pinged.has(ev) || location.hostname === 'localhost') return; pinged.add(ev);
-  fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/' + ev, { mode: 'no-cors', keepalive: true }).catch(() => {});
+  fetch('https://pedalcraft-stats.pages.dev/hit/' + ev, { mode: 'no-cors', keepalive: true }).catch(() => {});
 }
 
 // ---------- Demo ----------
