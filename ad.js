@@ -20,6 +20,9 @@
       sessionStorage.setItem('pc_kw', slug(q.get('pc_kw')));
       sessionStorage.setItem('pc_dev', /^[mtc]$/.test(q.get('pc_dev') || '') ? q.get('pc_dev') : 'x');
       hit('land');
+      // Deutschsprachige Anzeigen-Besucher bekommen die deutsche Zielseite
+      var de = /(^|-)(ohne|abo|abonnement|kündigen|kosten|schalten|rollentrainer)(-|$)/.test(sessionStorage.getItem('pc_kw')) || /^de/i.test(navigator.language || '');
+      if (de && location.pathname === '/zwift-click-without-zwift/') location.replace('/de/zwift-click-ohne-abo/');
     }
   } catch (e) {}
   window.pcAd = hit;
