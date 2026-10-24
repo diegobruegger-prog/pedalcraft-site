@@ -485,18 +485,30 @@ function showPro(f) {
   let extra = '';
   if (f === 'save') extra = ride.elapsed > 0 ? `${Math.floor(ride.elapsed / 60)} min, ${(ride.dist / 1000).toFixed(1)} km, ${Math.round(ride.kj)} kJ.` : 'still empty, start pedalling.';
   $('pro-text').textContent = txt + extra;
+  $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH'; $('pro-buy').textContent = 'Get the Mac app · $29 launch price'; offerOpen = false;
   $('pro').classList.remove('hidden');
   ping('pro-' + f);
 }
+// Angebot nach 10 Minuten echter Fahrt: Trainer und Click funktionieren nachweislich, bester Moment fürs Angebot
+let offerOpen = false;
+function showRideOffer() {
+  $('pro-title').textContent = 'It works with your trainer.';
+  $('pro-text').textContent = "You've ridden 10 minutes. Keep every ride, train with ERG workouts and track your FTP in the Mac app: $24 with code RIDE10 instead of $39. One-time, no subscription.";
+  $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get it for $24';
+  offerOpen = true;
+  $('pro').classList.remove('hidden');
+  ping('offer-ride10');
+}
 document.querySelectorAll('.lock').forEach(b => b.onclick = () => showPro(b.dataset.f));
 $('pro-close').onclick = () => $('pro').classList.add('hidden');
-$('pro-buy').onclick = () => ping('buy-click');
+$('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); };
 // Nach 10 und 30 Minuten echter Fahrt freundlich daran erinnern, dass die Fahrt nicht gespeichert wird
 let nudged = new Set();
 setInterval(() => {
   // Anonyme Fahrdauer-Stufen (nur echte Fahrten): zeigt, wie lange Leute wirklich trainieren
   for (const m of [5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
-  for (const m of [10, 30]) if (!ride.demo && ride.elapsed >= m * 60 && !nudged.has(m)) { nudged.add(m); toast(`${m} minutes in. This ride won't be saved here; the Mac app keeps every ride.`, 7000); }
+  if (!ride.demo && !EMBED && ride.elapsed >= 600 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
+  if (!ride.demo && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
 }, 5000);
 
 // ---------- Wire up ----------
