@@ -183,6 +183,7 @@ PAGE = """<!doctype html>
   .cta {{ display:flex; gap:10px; flex-wrap:wrap; margin:22px 0 8px; }}
   .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; margin-top:28px; }}
   .sub {{ display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 6px; }} .sub input {{ flex:1 1 200px; min-width:0; height:44px; padding:0 14px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:#0A0A0B; color:#F5F5F7; font:inherit; font-size:16px; }} .sub button {{ height:44px; padding:0 18px; border-radius:999px; border:0; background:#F5F5F7; color:#000; font:inherit; font-weight:600; cursor:pointer; }} .subnote {{ font-size:13px; color:#8E8E93; margin:0; }}
+  .promo {{ width:100%; border-radius:14px; border:1px solid rgba(255,255,255,.08); margin:18px 0 6px; display:block; background:#141416; }}
   details {{ border-top:1px solid var(--line); padding:18px 0; }}
   summary {{ font-weight:700; cursor:pointer; }} details p {{ color:var(--soft); margin:8px 0 0; }}
   li {{ margin:4px 0; }} footer {{ color:var(--soft); font-size:14px; padding:48px 0 60px; }}
@@ -194,6 +195,7 @@ PAGE = """<!doctype html>
 <main>
 <h1>{h1}</h1>
 <p class="lead">{lead}</p>
+<video class="promo" src="/media/pedalcraft-16x9.mp4" poster="/media/pedalcraft-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
 <div class="cta"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
 {sections}
 <div class="card">{maccard}</div>
