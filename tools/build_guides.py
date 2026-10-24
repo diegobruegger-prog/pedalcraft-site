@@ -45,16 +45,17 @@ GUIDES = [
     },
     {
         "slug": "free-zwift-alternative",
-        "title": "A free Zwift alternative that runs in your browser",
-        "desc": "Looking for a free alternative to Zwift? PedalCraft runs in Chrome or Edge: connect your smart trainer, shift with your Zwift Click, see your watts live. No subscription.",
-        "h1": "A free alternative to Zwift, in your browser",
-        "lead": "Not everyone needs a virtual world. If you want to ride your smart trainer, shift and see your numbers, PedalCraft does that in your browser for free, with no install and no account.",
+        "title": "Looking for a free Zwift alternative? What PedalCraft is, and isn't",
+        "desc": "PedalCraft is not a Zwift replacement: no virtual world, no group rides. It lets you ride your smart trainer and shift with your Zwift Click in Chrome or Edge for free, without a subscription.",
+        "h1": "Not a Zwift replacement. Just your trainer, for free.",
+        "lead": "If you want a virtual world, races and group rides, Zwift or MyWhoosh are the right choice. If you just want to ride your smart trainer, shift with your Click and see your numbers without a subscription, PedalCraft does that in your browser for free.",
         "sections": [
             ("What you get for free", "<ul><li>Smart trainer and heart rate connection via Web Bluetooth</li><li>Virtual shifting with Zwift Click, Play or Ride</li><li>Live watts, power zones, cadence, speed, grade</li><li>A demo mode if you want to look first</li></ul>"),
             ("What it is not", "<p>PedalCraft has no 3D world, no group rides and no races. It is a focused tool for riding and training. If that is what you want, you save the subscription.</p>"),
             ("When you want more", f"<p>The <a href=\"{BUY}\">Mac app</a> ($30 once) adds an FTP ramp test, a workout library with ERG, a ride log with summary images and Strava upload.</p>"),
         ],
         "faq": [
+            ("Is PedalCraft a Zwift replacement?", "No. It has no virtual world, no group rides and no races. It is a simple tool to ride, shift and train with your trainer and Click without a subscription."),
             ("Is PedalCraft really free?", "The browser version is free with no time limit. Only the Mac app with workouts and the ride log is paid, once."),
             ("Which trainers work?", "It is built for the Wahoo KICKR CORE 2 and works with most Bluetooth FTMS smart trainers."),
             ("Is it affiliated with Zwift?", "No. PedalCraft is independent and uses Bluetooth protocols documented in the open by the indoor-cycling community."),
