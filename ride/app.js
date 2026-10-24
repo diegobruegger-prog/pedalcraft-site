@@ -494,6 +494,8 @@ $('pro-buy').onclick = () => ping('buy-click');
 // Nach 10 und 30 Minuten echter Fahrt freundlich daran erinnern, dass die Fahrt nicht gespeichert wird
 let nudged = new Set();
 setInterval(() => {
+  // Anonyme Fahrdauer-Stufen (nur echte Fahrten): zeigt, wie lange Leute wirklich trainieren
+  for (const m of [5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
   for (const m of [10, 30]) if (!ride.demo && ride.elapsed >= m * 60 && !nudged.has(m)) { nudged.add(m); toast(`${m} minutes in. This ride won't be saved here; the Mac app keeps every ride.`, 7000); }
 }, 5000);
 
