@@ -20,12 +20,12 @@ GUIDES = [
             ("So verbindest du ihn", "<ol><li>Zwift auf allen Geräten beenden, auch auf dem Handy. Nur eine App kann den Trainer steuern.</li><li><a href=\"/ride/\">pedalcraft.online/ride</a> öffnen und auf <b>Connect trainer</b> klicken.</li><li>Auf jedem Click einmal drücken, damit er aufwacht, dann <b>Connect Click</b> wählen.</li><li>Losfahren. <b>+</b> schaltet schwerer, <b>−</b> leichter.</li></ol>"),
             ("Wie das Schalten ohne Zwift funktioniert", "<p>Auf Trainern mit Zwift-Cog (zum Beispiel KICKR CORE 2 oder Zwift Hub) schickt PedalCraft den Gang an den Trainer, und die Trainer-Firmware ändert den Widerstand, genau wie in Zwift. Andere Bluetooth-FTMS-Trainer bekommen pro Gang eine simulierte Steigung.</p>"),
             ("Kein Zwift-Ersatz", "<p>PedalCraft hat keine virtuelle Welt, keine Rennen und keine Gruppenfahrten. Es ist ein einfaches Werkzeug zum Fahren, Schalten und Trainieren, ohne monatliche Kosten.</p>"),
-            ("Wenn du trainieren willst", f"<p>Die <a href=\"{BUY}\">Mac-App</a> bringt ERG-Workouts von 20 Minuten bis 2 Stunden, einen FTP-Rampentest, ein Fahrtenbuch und Strava-Upload. Einmal $30, zum Start $20, alle Updates inklusive. Läuft auf Apple Silicon und Intel ab macOS 14. Funktioniert sie mit deinem Trainer nicht, gibt es das Geld zurück.</p>"),
+            ("Wenn du trainieren willst", f"<p>Die <a href=\"{BUY}\">Mac-App</a> bringt ERG-Workouts von 20 Minuten bis 2 Stunden, einen FTP-Rampentest, ein Fahrtenbuch und Strava-Upload. Einmal $39, zum Start $29, alle Updates inklusive. Läuft auf Apple Silicon und Intel ab macOS 14. Funktioniert sie mit deinem Trainer nicht, gibt es das Geld zurück.</p>"),
         ],
         "faq": [
             ("Brauche ich ein Zwift-Abo, um mit dem Click zu schalten?", "Nein. PedalCraft verbindet den Click direkt über Bluetooth, ohne Zwift-App und ohne Konto."),
             ("Geht das auf dem iPhone?", "Im Browser nicht: Safari und iPhone können kein Web Bluetooth. Nimm Chrome oder Edge auf einem Computer oder Android-Gerät."),
-            ("Was kostet es?", "Die Browser-Version ist gratis. Die Mac-App kostet einmal $30, zum Start $20."),
+            ("Was kostet es?", "Die Browser-Version ist gratis. Die Mac-App kostet einmal $39, zum Start $29."),
         ],
     },
     {
@@ -43,7 +43,7 @@ GUIDES = [
         "faq": [
             ("Do I need a Zwift subscription to use the Zwift Click?", "No. The Click is a Bluetooth controller. PedalCraft connects to it directly in Chrome or Edge, without the Zwift app or an account."),
             ("Does it work on iPhone?", "Not in the browser: Safari and iPhone don't support Web Bluetooth. Use Chrome or Edge on a computer or Android device."),
-            ("Is it free?", "The browser version is free. A Mac app with workouts, an FTP test, a ride log and Strava upload costs $30 once."),
+            ("Is it free?", "The browser version is free. A Mac app with workouts, an FTP test, a ride log and Strava upload costs $39 once."),
         ],
     },
     {
@@ -55,7 +55,7 @@ GUIDES = [
         "sections": [
             ("What still works without Zwift", "<ul><li>Virtual shifting with the Zwift Click, done by the trainer firmware</li><li>Live power, cadence, speed and your power zones</li><li>Grade changes with the arrow keys</li><li>Heart rate from a strap or a watch that broadcasts heart rate</li></ul>"),
             ("Start in two minutes", "<ol><li>Quit Zwift on all devices.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect the trainer, then the Click.</li><li>Pedal and shift.</li></ol>"),
-            ("Want structured training?", f"<p>The browser version shows your ride live and saves nothing. The <a href=\"{BUY}\">PedalCraft Mac app</a> adds an FTP ramp test, ERG workouts from 20 minutes to 2 hours, a ride log and Strava upload, for $30 once.</p>"),
+            ("Want structured training?", f"<p>The browser version shows your ride live and saves nothing. The <a href=\"{BUY}\">PedalCraft Mac app</a> adds an FTP ramp test, ERG workouts from 20 minutes to 2 hours, a ride log and Strava upload, for $39 once.</p>"),
         ],
         "faq": [
             ("Can I use the KICKR CORE 2 virtual shifting without Zwift?", "Yes. PedalCraft sends the gear to the trainer the same way Zwift does, so the trainer firmware shifts."),
@@ -72,7 +72,7 @@ GUIDES = [
         "sections": [
             ("What you get for free", "<ul><li>Smart trainer and heart rate connection via Web Bluetooth</li><li>Virtual shifting with Zwift Click, Play or Ride</li><li>Live watts, power zones, cadence, speed, grade</li><li>A demo mode if you want to look first</li></ul>"),
             ("What it is not", "<p>PedalCraft has no 3D world, no group rides and no races. It is a focused tool for riding and training. If that is what you want, you save the subscription.</p>"),
-            ("When you want more", f"<p>The <a href=\"{BUY}\">Mac app</a> ($30 once) adds an FTP ramp test, a workout library with ERG, a ride log with summary images and Strava upload.</p>"),
+            ("When you want more", f"<p>The <a href=\"{BUY}\">Mac app</a> ($39 once) adds an FTP ramp test, a workout library with ERG, a ride log with summary images and Strava upload.</p>"),
         ],
         "faq": [
             ("Is PedalCraft a Zwift replacement?", "No. It has no virtual world, no group rides and no races. It is a simple tool to ride, shift and train with your trainer and Click without a subscription."),
@@ -101,29 +101,29 @@ GUIDES = [
     {
         "slug": "zwift-click-mac",
         "title": "Use the Zwift Click on a Mac without Zwift",
-        "desc": "Shift your smart trainer with a Zwift Click on your Mac, no Zwift subscription. Free in Chrome, or as a native Mac app with ERG workouts and an FTP test for $30 once.",
+        "desc": "Shift your smart trainer with a Zwift Click on your Mac, no Zwift subscription. Free in Chrome, or as a native Mac app with ERG workouts and an FTP test for $39 once.",
         "h1": "Zwift Click on your Mac, without Zwift",
         "lead": "On a Mac you have two ways to ride with your Zwift Click and no subscription: the free browser version in Chrome, or the PedalCraft Mac app with workouts, an FTP test and a ride log.",
         "sections": [
             ("Free: in Chrome or Edge", "<ol><li>Quit Zwift on all devices.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge. Safari does not support Web Bluetooth.</li><li>Connect your trainer, then your Click, and shift.</li></ol>"),
-            ("The Mac app", f"<p>The <a href=\"{BUY}\">PedalCraft Mac app</a> runs natively on macOS 14 or later, Apple Silicon and Intel. It keeps the Click connected in the background, holds your watts in ERG workouts from 20 minutes to 2 hours, runs an FTP ramp test, saves every ride and uploads it to Strava. A mini window shows your numbers on top of Netflix or YouTube, even in full screen. $30 once, all updates included.</p>"),
+            ("The Mac app", f"<p>The <a href=\"{BUY}\">PedalCraft Mac app</a> runs natively on macOS 14 or later, Apple Silicon and Intel. It keeps the Click connected in the background, holds your watts in ERG workouts from 20 minutes to 2 hours, runs an FTP ramp test, saves every ride and uploads it to Strava. A mini window shows your numbers on top of Netflix or YouTube, even in full screen. $39 once, all updates included.</p>"),
             ("Which Click works", "<p>Zwift Click v1 and v2, Zwift Play and Zwift Ride. On Zwift Cog trainers such as the Wahoo KICKR CORE 2 or Zwift Hub, the trainer firmware shifts, just like in Zwift.</p>"),
         ],
         "faq": [
             ("Does the Zwift Click work on a Mac without the Zwift app?", "Yes. PedalCraft connects the Click over Bluetooth, in Chrome or in the native Mac app, without Zwift or an account."),
             ("Does it work in Safari?", "No. Safari has no Web Bluetooth. Use Chrome or Edge, or the Mac app."),
-            ("Is the Mac app a subscription?", "No. It costs $30 once and includes all future updates."),
+            ("Is the Mac app a subscription?", "No. It costs $39 once and includes all future updates."),
         ],
     },
     {
         "slug": "indoor-cycling-app-mac",
         "title": "An indoor cycling app for Mac without a subscription",
-        "desc": "PedalCraft is a native Mac app for smart trainers: ERG workouts, FTP ramp test, ride log, Strava upload and Zwift Click shifting. $30 once instead of a monthly subscription.",
+        "desc": "PedalCraft is a native Mac app for smart trainers: ERG workouts, FTP ramp test, ride log, Strava upload and Zwift Click shifting. $39 once instead of a monthly subscription.",
         "h1": "An indoor cycling app for your Mac. No subscription.",
-        "lead": "Most training apps cost $18 to $22 every month. PedalCraft for Mac costs $30 once and does the essentials well: ride, shift, train with ERG, test your FTP, keep a log.",
+        "lead": "Most training apps cost $18 to $22 every month. PedalCraft for Mac costs $39 once and does the essentials well: ride, shift, train with ERG, test your FTP, keep a log.",
         "sections": [
             ("What it does", "<ul><li>Connects your smart trainer, Zwift Click and heart rate over Bluetooth</li><li>ERG workouts from 20 minutes to 2 hours, recovery to VO2max, with cadence hints and 3-2-1 beeps</li><li>FTP ramp test: 10 minute warm-up, +20 W per minute, zones set for you</li><li>Ride log with summary images, ride rating and FTP suggestions</li><li>Strava upload and a mini window over Netflix or YouTube</li></ul>"),
-            ("What it costs compared to the others", "<p>Three years on an annual plan cost about $630 for TrainerRoad, $600 for Zwift and $540 for Rouvy or Wahoo SYSTM (US list prices, October 2026). Those apps offer more, such as virtual worlds and adaptive plans. PedalCraft costs $30, once.</p>"),
+            ("What it costs compared to the others", "<p>Three years on an annual plan cost about $630 for TrainerRoad, $600 for Zwift and $540 for Rouvy or Wahoo SYSTM (US list prices, October 2026). Those apps offer more, such as virtual worlds and adaptive plans. PedalCraft costs $39, once.</p>"),
             ("Try before you buy", "<p>The <a href=\"/ride/\">browser version</a> is free and uses the same trainer and Click connection. If it works with your setup, the Mac app will too.</p>"),
         ],
         "faq": [
@@ -135,13 +135,13 @@ GUIDES = [
     {
         "slug": "zwift-price",
         "title": "How much does Zwift cost in 2026, and the cheaper options",
-        "desc": "Zwift costs $19.99 a month or $199.99 a year in 2026. What TrainerRoad, Rouvy and Wahoo SYSTM cost, and how to ride your trainer for free or for $30 once.",
+        "desc": "Zwift costs $19.99 a month or $199.99 a year in 2026. What TrainerRoad, Rouvy and Wahoo SYSTM cost, and how to ride your trainer for free or for $39 once.",
         "h1": "What Zwift costs in 2026",
         "lead": "Zwift costs $19.99 a month or $199.99 a year in the US. Here is what the other big apps charge, and how to keep riding your smart trainer if you don't want another subscription.",
         "sections": [
             ("Prices in 2026", "<ul><li><b>Zwift</b>: $19.99 a month or $199.99 a year</li><li><b>TrainerRoad</b>: $21.99 a month or $209.99 a year</li><li><b>Rouvy</b>: $19.99 a month or $179.99 a year</li><li><b>Wahoo SYSTM</b> (Pro): $17.99 a month or $179.99 a year</li></ul><p>US list prices, checked October 2026. Prices differ by country and change; check each app before you subscribe.</p>"),
             ("Over three years", "<p>On annual plans, three winters cost about $600 for Zwift, $630 for TrainerRoad and $540 for Rouvy or Wahoo SYSTM.</p>"),
-            ("The no-subscription way", f"<p>If you mainly want to ride, shift with your Zwift Click and see your watts, the <a href=\"/ride/\">PedalCraft browser version</a> is free. The <a href=\"{BUY}\">Mac app</a> adds ERG workouts, an FTP test, a ride log and Strava upload for $30 once. It has no virtual world and no group rides.</p>"),
+            ("The no-subscription way", f"<p>If you mainly want to ride, shift with your Zwift Click and see your watts, the <a href=\"/ride/\">PedalCraft browser version</a> is free. The <a href=\"{BUY}\">Mac app</a> adds ERG workouts, an FTP test, a ride log and Strava upload for $39 once. It has no virtual world and no group rides.</p>"),
         ],
         "faq": [
             ("How much is Zwift per month in 2026?", "$19.99 a month in the US, or $199.99 a year on the annual plan."),
@@ -221,7 +221,7 @@ def main():
                           links=links, slug=g["slug"].replace("/", "-"), lang=g.get("lang", "en"),
                           cta1="Jetzt gratis fahren" if g.get("lang") == "de" else "Start riding",
                           cta2="Demo ansehen ›" if g.get("lang") == "de" else "Try the demo ›",
-                          maccard=(f'<b>PedalCraft für Mac</b>: FTP-Rampentest, ERG-Workouts von 20 Minuten bis 2 Stunden, Fahrtenbuch, Strava-Upload. <a href="{BUY}">Einmal $30, zum Start $20, kein Abo</a>.' if g.get("lang") == "de" else f'<b>PedalCraft for Mac</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log, Strava upload. <a href="{BUY}">$30 once, $20 at launch, no subscription</a>.'))
+                          maccard=(f'<b>PedalCraft für Mac</b>: FTP-Rampentest, ERG-Workouts von 20 Minuten bis 2 Stunden, Fahrtenbuch, Strava-Upload. <a href="{BUY}">Einmal $39, zum Start $29, kein Abo</a>.' if g.get("lang") == "de" else f'<b>PedalCraft for Mac</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log, Strava upload. <a href="{BUY}">$39 once, $29 at launch, no subscription</a>.'))
         os.makedirs(g["slug"], exist_ok=True)
         open(os.path.join(g["slug"], "index.html"), "w").write(out)
     # Sitemap
