@@ -3,9 +3,7 @@
 Aufruf: python3 tools/ads_report.py
 Kosten und Klicks pro Suchbegriff kommen aus Google Ads selbst; hier steht, was danach auf der Seite passiert."""
 import json, re, urllib.request
-from concurrent.futures import ThreadPoolExecutor
 
-BASE = "https://abacus.jasoncameron.dev/get/pedalcraft-online/"
 EVENTS = ["land", "ride", "demo", "connect-tap", "nobt-ios", "nobt", "trainer", "click", "ride-10m", "ride-30m", "buy"]
 DEVICES = {"c": "Computer", "m": "Handy", "t": "Tablet"}
 KEYWORDS = """zwift click without zwift|zwift click without subscription|use zwift click without zwift|zwift click other apps|
@@ -23,34 +21,17 @@ def slug(s):
     return (re.sub(r"[^a-z0-9äöü]+", "-", s.lower()).strip("-")[:40]) or "x"
 
 
-def get(key, tries=4):
-    import time
-    for i in range(tries):
-        try:
-            with urllib.request.urlopen(BASE + urllib.parse.quote(key), timeout=10) as r:
-                return json.load(r).get("value", 0)
-        except urllib.error.HTTPError as e:
-            if e.code == 404:
-                return 0          # Zähler existiert noch nicht
-            time.sleep(1.2)       # 429: Dienst bremst, kurz warten
-        except Exception:
-            time.sleep(1.2)
-    return "?"
+ALL = json.load(urllib.request.urlopen("https://pedalcraft-stats.pages.dev/all", timeout=15))  # eine Anfrage für alles
 
 
-import urllib.parse  # noqa: E402
+def get(key):
+    return ALL.get(key, 0)
 
-import urllib.error  # noqa: E402
+
 kws = sorted({k.strip() for k in KEYWORDS.replace("\n", "").split("|") if k.strip()})
 keys = ["ad-" + e for e in EVENTS] + [f"ad-{d}-{e}" for d in DEVICES for e in EVENTS]
-with ThreadPoolExecutor(2) as ex:
-    val = dict(zip(keys, ex.map(get, keys)))
-kwkeys = [f"adkw-{slug(k)}-{e}" for k in kws for e in ("land", "ride", "trainer", "buy")]
-if val["ad-land"] not in (0, "?"):   # Suchbegriffe nur abfragen, wenn es Anzeigen-Besuche gibt
-    with ThreadPoolExecutor(2) as ex:
-        val.update(zip(kwkeys, ex.map(get, kwkeys)))
-else:
-    val.update({k: 0 for k in kwkeys})
+keys += [f"adkw-{slug(k)}-{e}" for k in kws for e in ("land", "ride", "trainer", "buy")]
+val = {k: get(k) for k in keys}
 
 print("Alle Anzeigen:  " + "  ".join(f"{e}={val['ad-' + e]}" for e in EVENTS))
 for d, name in DEVICES.items():
@@ -60,3 +41,8 @@ rows = [(k, *(val[f"adkw-{slug(k)}-{e}"] for e in ("land", "ride", "trainer", "b
 for k, land, ride, tr, buy in sorted(rows, key=lambda r: -r[1]):
     if land:
         print(f"  {k:42s} land={land:3d} ride={ride:3d} trainer={tr:3d} buy={buy:3d}")
+
+print("\nGesamt (alle Besucher):")
+for k in ["home", "visit", "demo", "connect-tap", "nobt", "nobt-ios", "bt-cancel", "trainer", "click",
+          "ride-5m", "ride-10m", "ride-20m", "ride-30m", "ride-60m", "offer-ride10", "buy-ride10", "buy-click"]:
+    print(f"  {k:14s} {ALL.get(k, 0)}")
