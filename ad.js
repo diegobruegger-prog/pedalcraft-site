@@ -1,20 +1,26 @@
-// Anonyme Messung für Google-Anzeigen: nur wenn die Adresse ?pc_ad=<anzeigengruppe>-<gerät> enthält.
-// Keine Cookies, keine persönlichen Daten: zählt pro Anzeigengruppe/Gerät, wie weit Besucher kommen.
+// Anonyme Messung für Google-Anzeigen: nur wenn die Adresse ?pc_kw=<keyword>&pc_dev=<gerät> enthält.
+// Keine Cookies, keine persönlichen Daten: zählt pro Suchbegriff und Gerät, wie weit Besucher kommen.
 (function () {
-  var K = 'pc_ad';
+  function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9äöü]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'x'; }
+  function send(key) { fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/' + key, { mode: 'no-cors', keepalive: true }).catch(function () {}); }
   function hit(ev) {
     try {
-      var a = sessionStorage.getItem(K);
-      if (!a || location.hostname === 'localhost') return;
-      var s = 'pc_ad_' + ev;
-      if (sessionStorage.getItem(s)) return;
-      sessionStorage.setItem(s, '1');
-      fetch('https://abacus.jasoncameron.dev/hit/pedalcraft-online/ad-' + a + '-' + ev, { mode: 'no-cors', keepalive: true }).catch(function () {});
+      var kw = sessionStorage.getItem('pc_kw'), dev = sessionStorage.getItem('pc_dev');
+      if (!kw || location.hostname === 'localhost') return;
+      if (sessionStorage.getItem('pc_ad_' + ev)) return;
+      sessionStorage.setItem('pc_ad_' + ev, '1');
+      send('ad-' + ev);                       // alle Anzeigen zusammen
+      send('ad-' + dev + '-' + ev);           // pro Gerät (m, t, c)
+      if (ev === 'land' || ev === 'ride' || ev === 'trainer' || ev === 'buy') send('adkw-' + kw + '-' + ev);  // pro Suchbegriff
     } catch (e) {}
   }
   try {
-    var q = new URLSearchParams(location.search), a = q.get('pc_ad');
-    if (a && /^[0-9a-z-]{1,40}$/.test(a)) { sessionStorage.setItem(K, a); hit('land'); }
+    var q = new URLSearchParams(location.search);
+    if (q.get('pc_kw') !== null) {
+      sessionStorage.setItem('pc_kw', slug(q.get('pc_kw')));
+      sessionStorage.setItem('pc_dev', /^[mtc]$/.test(q.get('pc_dev') || '') ? q.get('pc_dev') : 'x');
+      hit('land');
+    }
   } catch (e) {}
   window.pcAd = hit;
   document.addEventListener('click', function (e) {
