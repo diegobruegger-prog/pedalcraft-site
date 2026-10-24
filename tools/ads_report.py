@@ -21,7 +21,7 @@ def slug(s):
     return (re.sub(r"[^a-z0-9äöü]+", "-", s.lower()).strip("-")[:40]) or "x"
 
 
-ALL = json.load(urllib.request.urlopen("https://pedalcraft-stats.pages.dev/all", timeout=15))  # eine Anfrage für alles
+ALL = json.load(urllib.request.urlopen(urllib.request.Request("https://pedalcraft-stats.pages.dev/all", headers={"User-Agent": "Mozilla/5.0 pedalcraft-report"}), timeout=15))  # eine Anfrage für alles
 
 
 def get(key):
