@@ -512,7 +512,15 @@ const closeWelcome = () => $('welcome').classList.add('hidden');
 $('start').onclick = needBT(async () => { closeWelcome(); await connectTrainer(); });
 $('demo').onclick = () => { closeWelcome(); startDemo(); };
 $('close').onclick = closeWelcome;
-if (!hasBT) { $('nobt').classList.remove('hidden'); $('start').classList.add('hidden'); }
+if (!hasBT) {
+  $('nobt').classList.remove('hidden'); $('start').classList.add('hidden'); $('nobt-actions').classList.remove('hidden');
+  $('sendlink').onclick = async () => {
+    ping('send-link'); const url = 'https://pedalcraft.online/ride/';
+    try { if (navigator.share) { await navigator.share({ title: 'PedalCraft', text: 'Ride my trainer in Chrome:', url }); return; } } catch (e) { return; }
+    try { await navigator.clipboard.writeText(url); toast('Link copied. Paste it into Chrome on your computer.', 4000); } catch (e) { toast(url, 8000); }
+  };
+  $('nobt-buy').onclick = () => ping('buy-click');
+}
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
