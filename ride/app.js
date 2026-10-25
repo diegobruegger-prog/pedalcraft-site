@@ -337,7 +337,28 @@ function ping(ev) {
   if (window.pcAd && ev !== 'buy-click') window.pcAd(ev === 'visit' ? 'ride' : ev);
   if (pinged.has(ev) || location.hostname === 'localhost') return; pinged.add(ev);
   fetch('https://pedalcraft-stats.pages.dev/hit/' + ev, { mode: 'no-cors', keepalive: true }).catch(() => {});
+  // Wichtige Schritte zusätzlich nach Herkunft und System zählen (anonym, nur Kategorien)
+  if (SEG_EVENTS && SEG && SEG_EVENTS.has(ev)) for (const k of ['src-' + SEG.src, 'os-' + SEG.os])
+    fetch('https://pedalcraft-stats.pages.dev/hit/' + k + '-' + ev, { mode: 'no-cors', keepalive: true }).catch(() => {});
 }
+var SEG_EVENTS = new Set(['visit', 'demo', 'connect-tap', 'nobt', 'trainer', 'click', 'ride-1m', 'ride-10m', 'buy-click']);
+var SEG = (() => {
+  let ref = '';
+  try { ref = new URL(document.referrer).hostname.replace(/^www\./, ''); } catch {}
+  let src = sessionStorage.getItem('pc_src');
+  if (!src) {
+    const ad = /pc_kw=/.test(location.search) || sessionStorage.getItem('pc_kw');
+    src = ad ? 'ads' : !ref ? 'direct' : ref === location.hostname ? 'site'
+      : /google\./.test(ref) ? 'google' : /bing\.|duckduckgo|ecosia|yahoo/.test(ref) ? 'search'
+      : /reddit/.test(ref) ? 'reddit' : /gumroad/.test(ref) ? 'gumroad' : /youtube|youtu\.be/.test(ref) ? 'youtube'
+      : /chatgpt|openai|perplexity|claude|gemini|copilot/.test(ref) ? 'ai' : /facebook|instagram|t\.co|x\.com|threads|bsky/.test(ref) ? 'social' : 'other';
+    try { sessionStorage.setItem('pc_src', src); } catch {}
+  }
+  const ua = navigator.userAgent;
+  const os = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'ios'
+    : /Android/.test(ua) ? 'android' : /Macintosh/.test(ua) ? 'mac' : /Windows/.test(ua) ? 'win' : /CrOS/.test(ua) ? 'chromeos' : 'other';
+  return { src, os };
+})();
 
 // ---------- Demo ----------
 let demoTimer = null;
