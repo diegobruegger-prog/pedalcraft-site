@@ -51,7 +51,7 @@ for k in ["home", "visit", "demo", "connect-tap", "nobt", "nobt-ios", "bt-cancel
 print("\nWer kommt wie weit? (ab 25.10. 14:15, nach Herkunft / System / Land)")
 SEG_EV = ["visit", "demo", "connect-tap", "nobt", "trainer", "click", "ride-1m", "ride-10m", "buy-click"]
 for pre in ("src", "os", "cc"):
-    groups = sorted({k[len(pre) + 1:].rsplit("-", 1)[0] for k in ALL if k.startswith(pre + "-") and any(k.endswith("-" + e) for e in SEG_EV)})
+    groups = sorted({k[len(pre) + 1:-len(e) - 1] for k in ALL for e in SEG_EV if k.startswith(pre + "-") and k.endswith("-" + e)})
     for g in groups:
         cells = [f"{e}={ALL.get(f'{pre}-{g}-{e}', 0)}" for e in SEG_EV if ALL.get(f"{pre}-{g}-{e}", 0)]
         print(f"  {pre}:{g:10s} " + "  ".join(cells))
