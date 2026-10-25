@@ -47,3 +47,11 @@ print("\nGesamt (alle Besucher):")
 for k in ["home", "visit", "demo", "connect-tap", "nobt", "nobt-ios", "bt-cancel", "trainer", "click", "shifts-1", "shifts-10", "shifts-50", "ride-1m", "ride-3m",
           "ride-5m", "ride-10m", "ride-20m", "ride-30m", "ride-60m", "offer-ride10", "buy-ride10", "subscribe-ride", "subscribe-home", "subscribe-guide", "buy-click"]:
     print(f"  {k:14s} {ALL.get(k, 0)}")
+
+print("\nWer kommt wie weit? (ab 25.10. 14:15, nach Herkunft / System / Land)")
+SEG_EV = ["visit", "demo", "connect-tap", "nobt", "trainer", "click", "ride-1m", "ride-10m", "buy-click"]
+for pre in ("src", "os", "cc"):
+    groups = sorted({k[len(pre) + 1:].rsplit("-", 1)[0] for k in ALL if k.startswith(pre + "-") and any(k.endswith("-" + e) for e in SEG_EV)})
+    for g in groups:
+        cells = [f"{e}={ALL.get(f'{pre}-{g}-{e}', 0)}" for e in SEG_EV if ALL.get(f"{pre}-{g}-{e}", 0)]
+        print(f"  {pre}:{g:10s} " + "  ".join(cells))
