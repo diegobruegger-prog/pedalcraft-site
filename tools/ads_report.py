@@ -15,7 +15,10 @@ zwift subscription price|zwift cost|virtual shifting|zwift play controller|zwift
 zwift click ohne abo|zwift click ohne zwift|zwift click schalten ohne abo|mit zwift click schalten|zwift click ohne abonnement|
 zwift cog ohne abo|zwift cog ohne zwift|kickr core 2 ohne zwift|kickr core 2 ohne abo|zwift ohne abo|zwift abo kündigen|
 zwift abo kosten|virtuelles schalten ohne zwift|zwift hub ohne abo|rollentrainer app mac|
-kickr core 2 app|zwift subscription alternative|virtual shifting app|smart trainer app|indoor cycling app"""
+kickr core 2 app|zwift subscription alternative|virtual shifting app|smart trainer app|indoor cycling app|
+zwift click tacx|zwift click tacx neo|zwift click elite|zwift click elite suito|zwift click saris|zwift click wahoo kickr|
+zwift click any trainer|zwift click compatible trainers|zwift click windows|zwift click android|zwift click pc|
+zwift click other trainer|virtual shifting tacx|virtual shifting elite|virtual shifting any trainer|zwift play tacx"""
 
 
 def slug(s):
