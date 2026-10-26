@@ -524,6 +524,15 @@ function showRideOffer() {
 }
 document.querySelectorAll('.lock').forEach(b => b.onclick = () => showPro(b.dataset.f));
 $('pro-close').onclick = () => $('pro').classList.add('hidden');
+// Nicht-Mac: klar sagen, dass die App nur für Mac ist, und Nachfrage nach einer eigenen Version messen (kein Formular, nur ein Zähler)
+if (!['mac', 'ios'].includes(SEG.os)) {
+  const sys = { win: 'Windows', android: 'Android', chromeos: 'Chromebook' }[SEG.os] || 'my computer';
+  for (const id of ['pro-buy', 'nobt-buy']) if ($(id)) $(id).textContent = 'Mac app only · $29';
+  const want = document.createElement('button');
+  want.className = 'btn'; want.id = 'want-other'; want.textContent = 'I want it for ' + sys;
+  want.onclick = () => { ping('want-' + SEG.os); want.disabled = true; want.textContent = 'Noted, thanks'; toast('Thanks! The free browser version works on ' + sys + ' today.'); };
+  $('pro-close').before(want);
+}
 $('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); };
 // Nach 10 und 30 Minuten echter Fahrt freundlich daran erinnern, dass die Fahrt nicht gespeichert wird
 let nudged = new Set();
