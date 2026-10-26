@@ -100,6 +100,8 @@ let trainer = null;
 
 function report({ power, cadence, speed, hr }) {
   const now = performance.now();
+  // Einmal pro Sitzung melden, ob überhaupt Daten vom Trainer kommen (unterscheidet «nicht gefahren» von «keine Daten»)
+  if (!ride.demo) { if (power != null || cadence != null) ping('data'); if (power > 0) ping('data-power'); if (cadence > 0) ping('data-cadence'); }
   if (power != null) { ride.power = Math.max(0, power); ride.t.power = now; }
   if (cadence != null) { ride.cadence = Math.max(0, Math.round(cadence)); ride.t.cadence = now; }
   if (speed != null) { ride.speed = Math.max(0, speed); ride.t.speed = now; }
