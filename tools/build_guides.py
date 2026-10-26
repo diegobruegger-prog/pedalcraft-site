@@ -9,6 +9,72 @@ SITE = "https://pedalcraft.online"
 
 GUIDES = [
     {
+        "slug": "zwift-play-without-zwift",
+        "title": "Use Zwift Play controllers without Zwift",
+        "desc": "Shift your smart trainer with Zwift Play controllers without the Zwift app or a subscription. Free in Chrome or Edge on Windows, Mac or Android.",
+        "h1": "Zwift Play, without Zwift",
+        "lead": "Zwift Play controllers are Bluetooth devices. PedalCraft connects them in your browser and turns the shift paddles into gear changes on your trainer. No Zwift app, no account.",
+        "sections": [
+            ("What works", "<ul><li>Shift paddles: harder and easier</li><li>Both controllers at the same time</li><li>Any Zwift Cog trainer (real virtual shifting) or Bluetooth FTMS trainer (grade per gear)</li></ul>"),
+            ("Connect", "<ol><li>Quit Zwift on all devices.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect your trainer, then press a button on each Play controller and click Connect Click.</li></ol>"),
+        ],
+        "faq": [
+            ("Do Zwift Play controllers need a subscription?", "Not with PedalCraft. They connect over Bluetooth directly in the browser."),
+            ("Does steering work?", "No. PedalCraft has no virtual world, only riding, shifting and training."),
+            ("Is it free?", "Yes, riding and shifting is free. Pro adds ERG workouts, an FTP test and a ride log for $39 once."),
+        ],
+    },
+    {
+        "slug": "zwift-hub-without-zwift",
+        "title": "Ride a Zwift Hub without a Zwift subscription",
+        "desc": "Keep virtual shifting on your Zwift Hub One with the Zwift Click, without paying for Zwift. Free in Chrome or Edge on Windows, Mac or Android.",
+        "h1": "Zwift Hub without Zwift",
+        "lead": "The Zwift Hub One shifts in its firmware, the Click only tells it which gear. PedalCraft sends those gears the same way Zwift does, so you keep virtual shifting after you cancel. Free, in your browser.",
+        "sections": [
+            ("What you keep", "<ul><li>Virtual shifting with the Zwift Click</li><li>Live power, cadence, speed and zones</li><li>Grade changes with the arrow keys</li><li>ERG workouts and an FTP test with PedalCraft Pro</li></ul>"),
+            ("Connect", "<ol><li>Quit Zwift on every device.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, then the Click.</li></ol>"),
+        ],
+        "faq": [
+            ("Does the Zwift Hub work without Zwift?", "Yes. It's a Bluetooth smart trainer. PedalCraft connects directly and uses the same virtual shifting messages as Zwift."),
+            ("Do I need the Zwift Companion app?", "Only for firmware updates. To ride, PedalCraft connects directly."),
+            ("Windows or Mac?", "Both, plus Android and Chromebook, in Chrome or Edge."),
+        ],
+    },
+    {
+        "slug": "free-indoor-cycling-app-windows",
+        "title": "Free indoor cycling app for Windows (no subscription)",
+        "desc": "Ride your Bluetooth smart trainer on a Windows PC for free: live watts, cadence, gears and shifting with Zwift Click, in Chrome or Edge. No install, no account.",
+        "h1": "Free indoor cycling on Windows",
+        "lead": "Open a browser tab, connect your smart trainer and ride. PedalCraft shows your watts, cadence, speed and zones, and lets you shift with a Zwift Click or the keyboard. Free, no install, no account, no subscription.",
+        "sections": [
+            ("What you get for free", "<ul><li>Live power, cadence, speed, heart rate and power zones</li><li>Virtual gears: Zwift Click, Play or Ride, or the arrow keys</li><li>Grade changes</li><li>A rider that pedals at your cadence</li></ul>"),
+            ("What you need", "<ul><li>Windows 10 or 11 with Bluetooth</li><li>Chrome or Edge</li><li>A Bluetooth smart trainer (FTMS or Zwift Cog)</li></ul>"),
+            ("Not a Zwift replacement", "<p>No virtual world, no racing, no group rides. Just your trainer, your numbers and your gears, without a monthly fee.</p>"),
+        ],
+        "faq": [
+            ("Is there a free indoor cycling app for Windows?", "Yes. PedalCraft runs free in Chrome or Edge on Windows and connects your smart trainer over Bluetooth."),
+            ("Can I do structured workouts?", "With PedalCraft Pro: ERG workouts from 20 minutes to 2 hours and an FTP test, $39 once."),
+            ("Are rides saved?", "In the free version, no. Pro saves rides in your browser and exports them for Strava."),
+        ],
+    },
+    {
+        "slug": "de/zwift-click-jeder-trainer",
+        "lang": "de",
+        "title": "Zwift Click mit jedem Smart-Trainer (Tacx, Elite, Wahoo)",
+        "desc": "Mit dem Zwift Click einen Tacx, Elite, Wahoo oder Saris schalten, gratis in Chrome oder Edge auf Windows, Mac oder Android. Ohne Zwift-Abo.",
+        "h1": "Zwift Click. Jeder Smart-Trainer.",
+        "lead": "Tacx, Elite, Wahoo, Saris: Wenn dein Trainer Bluetooth FTMS spricht, kann dein Zwift Click ihn schalten. Gratis im Browser, auf Windows, Mac oder Android. Ohne Zwift-Abo, ohne Konto.",
+        "sections": [
+            ("Welche Trainer gehen", "<ul><li><b>Zwift-Cog-Trainer</b> (Wahoo KICKR CORE 2, Zwift Hub One): echtes virtuelles Schalten in der Trainer-Firmware, wie in Zwift.</li><li><b>Bluetooth-FTMS-Trainer</b>, also die meisten Smart-Trainer seit etwa 2020 (zum Beispiel Tacx Neo 2T und Flux S mit aktueller Firmware, Elite Direto, Suito und Justo, Wahoo KICKR, Saris H3): Jeder Gang ändert die simulierte Steigung, das fährt sich wie Schalten.</li><li>Ältere Trainer, die nur ANT+ oder Tacx FE-C können, gehen noch nicht.</li></ul><p>Unsicher? <a href=\"/ride/\">Gratis-Version öffnen</a> und auf Connect trainer klicken. Erscheint dein Trainer in der Liste, geht es.</p>"),
+            ("So verbindest du", "<ol><li>Zwift und andere Trainer-Apps auf allen Geräten beenden.</li><li><a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome oder Edge öffnen.</li><li>Connect trainer, dann Connect Click.</li><li>Losfahren: + schwerer, − leichter.</li></ol>"),
+        ],
+        "faq": [
+            ("Kann ich den Zwift Click mit einem Tacx oder Elite benutzen?", "Ja, wenn der Trainer Bluetooth FTMS kann, und das können die meisten aktuellen Modelle. Jeder Druck auf den Click ändert die simulierte Steigung."),
+            ("Geht das auf Windows?", "Ja, in Chrome oder Edge auf Windows 10 oder 11 mit Bluetooth."),
+            ("Was kostet es?", "Fahren und Schalten ist gratis. PedalCraft Pro mit ERG-Workouts, FTP-Test und Fahrtenbuch kostet einmal $39."),
+        ],
+    },
+    {
         "slug": "zwift-click-any-trainer",
         "title": "Use the Zwift Click with any smart trainer",
         "desc": "Shift Tacx, Elite, Wahoo, Saris and other Bluetooth smart trainers with your Zwift Click, free in Chrome or Edge on Windows, Mac or Android. No Zwift subscription.",
