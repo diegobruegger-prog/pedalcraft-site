@@ -781,6 +781,13 @@ document.querySelectorAll('.lock').forEach(b => b.onclick = () => showPro(b.data
 $('pro-close').onclick = () => $('pro').classList.add('hidden');
 $('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); };
 $('upsell-unlock').onclick = showUnlock;
+// Weitersagen: teilen oder Link kopieren (zählt nur, dass geteilt wurde)
+$('share').onclick = async () => {
+  ping('share'); const url = 'https://pedalcraft.online/?ref=share';
+  const text = 'Ride your smart trainer and shift with a Zwift Click, free in the browser, no Zwift subscription:';
+  try { if (navigator.share) { await navigator.share({ title: 'PedalCraft', text, url }); return; } } catch (e) { return; }
+  try { await navigator.clipboard.writeText(text + ' ' + url); toast('Link copied. Paste it wherever your riding friends are.', 4000); } catch (e) { toast(url, 8000); }
+};
 $('pro-key-in').onkeydown = e => { if (e.key === 'Enter') $('pro-key-go').click(); };
 renderPro();
 if (location.hostname === 'localhost') window.__pc = { samples, saveRide, tcx, dbAll, ride, startWorkout, FTP_TEST, get wo() { return wo; } };   // nur zum Testen
