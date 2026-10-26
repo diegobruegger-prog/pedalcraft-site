@@ -138,7 +138,7 @@
   }
   @media (max-width: 560px) { body { font-size: 17px; } .eyebrow { font-size: 14px; } .hero .actions { gap: 20px; } .wrap { padding: 0 16px; } .frame .bar { display: none; } }
 </style>
-<script src="/ad.js?v=6"></script>
+<script src="/ad.js?v=7"></script>
 </head>
 <body>
 <div class="wrap">
@@ -279,7 +279,7 @@
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
     els.forEach(function (e) { io.observe(e); });
   })();
-  if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
+  if (location.hostname !== 'localhost' && !/bot|crawl|spider|headless|google-inspectiontool/i.test(navigator.userAgent)) fetch('https://pedalcraft-stats.pages.dev/hit/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
   document.getElementById('buy-top').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
   document.getElementById('buy').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
 </script>

@@ -4,6 +4,7 @@
   function slug(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9äöü]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'x'; }
   function send(key) { fetch('https://pedalcraft-stats.pages.dev/hit/' + key, { mode: 'no-cors', keepalive: true }).catch(function () {}); }
   function hit(ev) {
+    if (/bot|crawl|spider|headless|google-inspectiontool/i.test(navigator.userAgent)) return;
     try {
       var kw = sessionStorage.getItem('pc_kw'), dev = sessionStorage.getItem('pc_dev');
       if (!kw || location.hostname === 'localhost') return;
@@ -26,7 +27,9 @@
     }
   } catch (e) {}
   // Anonymer Besuchsverlauf: zufällige ID pro Tab (sessionStorage), keine Cookies, keine IP, nur die Abfolge der Schritte
-  var EMBED = /[?&]embed=1/.test(location.search), T0 = Date.now(), seen = {};
+  // Suchmaschinen-Bots (z. B. Googlebot rendert mit Chrome) nicht als Besucher zählen
+  var BOT = /bot|crawl|spider|slurp|lighthouse|headless|google-inspectiontool|bingpreview|facebookexternalhit|preview/i.test(navigator.userAgent) || navigator.webdriver === true;
+  var EMBED = BOT || /[?&]embed=1/.test(location.search), T0 = Date.now(), seen = {};
   function sid() {
     try {
       var s = sessionStorage.getItem('pc_sid');

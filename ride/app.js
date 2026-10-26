@@ -345,8 +345,9 @@ function safe(fn) { return async () => { try { await fn(); } catch (e) { ping(e 
 // Anonymous usage counter (no personal data, no cookies): one ping per event type and session.
 const pinged = new Set();
 const EMBED = new URLSearchParams(location.search).has('embed'); // live demo on the home page
+const BOT = /bot|crawl|spider|slurp|lighthouse|headless|google-inspectiontool|bingpreview/i.test(navigator.userAgent) || navigator.webdriver === true;
 function ping(ev) {
-  if (EMBED) return;
+  if (EMBED || BOT) return;
   if (window.pcAd && ev !== 'buy-click') window.pcAd(ev === 'visit' ? 'ride' : ev);
   if (pinged.has(ev) || location.hostname === 'localhost') return; pinged.add(ev);
   fetch('https://pedalcraft-stats.pages.dev/hit/' + ev, { mode: 'no-cors', keepalive: true }).catch(() => {});
