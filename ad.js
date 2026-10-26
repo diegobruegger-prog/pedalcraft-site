@@ -42,7 +42,7 @@
   }
   try {
     var page = location.pathname.replace(/index\.html$/, '') || '/';
-    if (!sessionStorage.getItem('pc_jstart')) {
+    if (!EMBED && location.hostname !== 'localhost' && !sessionStorage.getItem('pc_jstart')) {
       sessionStorage.setItem('pc_jstart', '1');
       var ref = ''; try { ref = new URL(document.referrer).hostname.replace(/^www\./, ''); } catch (e) {}
       var ua = navigator.userAgent;
@@ -51,8 +51,14 @@
       var br = /Edg\//.test(ua) ? 'edge' : /Chrome\//.test(ua) ? 'chrome' : /Firefox\//.test(ua) ? 'firefox' : /Safari\//.test(ua) ? 'safari' : 'other';
       j('start:' + os + ':' + br + ':' + (navigator.language || 'x').slice(0, 5) + ':w' + Math.round(innerWidth / 100) * 100);
       j('from:' + (sessionStorage.getItem('pc_kw') ? 'ad:' + sessionStorage.getItem('pc_kw') : ref || 'direct'));
+      // Tägliche Nutzer: ein Zähler pro Tag (UTC) und Besuch, dazu wie viele die Fahrseite öffnen
+      var day = new Date().toISOString().slice(0, 10);
+      try { sessionStorage.setItem('pc_day', day); } catch (e) {}
+      send('day-' + day);
+      if (/^\/ride\//.test(location.pathname)) { send('day-' + day + '-ride'); try { sessionStorage.setItem('pc_dayride', '1'); } catch (e) {} }
     }
     j('page:' + page);
+    try { if (/^\/ride\//.test(location.pathname) && !EMBED && sessionStorage.getItem('pc_day') && !sessionStorage.getItem('pc_dayride')) { sessionStorage.setItem('pc_dayride', '1'); send('day-' + sessionStorage.getItem('pc_day') + '-ride'); } } catch (e) {}
     var marks = [25, 50, 75, 100];
     addEventListener('scroll', function () {
       var h = document.documentElement.scrollHeight - innerHeight; if (h < 200) return;

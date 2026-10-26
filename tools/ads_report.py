@@ -72,3 +72,9 @@ print(f"\nBesuchsverläufe der letzten 7 Tage: {len(JR)} (davon mit Kaufklick: {
 for x in JR[:25]:
     t = datetime.datetime.fromtimestamp(x["start"] / 1000).strftime("%d.%m. %H:%M")
     print(f"  {t} {x['cc']}: " + " → ".join(f"{e}" + (f" (+{s}s)" if s else "") for s, e in x["steps"]))
+
+# Tägliche Nutzer (Ziel: 100 pro Tag)
+days = sorted({k[4:14] for k in ALL if re.match(r"day-\d{4}-\d{2}-\d{2}$", k)})
+print("\nTägliche Nutzer (Besuche pro Tag, UTC) · davon Fahrseite:")
+for d in days[-14:]:
+    print(f"  {d}: {ALL.get('day-' + d, 0):4d} · Fahrseite {ALL.get('day-' + d + '-ride', 0)}")
