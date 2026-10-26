@@ -9,6 +9,91 @@ SITE = "https://pedalcraft.online"
 
 GUIDES = [
     {
+        "slug": "zwift-click-any-trainer",
+        "title": "Use the Zwift Click with any smart trainer",
+        "desc": "Shift Tacx, Elite, Wahoo, Saris and other Bluetooth smart trainers with your Zwift Click, free in Chrome or Edge on Windows, Mac or Android. No Zwift subscription.",
+        "h1": "Your Zwift Click. Any smart trainer.",
+        "lead": "Tacx, Elite, Wahoo, Saris, JetBlack, Van Rysel: if your trainer speaks Bluetooth FTMS, your Zwift Click can shift it. Free in your browser, on Windows, Mac or Android. No Zwift subscription, no account.",
+        "sections": [
+            ("Which trainers work", "<ul><li><b>Zwift Cog trainers</b> (Wahoo KICKR CORE 2, Zwift Hub One): real virtual shifting in the trainer firmware, like in Zwift.</li><li><b>Bluetooth FTMS trainers</b>, which is most smart trainers sold since about 2020 (for example Tacx Neo 2T and Flux S with current firmware, Elite Direto, Suito and Justo, Wahoo KICKR, Saris H3): every gear changes the simulated grade, so it rides like shifting.</li><li>Older trainers that only speak ANT+ or Tacx FE-C over Bluetooth don't connect yet.</li></ul><p>Not sure? <a href=\"/ride/\">Open the free version</a> and click Connect trainer. If your trainer shows up in the list, it works.</p>"),
+            ("How to connect", "<ol><li>Quit Zwift and other trainer apps on every device. Only one app can control the trainer.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Click <b>Connect trainer</b> and pick yours.</li><li>Press a button on each Click, then <b>Connect Click</b>.</li><li>Ride. <b>+</b> is harder, <b>−</b> is easier.</li></ol>"),
+            ("Windows, Mac, Android", "<p>It runs in Chrome or Edge on Windows 10 and 11, macOS, Android and Chromebook. Your computer needs Bluetooth (built in, or a small USB Bluetooth adapter). iPhone and Safari can't do Web Bluetooth.</p>"),
+            ("Not a Zwift replacement", "<p>There's no virtual world and no racing. PedalCraft is a simple tool to ride, shift and train without a monthly fee.</p>"),
+        ],
+        "faq": [
+            ("Can I use the Zwift Click with a Tacx or Elite trainer?", "Yes, if the trainer supports Bluetooth FTMS, which most current models do. Each Click press changes the simulated grade, so it feels like shifting gears."),
+            ("Does it work on Windows?", "Yes, in Chrome or Edge on Windows 10 or 11 with Bluetooth."),
+            ("Is it free?", "Riding and shifting is free. PedalCraft Pro adds ERG workouts, an FTP test and a ride log for $39 once."),
+        ],
+    },
+    {
+        "slug": "zwift-click-tacx",
+        "title": "Zwift Click with a Tacx trainer (Neo, Flux, Flow)",
+        "desc": "Shift your Tacx Neo, Flux or Flow with a Zwift Click, without Zwift. Free in Chrome or Edge on Windows, Mac or Android.",
+        "h1": "Zwift Click on a Tacx trainer",
+        "lead": "Got a Tacx Neo, Flux or Flow and a Zwift Click? PedalCraft connects both in your browser and turns every Click into a gear change on the Tacx. Free, no subscription.",
+        "sections": [
+            ("Which Tacx models", "<p>Tacx trainers with current firmware support Bluetooth FTMS, the standard PedalCraft uses: Neo 2T, Neo 3M, Flux S and 2, Flow Smart and others. Update the firmware in the Tacx Training app first. The very first Neo and Flux and the Vortex only speak Tacx FE-C and don't connect yet.</p>"),
+            ("How shifting feels", "<p>Each gear changes the simulated grade by one percent. Shift up and the Tacx gets heavier, shift down and it gets lighter, the way it does on a road.</p>"),
+            ("Connect in a minute", "<ol><li>Close Zwift and the Tacx app.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, pick your Tacx, then connect the Click.</li></ol>"),
+        ],
+        "faq": [
+            ("Does the Tacx Neo work with the Zwift Click without Zwift?", "Yes, with current firmware the Neo speaks Bluetooth FTMS and PedalCraft shifts it with the Click."),
+            ("Do I need the Tacx app?", "Only once to update the firmware. To ride, PedalCraft connects directly."),
+            ("Does ERG mode work on Tacx?", "Yes. PedalCraft Pro sends the target watts over FTMS and the Tacx holds them."),
+        ],
+    },
+    {
+        "slug": "zwift-click-elite",
+        "title": "Zwift Click with an Elite trainer (Direto, Suito, Justo)",
+        "desc": "Use a Zwift Click to shift an Elite Direto, Suito or Justo smart trainer, free in Chrome or Edge. No Zwift subscription.",
+        "h1": "Zwift Click on an Elite trainer",
+        "lead": "Elite Direto, Suito, Justo or Avanti: PedalCraft connects your Elite and your Zwift Click in the browser, and every press of the Click shifts a gear. Free, no account.",
+        "sections": [
+            ("Which Elite models", "<p>Elite smart trainers with Bluetooth FTMS work, which covers the current Direto, Suito, Justo and Avanti models. Update the firmware in Elite's myETraining app if the trainer doesn't show up.</p>"),
+            ("How to connect", "<ol><li>Quit Zwift on every device.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, pick your Elite, then connect the Click.</li></ol>"),
+            ("What you get", "<p>Live watts, cadence, speed and zones, shifting with the Click, and grade changes with the arrow keys. PedalCraft Pro adds ERG workouts, an FTP test and a ride log.</p>"),
+        ],
+        "faq": [
+            ("Can the Zwift Click shift an Elite Suito?", "Yes. PedalCraft turns each Click press into a grade change on the Suito over Bluetooth FTMS."),
+            ("Does it need Zwift?", "No. It runs in your browser without the Zwift app or an account."),
+            ("Windows or Mac?", "Both, plus Android and Chromebook, in Chrome or Edge."),
+        ],
+    },
+    {
+        "slug": "zwift-click-windows",
+        "title": "Use the Zwift Click on Windows without Zwift",
+        "desc": "Connect a Zwift Click and your smart trainer on a Windows PC in Chrome or Edge, and shift without a Zwift subscription. Free, no install.",
+        "h1": "Zwift Click on Windows. No Zwift.",
+        "lead": "Your Windows PC can talk to the Zwift Click and your trainer straight from Chrome or Edge. Nothing to install, no account, no subscription.",
+        "sections": [
+            ("What you need", "<ul><li>Windows 10 or 11 with Bluetooth (built in or a USB adapter)</li><li>Chrome or Edge</li><li>A Zwift Click, Play or Ride and a Bluetooth smart trainer</li></ul>"),
+            ("Connect", "<ol><li>Close Zwift.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a>.</li><li>Connect trainer, then the Click. Ride and shift.</li></ol>"),
+            ("If the trainer doesn't show up", "<p>Make sure no other app or phone is connected to the trainer, and that Windows Bluetooth is on. Desktop PCs without Bluetooth need a small USB Bluetooth adapter.</p>"),
+        ],
+        "faq": [
+            ("Do I need to install anything on Windows?", "No. PedalCraft runs in Chrome or Edge using Web Bluetooth."),
+            ("Does ERG work on Windows?", "Yes, with PedalCraft Pro: ERG workouts, FTP test and a ride log, $39 once."),
+            ("Does Firefox work?", "No, Firefox doesn't support Web Bluetooth. Use Chrome or Edge."),
+        ],
+    },
+    {
+        "slug": "zwift-click-android",
+        "title": "Use the Zwift Click on Android without Zwift",
+        "desc": "Ride your smart trainer and shift with a Zwift Click from an Android phone or tablet in Chrome. Free, no app, no Zwift subscription.",
+        "h1": "Zwift Click on Android. No app.",
+        "lead": "An Android phone or tablet is enough: open PedalCraft in Chrome, connect your trainer and Click, and ride. No app to install, no subscription.",
+        "sections": [
+            ("Connect", "<ol><li>Close Zwift and the Zwift Companion app.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome.</li><li>Allow Bluetooth and location if Android asks (Android needs it to scan).</li><li>Connect trainer, then the Click.</li></ol>"),
+            ("Tablet on the bars", "<p>A tablet on the handlebars makes a great display: big watts, cadence, gear and time.</p>"),
+        ],
+        "faq": [
+            ("Is there an app to install?", "No. It runs in Chrome on Android."),
+            ("Does it work on iPhone?", "No, iPhone browsers can't use Web Bluetooth. Use Android, or Chrome on a computer."),
+            ("Can I save rides on Android?", "Yes, with PedalCraft Pro: rides are saved in the browser and you can download them for Strava."),
+        ],
+    },
+    {
         "slug": "de/zwift-click-ohne-abo",
         "lang": "de",
         "title": "Mit dem Zwift Click schalten, ohne Zwift-Abo",
@@ -231,7 +316,7 @@ def main():
                           subhead="Nicht am Computer? Link per Mail:" if g.get("lang") == "de" else "Not at your computer? Get the link by email:",
                           cta1="Jetzt gratis fahren" if g.get("lang") == "de" else "Start riding",
                           cta2="Demo ansehen ›" if g.get("lang") == "de" else "Try the demo ›",
-                          maccard=(f'<b>PedalCraft für Mac</b>: FTP-Rampentest, ERG-Workouts von 20 Minuten bis 2 Stunden, Fahrtenbuch, Strava-Upload. <a href="{BUY}">Einmal $39, zum Start $29, kein Abo</a>.' if g.get("lang") == "de" else f'<b>PedalCraft for Mac</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log, Strava upload. <a href="{BUY}">$39 once, $29 at launch, no subscription</a>.'))
+                          maccard=(f'<b>PedalCraft Pro</b>: FTP-Rampentest, ERG-Workouts von 20 Minuten bis 2 Stunden, Fahrtenbuch. Im Browser auf Windows, Mac und Android, dazu die Mac-App. <a href="{BUY}">Einmal $39, zum Start $29, kein Abo</a>.' if g.get("lang") == "de" else f'<b>PedalCraft Pro</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log. In the browser on Windows, Mac and Android, plus a native Mac app. <a href="{BUY}">$39 once, $29 at launch, no subscription</a>.'))
         if g.get("lang") == "de":
             out = out.replace("Email me the link", "Link per Mail senden").replace("We send you the link and the $29 launch code. Unsubscribe anytime.", "Wir schicken dir den Link und den $29-Launch-Code. Abmeldung jederzeit.")
         os.makedirs(g["slug"], exist_ok=True)

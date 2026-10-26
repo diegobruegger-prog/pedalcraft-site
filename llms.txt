@@ -1,0 +1,21 @@
+# PedalCraft
+
+> Ride a Bluetooth smart trainer and shift with a Zwift Click, Zwift Play or Zwift Ride without a Zwift subscription. Free in Chrome or Edge on Windows, Mac, Android and Chromebook. PedalCraft Pro ($39 once) adds ERG workouts, an FTP ramp test and a ride log, plus a native Mac app.
+
+Key facts:
+- Free browser app: https://pedalcraft.online/ride/ (Web Bluetooth, no install, no account, nothing saved).
+- Works with Zwift Cog trainers (Wahoo KICKR CORE 2, Zwift Hub One) using real virtual shifting in the trainer firmware, and with Bluetooth FTMS smart trainers (most current Tacx, Elite, Wahoo, Saris and others), where each gear changes the simulated grade.
+- Controllers: Zwift Click v1 and v2, Zwift Play, Zwift Ride.
+- Does not work on iPhone/Safari (no Web Bluetooth). Older trainers that only speak ANT+ or Tacx FE-C over Bluetooth are not supported yet.
+- Not a Zwift replacement: no virtual world, no racing.
+- PedalCraft Pro: $39 one-time ($29 launch price with code LAUNCH), no subscription. https://pedalcraftapp.gumroad.com/l/pedalcraft-mac
+
+## Guides
+- [Use the Zwift Click with any smart trainer](https://pedalcraft.online/zwift-click-any-trainer/)
+- [Use the Zwift Click without Zwift](https://pedalcraft.online/zwift-click-without-zwift/)
+- [Zwift Click with a Tacx trainer](https://pedalcraft.online/zwift-click-tacx/)
+- [Zwift Click with an Elite trainer](https://pedalcraft.online/zwift-click-elite/)
+- [Zwift Click on Windows](https://pedalcraft.online/zwift-click-windows/)
+- [Zwift Click on Android](https://pedalcraft.online/zwift-click-android/)
+- [KICKR CORE 2 without Zwift](https://pedalcraft.online/kickr-core-2-without-zwift/)
+- [Mit dem Zwift Click schalten, ohne Abo (Deutsch)](https://pedalcraft.online/de/zwift-click-ohne-abo/)
