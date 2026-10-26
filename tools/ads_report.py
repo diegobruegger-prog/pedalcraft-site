@@ -60,3 +60,12 @@ for pre in ("src", "os", "cc"):
     for g in groups:
         cells = [f"{e}={ALL.get(f'{pre}-{g}-{e}', 0)}" for e in SEG_EV if ALL.get(f"{pre}-{g}-{e}", 0)]
         print(f"  {pre}:{g:10s} " + "  ".join(cells))
+
+# Besuchsverläufe (ab 26.10. 12:00): Käufer-Klicks zuerst, dann die neusten
+import datetime
+JR = json.load(urllib.request.urlopen(urllib.request.Request("https://pedalcraft-stats.pages.dev/journeys?days=7", headers={"User-Agent": "Mozilla/5.0 pedalcraft-report"}), timeout=15))
+JR.sort(key=lambda x: (not any(e.startswith("buy:") for _, e in x["steps"]), -x["start"]))
+print(f"\nBesuchsverläufe der letzten 7 Tage: {len(JR)} (davon mit Kaufklick: {sum(any(e.startswith('buy:') for _, e in x['steps']) for x in JR)})")
+for x in JR[:25]:
+    t = datetime.datetime.fromtimestamp(x["start"] / 1000).strftime("%d.%m. %H:%M")
+    print(f"  {t} {x['cc']}: " + " → ".join(f"{e}" + (f" (+{s}s)" if s else "") for s, e in x["steps"]))
