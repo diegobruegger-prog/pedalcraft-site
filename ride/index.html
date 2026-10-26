@@ -37,8 +37,8 @@
   .btn.primary:hover { background: var(--accent-deep); }
   main { display: grid; grid-template-columns: 1fr 380px; gap: 14px; min-height: 0; }
   .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
-  .scene { display: flex; flex-direction: column; min-height: 0; }
-  canvas { width: 100%; flex: 1; min-height: 300px; display: block; border-radius: 10px; margin: 10px 10px 0; width: calc(100% - 20px); }
+  .scene { display: flex; flex-direction: column; min-height: 0; position: relative; }
+  #scene { width: 100%; flex: 1; min-height: 300px; display: block; border-radius: 10px; margin: 10px 10px 0; width: calc(100% - 20px); }
   .gearbar { display: flex; align-items: center; gap: 14px; padding: 14px 20px 18px; }
   .shift { width: 96px; height: 80px; border-radius: 10px; background: var(--raise); color: var(--ink); display: grid; place-items: center; font-weight: 700; font-size: 12px; }
   .shift b { font-size: 32px; line-height: 1; }
@@ -79,6 +79,18 @@
   .lock:hover { border-color: rgba(61,139,255,.6); }
   .lock .ic { width: 22px; text-align: center; opacity: .75; }
   .lock .pro { margin-left: auto; font-size: 11px; font-weight: 800; letter-spacing: .8px; color: var(--accent); }
+  .wbar { position: absolute; top: 12px; left: 12px; right: 12px; background: rgba(23,24,27,.92); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; }
+  .wtop { display: flex; justify-content: space-between; font-size: 14px; } .wtop span { color: var(--soft); font-variant-numeric: tabular-nums; }
+  .wmid { display: flex; gap: 18px; align-items: center; } .wmid .val { font-size: 34px; font-weight: 800; color: var(--accent); }
+  .wstep { display: grid; gap: 2px; font-weight: 600; }
+  #wbar-profile { width: 100%; height: 40px; border-radius: 6px; background: rgba(255,255,255,.04); }
+  .wbtns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .overlay .box.wide { max-width: 760px; width: 100%; max-height: 88vh; overflow: auto; }
+  .wlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; margin-top: 12px; }
+  .wcard { text-align: left; display: grid; gap: 6px; padding: 12px; border-radius: 10px; background: var(--raise); border: 1px solid var(--line); color: var(--ink); font-size: 14px; }
+  .wcard:hover { border-color: rgba(61,139,255,.6); } .wcard canvas { width: 100%; height: 44px; } .wmeta, .winfo { color: var(--soft); font-size: 12.5px; }
+  .rrow { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); } .rrow > div { display: grid; gap: 2px; margin-right: auto; }
+  .keyrow { display: flex; gap: 8px; flex-wrap: wrap; } .keyrow input { flex: 1; min-width: 220px; padding: 10px 12px; border-radius: 10px; background: var(--raise); border: 1px solid var(--line); color: var(--ink); font: 600 14px ui-monospace, monospace; }
   .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--raise); border: 1px solid var(--line); padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 14px; z-index: 20; }
   @media (max-width: 980px) { main { grid-template-columns: 1fr; } footer.bottom { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 560px) { .big .val { font-size: 52px; } .gear .num { font-size: 46px; } .shift { width: 72px; } header .brand span { display: none; } }
@@ -97,12 +109,19 @@
     <button class="chip connect" id="c-trainer"><i class="dot"></i><span>Connect trainer</span></button>
     <button class="chip connect" id="c-ctrl"><i class="dot"></i><span>Connect Click</span></button>
     <button class="chip connect" id="c-hr"><i class="dot"></i><span>Heart rate</span></button>
-    <a class="btn primary" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Get the Mac app · $29</a>
+    <a class="btn primary" id="head-buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Get Pro · $29</a>
   </header>
 
   <main>
     <section class="panel scene">
       <canvas id="scene" aria-label="Animated rider"></canvas>
+      <div class="wbar hidden" id="wbar">
+        <div class="wtop"><b id="wbar-name"></b><span id="wbar-time"></span></div>
+        <div class="wmid"><div><div class="label">Target</div><div class="val"><span id="wbar-target">0</span><small>W</small></div></div>
+          <div class="wstep"><span id="wbar-step"></span><span id="wbar-rpm" class="note"></span></div></div>
+        <canvas id="wbar-profile"></canvas>
+        <div class="wbtns"><button class="btn" id="wbar-minus">−5%</button><button class="btn" id="wbar-plus">+5%</button><button class="btn" id="wbar-end">Stop</button></div>
+      </div>
       <div class="gearbar">
         <button class="shift" id="down"><b>−</b>easier</button>
         <div class="gear">
@@ -127,16 +146,20 @@
           <div class="grade"><button class="round" id="gminus">−</button><div class="val"><span id="grade">0.0</span><small>%</small></div><button class="round" id="gplus">+</button></div></div>
       </div>
       <div class="panel upsell">
-        <h3>In the Mac app</h3>
+        <h3 id="upsell-title">PedalCraft Pro</h3>
         <div class="locked">
           <button class="lock" data-f="workout"><span class="ic">🔒</span>Start a workout (ERG)<span class="pro">PRO</span></button>
           <button class="lock" data-f="ftp"><span class="ic">🔒</span>Take the FTP test<span class="pro">PRO</span></button>
           <button class="lock" data-f="save"><span class="ic">🔒</span>Save this ride<span class="pro">PRO</span></button>
-          <button class="lock" data-f="strava"><span class="ic">🔒</span>Upload to Strava<span class="pro">PRO</span></button>
-          <button class="lock" data-f="mini"><span class="ic">🔒</span>Mini window over Netflix<span class="pro">PRO</span></button>
+          <button class="lock" data-f="rides"><span class="ic">🔒</span>Ride log and Strava file<span class="pro">PRO</span></button>
+          <button class="lock hidden" data-f="ftpset" id="lock-ftpset"><span class="ic">›</span><span class="t">FTP</span><span class="pro"></span></button>
         </div>
-        <a class="btn primary" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH" style="align-self:flex-start">Unlock all · $29 launch price</a>
-        <div class="note">This free version shows your ride live. Nothing is saved, nothing leaves your browser.</div>
+        <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap">
+          <a class="btn primary" id="upsell-buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Get Pro · $29 launch price</a>
+          <button class="btn" id="upsell-unlock">I have a key</button>
+        </div>
+        <div class="note" id="upsell-note">This free version shows your ride live. Nothing is saved, nothing leaves your browser.</div>
+        <div class="note">One-time, works in Chrome and Edge on Windows, Mac, Android and Chromebook. The native Mac app is included.</div>
       </div>
     </section>
   </main>
@@ -176,15 +199,32 @@
   <div class="panel box">
     <h2 id="pro-title">Workouts with ERG</h2>
     <p id="pro-text"></p>
+    <div id="pro-key" class="hidden keyrow"><input id="pro-key-in" placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX" aria-label="License key" autocomplete="off" spellcheck="false"><button class="btn primary" id="pro-key-go">Unlock</button></div>
     <div class="actions">
       <a class="btn primary" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH" id="pro-buy">Get the Mac app · $29 launch price</a>
       <button class="btn" id="pro-close">Keep riding free</button>
     </div>
-    <p class="note">One-time purchase, all future updates included. macOS 14 or newer.</p>
+    <p class="note">One-time purchase, all future updates included. Works in Chrome and Edge on Windows, Mac, Android and Chromebook, plus the native Mac app (macOS 14+).</p>
+  </div>
+</div>
+<div class="overlay hidden" id="pick">
+  <div class="panel box wide">
+    <h2>Pick a workout</h2>
+    <div class="actions" id="pick-tabs"></div>
+    <div class="wlist" id="pick-list"></div>
+    <div class="actions"><button class="btn" id="pick-close">Close</button></div>
+  </div>
+</div>
+<div class="overlay hidden" id="rides">
+  <div class="panel box wide">
+    <h2>Your rides</h2>
+    <p class="note">Saved in this browser. To put a ride on Strava: download the .tcx file and drop it on <a href="https://www.strava.com/upload/select" target="_blank" rel="noopener">strava.com/upload</a>.</p>
+    <div id="rides-list"></div>
+    <div class="actions"><button class="btn" id="rides-close">Close</button></div>
   </div>
 </div>
 <div class="toast hidden" id="toast"></div>
 
-<script type="module" src="app.js?v=14"></script>
+<script type="module" src="app.js?v=15"></script>
 </body>
 </html>

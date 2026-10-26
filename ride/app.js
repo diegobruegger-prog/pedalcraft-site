@@ -108,6 +108,7 @@ function report({ power, cadence, speed, hr }) {
 
 let shiftCount = 0;
 function shift(up) {
+  if (wo) { setIntensity(wo.intensity + (up ? 5 : -5)); return; }
   if (!ride.demo) { shiftCount++; for (const n of [1, 10, 50]) if (shiftCount === n) ping('shifts-' + n); }
   const next = ride.gear + (up ? 1 : -1);
   if (next < 0 || next >= GEARS.length) { beep(220, 0.08); return; }
@@ -188,7 +189,8 @@ class Trainer {
       setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · virtual shifting');
       const ratio = Math.round(GEARS[ride.gear] * 10000);
       [MSG.unknown41, MSG.gear(ratio, 9, 75), MSG.getDeviceInfo, MSG.sim(Math.round(ride.grade * 100), true), MSG.gear(ratio)].forEach(m => this.write(m));
-      this.keepAlive = setInterval(() => this.zwiftReady && this.write(MSG.sim(Math.round(ride.grade * 100), false)), 5000);
+      this.keepAlive = setInterval(() => this.zwiftReady && this.write(this.erg != null ? [0x04, ...pbField(3, this.erg)] : MSG.sim(Math.round(ride.grade * 100), false)), 5000);
+      if (this.erg != null) this.setTarget(this.erg);
     }
   }
   onZwiftAsync(d) {
@@ -222,8 +224,17 @@ class Trainer {
     const g = Math.round(grade * 100);
     this.writeFTMS([0x11, 0, 0, g & 0xFF, (g >> 8) & 0xFF, 40, 51]);
   }
-  applyGear() { if (this.zwiftReady) this.write(MSG.gear(Math.round(GEARS[ride.gear] * 10000))); else this.sendSim(); }
-  applyGrade() { if (this.zwiftReady) this.write(MSG.sim(Math.round(ride.grade * 100), false)); else this.sendSim(); }
+  applyGear() { if (this.erg) return; if (this.zwiftReady) this.write(MSG.gear(Math.round(GEARS[ride.gear] * 10000))); else this.sendSim(); }
+  applyGrade() { if (this.erg) return; if (this.zwiftReady) this.write(MSG.sim(Math.round(ride.grade * 100), false)); else this.sendSim(); }
+  // ERG: der Trainer hält die Watt (Zwift-Protokoll Feld 3, sonst FTMS 0x05). null = zurück zum Schalten.
+  setTarget(w) {
+    this.erg = w;
+    if (w != null) {
+      if (this.zwiftReady) this.write([0x04, ...pbField(3, w)]); else this.writeFTMS([0x05, w & 0xFF, (w >> 8) & 0xFF]);
+    } else if (this.zwiftReady) {
+      this.write(MSG.sim(Math.round(ride.grade * 100), true)); this.write(MSG.gear(Math.round(GEARS[ride.gear] * 10000)));
+    } else this.sendSim();
+  }
   async onDisconnect() {
     this.zwiftReady = false; clearInterval(this.keepAlive);
     setChip('c-trainer', false, 'Trainer reconnecting …');
@@ -367,8 +378,8 @@ function startDemo() {
   setChip('c-trainer', true, 'Demo trainer');
   demoTimer = setInterval(() => {
     t += 0.25;
-    const base = 120 + ride.gear * 6 + ride.grade * 12;
-    const surge = (Math.floor(t / 20) % 3 === 2) ? 90 : 0;
+    const base = wo && wo.target ? wo.target - 4 : 120 + ride.gear * 6 + ride.grade * 12;
+    const surge = !wo && (Math.floor(t / 20) % 3 === 2) ? 90 : 0;
     report({ power: Math.round(base + surge + Math.sin(t) * 8), cadence: 86 + Math.sin(t / 3) * 6 + (surge ? 8 : 0), speed: 22 + ride.gear * 0.6 - ride.grade * 0.9 + Math.sin(t / 5), hr: Math.round(118 + ride.gear + surge / 3) });
   }, 250);
   ping('demo');
@@ -384,6 +395,8 @@ setInterval(() => {
   if (now - ride.t.hr > 5000) ride.hr = null;
   if (ride.power > 0 || ride.cadence > 0) {
     ride.elapsed += 1; ride.dist += ride.speed / 3.6; ride.sum += ride.power; ride.n += 1; ride.kj += ride.power / 1000;
+    if (!ride.demo) samples.push([Math.round(ride.power), ride.cadence, ride.hr || 0, Math.round(ride.speed * 10), Math.round(ride.dist)]);
+    if (wo) workoutTick();
   }
   render();
 }, 1000);
@@ -494,29 +507,269 @@ function drawFace(level, size) {
   if (level >= 2) { ctx.fillStyle = '#8CBFFF'; for (const [x, y] of level === 3 ? [[0.36, -0.1], [-0.38, -0.02]] : [[0.36, -0.1]]) { ctx.beginPath(); ctx.moveTo(x * s, (y - 0.07) * s); ctx.quadraticCurveTo((x + 0.07) * s, (y + 0.03) * s, x * s, (y + 0.05) * s); ctx.quadraticCurveTo((x - 0.07) * s, (y + 0.03) * s, x * s, (y - 0.07) * s); ctx.fill(); } }
 }
 
-// ---------- Pro features (shown locked in the free version) ----------
+// ---------- Pro: Freischaltung per Gumroad-Lizenzschlüssel ----------
+const BUY = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH';
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+let pro = store.get('pc_pro', null);
+ride.ftp = store.get('pc_ftp', 200);
+const isPro = () => !!(pro && pro.key);
+async function checkKey(key) {
+  const r = await fetch('https://pedalcraft-stats.pages.dev/license?key=' + encodeURIComponent(key.trim()));
+  return (await r.json()).ok === true;
+}
+// Beim Start still nachprüfen; nur ein klares Nein sperrt (offline bleibt Pro an)
+if (isPro() && location.hostname !== 'localhost') checkKey(pro.key).then(ok => { if (!ok) { pro = null; store.set('pc_pro', null); renderPro(); toast('Your PedalCraft Pro key is no longer valid.', 6000); } }).catch(() => {});
+
+function showUnlock() {
+  $('pro-title').textContent = 'Unlock PedalCraft Pro';
+  $('pro-text').innerHTML = 'Paste the license key from your Gumroad receipt. It works in Chrome and Edge on Windows, Mac, Android and Chromebook.';
+  $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden'); $('pro-buy').href = BUY; $('pro-buy').textContent = 'Get a key · $29 launch price'; offerOpen = false;
+  $('pro').classList.remove('hidden'); setTimeout(() => $('pro-key-in').focus(), 50);
+  ping('unlock-open');
+}
+$('pro-key-go').onclick = async () => {
+  const key = $('pro-key-in').value.trim();
+  if (!key) return;
+  $('pro-key-go').disabled = true; $('pro-key-go').textContent = 'Checking …';
+  try {
+    if (await checkKey(key)) {
+      pro = { key, t: Date.now() }; store.set('pc_pro', pro); ping('unlock-ok');
+      $('pro').classList.add('hidden'); renderPro(); toast('PedalCraft Pro is unlocked. Have a good ride!', 5000);
+    } else { ping('unlock-bad'); toast('That key did not work. Copy it again from your Gumroad receipt.', 6000); }
+  } catch (e) { toast('Could not check the key. Are you online?', 5000); }
+  $('pro-key-go').disabled = false; $('pro-key-go').textContent = 'Unlock';
+};
+
+// ---------- Pro: Trainings (wie in der Mac-App) ----------
+const seg = (min, pct, text, rpm) => ({ s: Math.round(min * 60), a: pct, b: pct, text, rpm });
+const ramp = (min, a, b, text) => ({ s: Math.round(min * 60), a, b, text });
+const rep = (n, segs) => Array.from({ length: n }, () => segs).flat();
+const WARM = [ramp(6, 45, 65, 'Warm-up'), seg(2, 70, 'Warm-up'), seg(1, 85, 'Wake up the legs'), seg(1, 55, 'Easy')];
+const cool = (min = 5) => ramp(min, 55, 40, 'Cool-down');
+const CAT_INFO = { Recovery: 'Spin easy. Perfect after a hard day.', Endurance: 'Zone 2 endurance with gentle waves.', 'Sweet Spot': 'Just below threshold: lots of benefit per minute.',
+  Threshold: 'Right at FTP. Hard, but doable.', Intervals: 'Short, hard efforts above threshold.', Sprints: 'Short all-out sprints, easy in between.' };
+function makeWorkout(cat, minutes) {
+  const short = minutes <= 20;
+  const wu = short ? [ramp(4, 45, 65, 'Warm-up'), seg(1, 75, 'Warm-up')] : WARM;
+  const coolMin = short ? 3 : 5, main = minutes - (short ? 5 : 10) - coolMin;
+  const intervals = (work, pct, label, rest, maxReps, rpm) => {
+    const reps = Math.max(1, Math.min(maxReps, Math.floor((main + rest) / (work + rest))));
+    const segs = [];
+    for (let k = 0; k < reps; k++) { segs.push(seg(work, pct, label, rpm)); if (k < reps - 1) segs.push(seg(rest, 55, 'Recover')); }
+    const rest2 = main - (reps * work + (reps - 1) * rest);
+    if (rest2 >= 1) { segs.push(seg(Math.min(3, rest2), 55, 'Recover')); if (rest2 > 3) segs.push(seg(rest2 - 3, 66, 'Endurance')); }
+    return [segs, `${reps} × ${work < 1 ? Math.round(work * 60) + ' s' : work + ' min'}`];
+  };
+  let body = [], title = '';
+  if (cat === 'Recovery') body = [seg(main, 52, 'Spin easy')];
+  else if (cat === 'Endurance') { const n = Math.floor(main / 10); body = rep(n, [seg(8, 68, 'Endurance'), seg(2, 75, 'Small wave, spin faster', [95, 105])]); if (main - n * 10 >= 1) body.push(seg(main - n * 10, 68, 'Endurance')); }
+  else if (cat === 'Sweet Spot') { const w = main >= 50 ? 15 : main >= 25 ? 8 : 4; [body, title] = intervals(w, 90, 'Sweet Spot', w >= 15 ? 5 : w >= 8 ? 3 : 2, w >= 15 ? 3 : 5); }
+  else if (cat === 'Threshold') { const w = main >= 40 ? 8 : main >= 25 ? 6 : 3; [body, title] = intervals(w, 98, 'Threshold', w >= 8 ? 4 : w >= 6 ? 3 : 2, 5); }
+  else if (cat === 'Intervals') [body, title] = intervals(3, 115, 'Hard!', 3, 6);
+  else [body, title] = intervals(0.25, 170, 'SPRINT!', 2.75, 10, [100, 125]);
+  return { name: `${cat} ${minutes}`, info: (title ? title + '. ' : '') + CAT_INFO[cat], segs: [...wu, ...body, cool(coolMin)] };
+}
+const SPECIALS = [
+  { name: 'Pyramid', info: '1-2-3-4-3-2-1 minutes hard, equal rest.', segs: [...WARM, ...[1, 2, 3, 4, 3, 2, 1].flatMap(m => [seg(m, 105, 'Hard'), seg(m, 55, 'Recover')]), cool()] },
+  { name: '30/30', info: '30 seconds hard, 30 seconds easy. Two sets.', segs: [...WARM, ...rep(8, [seg(0.5, 125, 'Hard'), seg(0.5, 50, 'Easy')]), seg(5, 55, 'Break'), ...rep(8, [seg(0.5, 125, 'Hard'), seg(0.5, 50, 'Easy')]), cool()] },
+  { name: 'Over-unders', info: 'Alternating just below and just above threshold.', segs: [...WARM, ...rep(3, [...rep(3, [seg(2, 95, 'Under'), seg(1, 108, 'Over')]), seg(4, 55, 'Recover')]), cool()] },
+  { name: 'Mountain pass', info: 'Like a long climb with steep ramps every 5 minutes.', segs: [...WARM, ...rep(4, [ramp(4, 82, 92, 'Climbing'), seg(1, 110, 'Steep ramp')]), seg(5, 60, 'Summit, enjoy'), cool()] },
+  { name: 'Coffee ride', info: 'Easy with a few short, fast spins.', segs: [ramp(8, 45, 60, 'Warm-up'), ...rep(3, [seg(6, 60, 'Cruise'), seg(1, 70, 'Spin fast', [100, 115])]), seg(5, 58, 'Easy'), cool(3)] },
+];
+// FTP-Test: 10 min Aufwärmen, ab 100 W jede Minute +20 W, danach 8 min Ausrollen (absolute Watt)
+const FTP_TEST = (() => {
+  const warm = [ramp(5, 70, 100, 'Warm-up'), seg(3, 110, 'Warm-up'), seg(1, 140, 'Wake up the legs', [90, 100]), seg(1, 90, 'Easy, here we go soon')];
+  const steps = Array.from({ length: 22 }, (_, i) => seg(1, 100 + 20 * i, `Step ${i + 1}`));
+  const warmEnd = warm.reduce((a, x) => a + x.s, 0);
+  return { name: 'FTP test', info: '10 min warm-up, then +20 W every minute until you can’t go on. Then 8 min cool-down.', test: true, abs: true,
+    segs: [...warm, ...steps, ramp(8, 100, 60, 'Cool down, well done!')], rampFrom: warmEnd, rampTo: warmEnd + 22 * 60 };
+})();
+const total = w => w.segs.reduce((a, x) => a + x.s, 0);
+function at(w, t) {
+  let start = 0;
+  for (let i = 0; i < w.segs.length; i++) { const x = w.segs[i]; if (t < start + x.s) return { i, start, v: x.a + (x.b - x.a) * (t - start) / Math.max(x.s, 1) }; start += x.s; }
+  const l = w.segs.length - 1; return { i: l, start: total(w) - w.segs[l].s, v: w.segs[l].b };
+}
+const wattsAt = (w, t, intensity) => { const v = at(w, t).v; return Math.round(w.abs ? v : v / 100 * ride.ftp * intensity / 100); };
+function cadenceAt(w, t) {
+  const a = at(w, t), x = w.segs[a.i]; if (x.rpm) return x.rpm;
+  const pct = w.abs ? a.v / ride.ftp * 100 : a.v;
+  return pct <= 75 ? [80, 95] : pct <= 105 ? [85, 95] : pct <= 150 ? [90, 105] : [95, 120];
+}
+const zoneColor = pct => ZONES[Math.max(0, ZONES.findIndex(z => pct < z[0] + 1))][1];
+function drawProfile(canvas, w, t) {
+  const dpr = devicePixelRatio || 1, W = canvas.clientWidth, H = canvas.clientHeight; if (!W || !H) return;
+  canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+  const c = canvas.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+  const T = total(w), pct = v => w.abs ? v / ride.ftp * 100 : v;
+  const top = Math.max(120, ...w.segs.map(x => pct(Math.max(x.a, x.b))));
+  let x = 0;
+  for (const sg of w.segs) {
+    const ww = sg.s / T * W, h1 = pct(sg.a) / top * H, h2 = pct(sg.b) / top * H;
+    c.fillStyle = zoneColor((pct(sg.a) + pct(sg.b)) / 2);
+    c.beginPath(); c.moveTo(x, H); c.lineTo(x, H - h1); c.lineTo(x + ww, H - h2); c.lineTo(x + ww, H); c.fill(); x += ww;
+  }
+  if (t != null) { const px = t / T * W; c.fillStyle = 'rgba(0,0,0,.5)'; c.fillRect(0, 0, px, H); c.fillStyle = '#fff'; c.fillRect(px - 1.5, 0, 3, H); }
+}
+const mmss = s => { s = Math.max(0, Math.round(s)); return s >= 3600 ? `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+
+let wo = null, pickMin = 30;
+function showPicker() {
+  $('pick').classList.remove('hidden');
+  const tabs = $('pick-tabs'); tabs.innerHTML = '';
+  for (const m of [20, 30, 45, 60, 120]) {
+    const b = document.createElement('button'); b.className = 'btn' + (m === pickMin ? ' primary' : ''); b.textContent = m + ' min';
+    b.onclick = () => { pickMin = m; showPicker(); }; tabs.appendChild(b);
+  }
+  const list = $('pick-list'); list.innerHTML = '';
+  const items = [...['Recovery', 'Endurance', 'Sweet Spot', 'Threshold', 'Intervals', 'Sprints'].map(c => makeWorkout(c, pickMin)), ...SPECIALS.filter(w => Math.abs(total(w) / 60 - pickMin) <= 8)];
+  for (const w of items) {
+    const card = document.createElement('button'); card.className = 'wcard';
+    card.innerHTML = `<b></b><span class="wmeta"></span><canvas></canvas><span class="winfo"></span>`;
+    card.querySelector('b').textContent = w.name; card.querySelector('.wmeta').textContent = mmss(total(w)) + ' · FTP ' + ride.ftp + ' W'; card.querySelector('.winfo').textContent = w.info;
+    card.onclick = () => { $('pick').classList.add('hidden'); startWorkout(w); };
+    list.appendChild(card); requestAnimationFrame(() => drawProfile(card.querySelector('canvas'), w));
+  }
+}
+function startWorkout(w) {
+  if (!trainer && !ride.demo) { toast('Connect your trainer first, then start the workout.', 5000); return; }
+  wo = { w, t: 0, intensity: 100, target: null, best60: 0, win: [], low: 0 };
+  $('wbar').classList.remove('hidden'); $('wbar-end').textContent = w.test ? 'I’m done' : 'Stop';
+  ping(w.test ? 'ftp-start' : 'workout-start');
+  workoutTick(true);
+}
+function setIntensity(v) { if (!wo || wo.w.abs) return; wo.intensity = Math.max(50, Math.min(150, v)); beep(wo.intensity > 100 ? 1100 : 760, 0.05); workoutTick(true); }
+function workoutTick(noAdvance) {
+  const w = wo.w;
+  if (!noAdvance) wo.t += 1;
+  if (wo.t >= total(w)) { finishWorkout(); return; }
+  const target = wattsAt(w, wo.t, wo.intensity);
+  if (target !== wo.target) { wo.target = target; trainer?.setTarget(target); }
+  // 3-2-1 vor jedem Wechsel
+  const a = at(w, wo.t), left = a.start + w.segs[a.i].s - wo.t;
+  if (left <= 3 && left >= 1 && a.i < w.segs.length - 1 && Math.abs(w.segs[a.i + 1].a - w.segs[a.i].b) >= 3) beep(left === 1 ? 1320 : 880, left === 1 ? 0.25 : 0.1);
+  if (w.test && !noAdvance && wo.t >= w.rampFrom && wo.t < w.rampTo) {
+    wo.win.push(ride.power); if (wo.win.length > 60) wo.win.shift();
+    if (wo.win.length === 60) wo.best60 = Math.max(wo.best60, Math.round(wo.win.reduce((x, y) => x + y, 0) / 60));
+    wo.low = ride.cadence < 40 ? wo.low + 1 : 0;
+    if (wo.low >= 10) endRamp();
+  }
+  const rpm = cadenceAt(w, wo.t), x = w.segs[a.i];
+  $('wbar-name').textContent = w.name + (wo.intensity !== 100 ? ` · ${wo.intensity}%` : '');
+  $('wbar-step').textContent = (x.text || '') + ' · ' + mmss(left) + ' left';
+  $('wbar-target').textContent = target; $('wbar-rpm').textContent = `${rpm[0]}–${rpm[1]} rpm`;
+  $('wbar-time').textContent = mmss(total(w) - wo.t);
+  drawProfile($('wbar-profile'), w, wo.t);
+}
+function endRamp() {
+  const w = wo.w; if (!w.test || wo.t >= w.rampTo) { stopWorkout(); return; }
+  wo.done = true; const ftp = Math.round(wo.best60 * 0.75);
+  wo.t = w.rampTo; wo.target = null; workoutTick(true); $('wbar-end').textContent = 'Stop';
+  if (ftp >= 60) {
+    ping('ftp-done');
+    $('pro-title').textContent = 'Your FTP: ' + ftp + ' W';
+    $('pro-text').textContent = `Best minute: ${wo.best60} W. FTP is 75% of that. Your zones and workouts now use ${ftp} W. Now cool down for 8 minutes.`;
+    ride.ftp = ftp; store.set('pc_ftp', ftp); renderPro();
+    $('pro-key').classList.add('hidden'); $('pro-buy').classList.add('hidden'); $('pro').classList.remove('hidden');
+  }
+}
+function finishWorkout() { toast(wo.w.name + ' done. Well ridden!', 5000); ping('workout-done'); stopWorkout(); }
+function stopWorkout() { wo = null; trainer?.setTarget(null); $('wbar').classList.add('hidden'); }
+$('wbar-end').onclick = () => { if (wo && wo.w.test && !wo.done) endRamp(); else stopWorkout(); };
+$('wbar-minus').onclick = () => setIntensity(wo.intensity - 5);
+$('wbar-plus').onclick = () => setIntensity(wo.intensity + 5);
+$('pick-close').onclick = () => $('pick').classList.add('hidden');
+
+// ---------- Pro: Fahrten speichern (IndexedDB) und als .tcx für Strava laden ----------
+const samples = [];
+const T_START = new Date();
+function db() {
+  return new Promise((res, rej) => { const r = indexedDB.open('pedalcraft', 1); r.onupgradeneeded = () => r.result.createObjectStore('rides', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+}
+async function dbAll() { const d = await db(); return new Promise(res => { const q = d.transaction('rides').objectStore('rides').getAll(); q.onsuccess = () => res(q.result.sort((a, b) => b.id - a.id)); q.onerror = () => res([]); }); }
+async function dbPut(r) { const d = await db(); return new Promise((res, rej) => { const tx = d.transaction('rides', 'readwrite'); tx.objectStore('rides').put(r); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); }
+async function dbDel(id) { const d = await db(); return new Promise(res => { const tx = d.transaction('rides', 'readwrite'); tx.objectStore('rides').delete(id); tx.oncomplete = res; }); }
+async function saveRide() {
+  if (samples.length < 60) { toast('Ride at least a minute, then save.', 4000); return; }
+  const best = n => { let s = 0, b = 0; for (let i = 0; i < samples.length; i++) { s += samples[i][0]; if (i >= n) s -= samples[i - n][0]; if (i >= n - 1) b = Math.max(b, s / n); } return Math.round(b); };
+  const r = { id: Date.now(), start: T_START.getTime(), secs: samples.length, dist: Math.round(ride.dist), avg: ride.n ? Math.round(ride.sum / ride.n) : 0, kj: Math.round(ride.kj),
+    max: Math.max(...samples.map(x => x[0])), name: wo ? wo.w.name : 'Free ride', samples: samples.slice() };
+  try { await dbPut(r); } catch (e) { toast('Could not save: ' + (e.message || e), 6000); return; }
+  saved = true; ping('ride-saved');
+  const b20 = samples.length >= 1200 ? best(1200) : 0, sug = Math.round(b20 * 0.95);
+  toast(`Saved: ${mmss(r.secs)}, ${(r.dist / 1000).toFixed(1)} km, ${r.avg} W avg.`, 5000);
+  if (sug >= ride.ftp * 1.03) { if (confirm(`Strong ride! Your best 20 minutes suggest an FTP of ${sug} W (now ${ride.ftp} W). Use it?`)) { ride.ftp = sug; store.set('pc_ftp', sug); renderPro(); } }
+  showRides();
+}
+let saved = false;
+function tcx(r) {
+  const t0 = r.start, iso = s => new Date(t0 + s * 1000).toISOString();
+  const pts = r.samples.map(([p, c, hr, sp, d], i) => `<Trackpoint><Time>${iso(i)}</Time><DistanceMeters>${d}</DistanceMeters>${hr ? `<HeartRateBpm><Value>${hr}</Value></HeartRateBpm>` : ''}<Cadence>${c}</Cadence><Extensions><TPX xmlns="http://www.garmin.com/xmlschemas/ActivityExtension/v2"><Speed>${(sp / 36).toFixed(2)}</Speed><Watts>${p}</Watts></TPX></Extensions></Trackpoint>`).join('');
+  return `<?xml version="1.0" encoding="UTF-8"?><TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"><Activities><Activity Sport="Biking"><Id>${iso(0)}</Id><Lap StartTime="${iso(0)}"><TotalTimeSeconds>${r.secs}</TotalTimeSeconds><DistanceMeters>${r.dist}</DistanceMeters><Calories>${Math.round(r.kj)}</Calories><Intensity>Active</Intensity><TriggerMethod>Manual</TriggerMethod><Track>${pts}</Track></Lap><Notes>${r.name} · PedalCraft</Notes></Activity></Activities></TrainingCenterDatabase>`;
+}
+function download(r) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([tcx(r)], { type: 'application/vnd.garmin.tcx+xml' }));
+  a.download = `PedalCraft ${new Date(r.start).toISOString().slice(0, 16).replace('T', ' ').replace(':', '-')}.tcx`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  ping('tcx-download');
+}
+async function showRides() {
+  $('rides').classList.remove('hidden');
+  const list = $('rides-list'); list.innerHTML = '<p class="note">Loading …</p>';
+  const rows = await dbAll(); list.innerHTML = '';
+  if (!rows.length) { list.innerHTML = '<p class="note">No saved rides yet. Ride, then press “Save this ride”.</p>'; return; }
+  for (const r of rows) {
+    const el = document.createElement('div'); el.className = 'rrow';
+    el.innerHTML = `<div><b></b><span class="note"></span></div><button class="btn">.tcx for Strava</button><button class="btn rdel" aria-label="Delete">✕</button>`;
+    el.querySelector('b').textContent = new Date(r.start).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' · ' + r.name;
+    el.querySelector('.note').textContent = `${mmss(r.secs)} · ${(r.dist / 1000).toFixed(1)} km · ${r.avg} W avg · ${r.max} W max · ${r.kj} kJ`;
+    el.querySelectorAll('button')[0].onclick = () => download(r);
+    el.querySelector('.rdel').onclick = async () => { if (confirm('Delete this ride?')) { await dbDel(r.id); showRides(); } };
+    list.appendChild(el);
+  }
+}
+$('rides-close').onclick = () => $('rides').classList.add('hidden');
+
+// ---------- Pro: Seitenleiste je nach Status ----------
 const PRO = {
   workout: ['Workouts with ERG', 'Pick 20, 30, 45, 60 or 120 minutes: recovery, endurance, sweet spot, threshold, intervals or sprints. Your trainer holds the watts, you get cadence hints and 3-2-1 beeps.'],
   ftp: ['FTP ramp test', '10 minute warm-up, then +20 W every minute until you stop. Your FTP and all your training zones are set automatically.'],
-  save: ['Save your rides', 'Every ride is saved with a summary image, your rating and an FTP suggestion when you got stronger. This ride would be: ' ],
-  strava: ['Strava upload', 'Every saved ride goes to Strava automatically, with watts, heart rate and cadence.'],
-  mini: ['Mini window', 'A small floating window with your numbers on top of Netflix or YouTube, even in full screen.'],
+  save: ['Save your rides', 'Keep every ride in your browser and download it for Strava (.tcx). This ride would be: '],
+  rides: ['Your ride log', 'All saved rides with time, distance, watts and work, ready for Strava.'],
 };
 function showPro(f) {
-  const [t, txt] = PRO[f];
+  if (isPro()) {
+    if (f === 'workout') return showPicker();
+    if (f === 'ftp') { if (confirm('FTP test: about 25 to 35 minutes. Your trainer sets the watts, you just keep pedalling until you can’t. Start now?')) startWorkout(FTP_TEST); return; }
+    if (f === 'save') return saveRide();
+    if (f === 'rides') return showRides();
+    if (f === 'ftpset') { const v = prompt('Your FTP in watts:', ride.ftp); const n = parseInt(v, 10); if (n >= 60 && n <= 600) { ride.ftp = n; store.set('pc_ftp', n); renderPro(); } return; }
+  }
+  if (f === 'unlock') return showUnlock();
+  const [t, txt] = PRO[f] || PRO.workout;
   $('pro-title').textContent = t;
   let extra = '';
   if (f === 'save') extra = ride.elapsed > 0 ? `${Math.floor(ride.elapsed / 60)} min, ${(ride.dist / 1000).toFixed(1)} km, ${Math.round(ride.kj)} kJ.` : 'still empty, start pedalling.';
   $('pro-text').textContent = txt + extra;
-  $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH'; $('pro-buy').textContent = 'Get the Mac app · $29 launch price'; offerOpen = false;
+  $('pro-key').classList.add('hidden'); $('pro-buy').classList.remove('hidden');
+  $('pro-buy').href = BUY; $('pro-buy').textContent = 'Get PedalCraft Pro · $29 launch price'; offerOpen = false;
   $('pro').classList.remove('hidden');
   ping('pro-' + f);
+}
+function renderPro() {
+  const on = isPro();
+  $('upsell-title').textContent = on ? 'PedalCraft Pro' : 'PedalCraft Pro';
+  document.querySelectorAll('.lock .ic').forEach(i => i.textContent = on ? '›' : '🔒');
+  document.querySelectorAll('.lock .pro').forEach(i => i.textContent = on ? '' : 'PRO');
+  $('lock-ftpset').classList.toggle('hidden', !on); $('lock-ftpset').querySelector('.t').textContent = 'FTP: ' + ride.ftp + ' W (change)';
+  $('upsell-buy').classList.toggle('hidden', on); $('upsell-unlock').classList.toggle('hidden', on); $('head-buy').classList.toggle('hidden', on);
+  $('upsell-note').textContent = on ? 'Rides are saved in this browser only. Download them as .tcx and upload at strava.com/upload.' : 'This free version shows your ride live. Nothing is saved, nothing leaves your browser.';
 }
 // Angebot nach 10 Minuten echter Fahrt: Trainer und Click funktionieren nachweislich, bester Moment fürs Angebot
 let offerOpen = false;
 function showRideOffer() {
   $('pro-title').textContent = 'It works with your trainer.';
-  $('pro-text').textContent = "You've ridden 10 minutes. Keep every ride, train with ERG workouts and track your FTP in the Mac app: $24 with code RIDE10 instead of $39. One-time, no subscription.";
+  $('pro-text').textContent = "You've ridden 10 minutes. Keep every ride, train with ERG workouts and track your FTP with PedalCraft Pro: $24 with code RIDE10 instead of $39. One-time, no subscription, Mac app included.";
+  $('pro-key').classList.add('hidden'); $('pro-buy').classList.remove('hidden');
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get it for $24';
   offerOpen = true;
   $('pro').classList.remove('hidden');
@@ -524,23 +777,18 @@ function showRideOffer() {
 }
 document.querySelectorAll('.lock').forEach(b => b.onclick = () => showPro(b.dataset.f));
 $('pro-close').onclick = () => $('pro').classList.add('hidden');
-// Nicht-Mac: klar sagen, dass die App nur für Mac ist, und Nachfrage nach einer eigenen Version messen (kein Formular, nur ein Zähler)
-if (!['mac', 'ios'].includes(SEG.os)) {
-  const sys = { win: 'Windows', android: 'Android', chromeos: 'Chromebook' }[SEG.os] || 'my computer';
-  for (const id of ['pro-buy', 'nobt-buy']) if ($(id)) $(id).textContent = 'Mac app only · $29';
-  const want = document.createElement('button');
-  want.className = 'btn'; want.id = 'want-other'; want.textContent = 'I want it for ' + sys;
-  want.onclick = () => { ping('want-' + SEG.os); want.disabled = true; want.textContent = 'Noted, thanks'; toast('Thanks! The free browser version works on ' + sys + ' today.'); };
-  $('pro-close').before(want);
-}
 $('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); };
+$('upsell-unlock').onclick = showUnlock;
+$('pro-key-in').onkeydown = e => { if (e.key === 'Enter') $('pro-key-go').click(); };
+renderPro();
+if (location.hostname === 'localhost') window.__pc = { samples, saveRide, tcx, dbAll, ride, startWorkout, FTP_TEST, get wo() { return wo; } };   // nur zum Testen
 // Nach 10 und 30 Minuten echter Fahrt freundlich daran erinnern, dass die Fahrt nicht gespeichert wird
 let nudged = new Set();
 setInterval(() => {
   // Anonyme Fahrdauer-Stufen (nur echte Fahrten): zeigt, wie lange Leute wirklich trainieren
   for (const m of [1, 3, 5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
-  if (!ride.demo && !EMBED && ride.elapsed >= 600 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
-  if (!ride.demo && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 600 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
+  if (!ride.demo && !isPro() && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
 }, 5000);
 
 // ---------- Wire up ----------
@@ -548,6 +796,7 @@ $('up').onclick = () => shift(true); $('down').onclick = () => shift(false);
 $('gplus').onclick = () => changeGrade(0.5); $('gminus').onclick = () => changeGrade(-0.5);
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'Enter' && document.activeElement === $('pro-key-in')) return;
   if (e.key === 'ArrowUp') { shift(true); e.preventDefault(); } else if (e.key === 'ArrowDown') { shift(false); e.preventDefault(); }
   else if (e.key === 'ArrowRight') changeGrade(0.5); else if (e.key === 'ArrowLeft') changeGrade(-0.5);
 });
@@ -569,7 +818,7 @@ if (!hasBT) {
   };
   $('nobt-buy').onclick = () => ping('buy-click');
 }
-window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo) { e.preventDefault(); e.returnValue = ''; } });
+window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
