@@ -9,6 +9,39 @@ SITE = "https://pedalcraft.online"
 
 GUIDES = [
     {
+        "slug": "zwift-click-left-button-not-working",
+        "title": "Zwift Click v2 left button stops working: why and what to do",
+        "desc": "The left (minus) Zwift Click v2 puck goes silent about a minute after connecting outside Zwift. Here is why it happens and how PedalCraft works around it.",
+        "h1": "The left Zwift Click stops after a minute",
+        "lead": "You connect your Zwift Click v2 outside the Zwift app, both buttons work, and after about a minute the left «−» puck goes quiet. It's not broken. Here's what's going on.",
+        "sections": [
+            ("Why it happens", "<p>The Click v2 left puck is locked by its firmware unless the Zwift app unlocked it recently. Outside Zwift it answers for about a minute after connecting, then stops sending button presses. The right «+» puck is never locked.</p>"),
+            ("What PedalCraft does", "<p>PedalCraft restarts the left puck every 50 seconds, so it keeps working. Now and then a press during the restart can be missed for about a second. Riding in the Zwift app once in a while also unlocks it for a longer time.</p>"),
+            ("Other things to check", "<ul><li>Update the Click firmware in the Zwift Companion app.</li><li>Quit Zwift and Zwift Companion on every device, so they don't grab the Click.</li><li>Press a button on each puck right before you connect, so it wakes up.</li><li>Replace the coin cell if the LED is weak.</li></ul>"),
+        ],
+        "faq": [
+            ("Is my Zwift Click v2 broken if the left button stops?", "Probably not. The left puck is locked by firmware outside Zwift after about a minute."),
+            ("Can I use the left button without Zwift?", "Yes, PedalCraft restarts the left puck every 50 seconds to keep it working."),
+            ("Does the right button have the same problem?", "No, only the left puck is locked."),
+        ],
+    },
+    {
+        "slug": "zwift-click-not-connecting",
+        "title": "Zwift Click not connecting? A quick checklist",
+        "desc": "Zwift Click won't pair or connect? Wake it, free it from other apps, check the battery and browser. A short checklist that fixes most cases.",
+        "h1": "Zwift Click not connecting",
+        "lead": "Most Zwift Click connection problems come down to three things: the Click is asleep, another app holds it, or the browser can't use Bluetooth. Work through this list.",
+        "sections": [
+            ("Checklist", "<ol><li><b>Wake it up:</b> press a button on each Click right before connecting. The LED should blink.</li><li><b>Free it:</b> quit Zwift and Zwift Companion on every device, including your phone. A Click talks to one app at a time.</li><li><b>Battery:</b> a weak coin cell causes drop-outs. Replace it (CR2032).</li><li><b>Browser:</b> use Chrome or Edge. Safari, Firefox and iPhone can't do Web Bluetooth.</li><li><b>Bluetooth on:</b> on Windows check Settings → Bluetooth, on Android allow Bluetooth and location.</li><li><b>Firmware:</b> update the Click in the Zwift Companion app once.</li></ol>"),
+            ("Test it in two minutes", "<p>Open <a href=\"/ride/\">pedalcraft.online/ride</a>, click <b>Connect Click</b> and press a button. If it shows up and the gear number changes, the Click is fine.</p>"),
+        ],
+        "faq": [
+            ("Why doesn't my Zwift Click show up?", "It's usually asleep or still connected to another app. Press a button on it and quit Zwift on all devices."),
+            ("Can I connect two Clicks?", "Yes. Connect them one after the other; PedalCraft shows both."),
+            ("Does the Zwift Click work on iPhone browsers?", "No, iPhone browsers can't use Web Bluetooth. Use Chrome on a computer or Android."),
+        ],
+    },
+    {
         "slug": "zwift-play-without-zwift",
         "title": "Use Zwift Play controllers without Zwift",
         "desc": "Shift your smart trainer with Zwift Play controllers without the Zwift app or a subscription. Free in Chrome or Edge on Windows, Mac or Android.",
