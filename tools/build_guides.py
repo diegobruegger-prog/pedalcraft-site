@@ -32,13 +32,13 @@ GUIDES = [
         "h1": "Zwift Click not connecting",
         "lead": "Most Zwift Click connection problems come down to three things: the Click is asleep, another app holds it, or the browser can't use Bluetooth. Work through this list.",
         "sections": [
-            ("Checklist", "<ol><li><b>Wake it up:</b> press a button on each Click right before connecting. The LED should blink.</li><li><b>Free it:</b> quit Zwift and Zwift Companion on every device, including your phone. A Click talks to one app at a time.</li><li><b>Battery:</b> a weak coin cell causes drop-outs. Replace it (CR2032).</li><li><b>Browser:</b> use Chrome or Edge. Safari, Firefox and iPhone can't do Web Bluetooth.</li><li><b>Bluetooth on:</b> on Windows check Settings → Bluetooth, on Android allow Bluetooth and location.</li><li><b>Firmware:</b> update the Click in the Zwift Companion app once.</li></ol>"),
+            ("Checklist", "<ol><li><b>Wake it up:</b> press a button on each Click right before connecting. The LED should blink.</li><li><b>Free it:</b> quit Zwift and Zwift Companion on every device, including your phone. A Click talks to one app at a time.</li><li><b>Battery:</b> a weak coin cell causes drop-outs. Replace it (CR2032).</li><li><b>Browser:</b> use Chrome or Edge. Safari and Firefox can't do Web Bluetooth; on iPhone use the free Bluefy app.</li><li><b>Bluetooth on:</b> on Windows check Settings → Bluetooth, on Android allow Bluetooth and location.</li><li><b>Firmware:</b> update the Click in the Zwift Companion app once.</li></ol>"),
             ("Test it in two minutes", "<p>Open <a href=\"/ride/\">pedalcraft.online/ride</a>, click <b>Connect Click</b> and press a button. If it shows up and the gear number changes, the Click is fine.</p>"),
         ],
         "faq": [
             ("Why doesn't my Zwift Click show up?", "It's usually asleep or still connected to another app. Press a button on it and quit Zwift on all devices."),
             ("Can I connect two Clicks?", "Yes. Connect them one after the other; PedalCraft shows both."),
-            ("Does the Zwift Click work on iPhone browsers?", "No, iPhone browsers can't use Web Bluetooth. Use Chrome on a computer or Android."),
+            ("Does the Zwift Click work on iPhone?", "Not in Safari. Install the free Bluefy browser app and open pedalcraft.online/ride in it, or use Chrome on a computer or Android."),
         ],
     },
     {
@@ -116,7 +116,7 @@ GUIDES = [
         "sections": [
             ("Which trainers work", "<ul><li><b>Zwift Cog trainers</b> (Wahoo KICKR CORE 2, Zwift Hub One): real virtual shifting in the trainer firmware, like in Zwift.</li><li><b>Bluetooth FTMS trainers</b>, which is most smart trainers sold since about 2020 (for example Tacx Neo 2T and Flux S with current firmware, Elite Direto, Suito and Justo, Wahoo KICKR, Saris H3): every gear changes the simulated grade, so it rides like shifting.</li><li>Older trainers that only speak ANT+ or Tacx FE-C over Bluetooth don't connect yet.</li></ul><p>Not sure? <a href=\"/ride/\">Open the free version</a> and click Connect trainer. If your trainer shows up in the list, it works.</p>"),
             ("How to connect", "<ol><li>Quit Zwift and other trainer apps on every device. Only one app can control the trainer.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Click <b>Connect trainer</b> and pick yours.</li><li>Press a button on each Click, then <b>Connect Click</b>.</li><li>Ride. <b>+</b> is harder, <b>−</b> is easier.</li></ol>"),
-            ("Windows, Mac, Android", "<p>It runs in Chrome or Edge on Windows 10 and 11, macOS, Android and Chromebook. Your computer needs Bluetooth (built in, or a small USB Bluetooth adapter). iPhone and Safari can't do Web Bluetooth.</p>"),
+            ("Windows, Mac, Android", "<p>It runs in Chrome or Edge on Windows 10 and 11, macOS, Android and Chromebook. Your computer needs Bluetooth (built in, or a small USB Bluetooth adapter). On iPhone and iPad, use the free Bluefy browser app; Safari can't do Web Bluetooth.</p>"),
             ("Not a Zwift replacement", "<p>There's no virtual world and no racing. PedalCraft is a simple tool to ride, shift and train without a monthly fee.</p>"),
         ],
         "faq": [
@@ -188,7 +188,7 @@ GUIDES = [
         ],
         "faq": [
             ("Is there an app to install?", "No. It runs in Chrome on Android."),
-            ("Does it work on iPhone?", "No, iPhone browsers can't use Web Bluetooth. Use Android, or Chrome on a computer."),
+            ("Does it work on iPhone?", "Not in Safari. Install the free Bluefy browser app and open pedalcraft.online/ride in it."),
             ("Can I save rides on Android?", "Yes, with PedalCraft Pro: rides are saved in the browser and you can download them for Strava."),
         ],
     },
@@ -208,7 +208,7 @@ GUIDES = [
         ],
         "faq": [
             ("Brauche ich ein Zwift-Abo, um mit dem Click zu schalten?", "Nein. PedalCraft verbindet den Click direkt über Bluetooth, ohne Zwift-App und ohne Konto."),
-            ("Geht das auf dem iPhone?", "Im Browser nicht: Safari und iPhone können kein Web Bluetooth. Nimm Chrome oder Edge auf einem Computer oder Android-Gerät."),
+            ("Geht das auf dem iPhone?", "Nicht in Safari. Mit der Gratis-App Bluefy geht es: installieren und darin pedalcraft.online/ride öffnen."),
             ("Was kostet es?", "Die Browser-Version ist gratis. Die Mac-App kostet einmal $39, zum Start $29."),
         ],
     },
@@ -226,7 +226,7 @@ GUIDES = [
         ],
         "faq": [
             ("Do I need a Zwift subscription to use the Zwift Click?", "No. The Click is a Bluetooth controller. PedalCraft connects to it directly in Chrome or Edge, without the Zwift app or an account."),
-            ("Does it work on iPhone?", "Not in the browser: Safari and iPhone don't support Web Bluetooth. Use Chrome or Edge on a computer or Android device."),
+            ("Does it work on iPhone?", "Not in Safari. Install the free Bluefy browser app and open pedalcraft.online/ride in it, or use Chrome or Edge on a computer or Android device."),
             ("Is it free?", "The browser version is free. A Mac app with workouts, an FTP test, a ride log and Strava upload costs $39 once."),
         ],
     },
@@ -272,7 +272,7 @@ GUIDES = [
         "h1": "Ride your smart trainer in the browser",
         "lead": "Modern Chrome and Edge can talk to Bluetooth devices directly. That is enough to control a smart trainer, read your power and heart rate, and shift with a Zwift Click, without installing anything.",
         "sections": [
-            ("Which browsers work", "<ul><li><b>Chrome</b> and <b>Edge</b> on macOS, Windows and Android: yes</li><li><b>Safari</b>, <b>Firefox</b> and all browsers on <b>iPhone</b>: no, they don't support Web Bluetooth</li></ul>"),
+            ("Which browsers work", "<ul><li><b>Chrome</b> and <b>Edge</b> on macOS, Windows and Android: yes</li><li><b>Safari</b> and <b>Firefox</b>: no, they don't support Web Bluetooth</li><li><b>iPhone and iPad</b>: with the free <b>Bluefy</b> browser app</li></ul>"),
             ("What the browser talks to", "<ul><li><b>FTMS</b>, the standard Bluetooth fitness machine profile: power, cadence, speed and resistance</li><li><b>Zwift's virtual shifting protocol</b> on Zwift Cog trainers, so the trainer firmware shifts</li><li><b>Zwift Click, Play and Ride</b> controllers for the shift buttons</li><li>The standard <b>heart rate</b> profile</li></ul>"),
             ("Privacy", "<p>Everything happens in your browser tab. PedalCraft has no account and no server for your data; the free version keeps nothing once you close the tab.</p>"),
             ("Try it", "<p>Open <a href=\"/ride/\">pedalcraft.online/ride</a>, connect your trainer, or start the demo.</p>"),
