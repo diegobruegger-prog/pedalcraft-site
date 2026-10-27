@@ -827,6 +827,11 @@ if (!hasBT) {
     try { await navigator.clipboard.writeText(url); toast('Link copied. Paste it into Chrome on your computer.', 4000); } catch (e) { toast(url, 8000); }
   };
   $('nobt-buy').onclick = () => ping('buy-click');
+  // Computer mit Firefox oder Safari: Link für Chrome/Edge kopieren statt «an Computer senden»
+  if (['win', 'mac', 'other', 'chromeos'].includes(SEG.os)) {
+    $('sendlink').textContent = 'Copy link for Chrome or Edge';
+    $('sendlink').onclick = async () => { ping('copy-for-chrome'); try { await navigator.clipboard.writeText('https://pedalcraft.online/ride/'); toast('Copied. Paste it into Chrome or Edge.', 4000); } catch (e) { toast('pedalcraft.online/ride', 8000); } };
+  }
   // iPhone/iPad: Web Bluetooth gibt es dort nur in Browser-Apps wie Bluefy
   if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) {
     $('ios-bluefy').classList.remove('hidden'); $('nobt').classList.add('hidden');
