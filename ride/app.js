@@ -767,11 +767,11 @@ function renderPro() {
   $('upsell-buy').classList.toggle('hidden', on); $('upsell-unlock').classList.toggle('hidden', on); $('head-buy').classList.toggle('hidden', on);
   $('upsell-note').textContent = on ? 'Rides are saved in this browser only. Download them as .tcx and upload at strava.com/upload.' : 'This free version shows your ride live. Nothing is saved, nothing leaves your browser.';
 }
-// Angebot nach 10 Minuten echter Fahrt: Trainer und Click funktionieren nachweislich, bester Moment fürs Angebot
+// Angebot nach 3 Minuten echter Fahrt (Diego 28.10.2026): Trainer und Click funktionieren nachweislich, bester Moment fürs Angebot
 let offerOpen = false;
 function showRideOffer() {
   $('pro-title').textContent = 'It works with your trainer.';
-  $('pro-text').textContent = "You've ridden 10 minutes. Keep every ride, train with ERG workouts and track your FTP with PedalCraft Pro: $24 with code RIDE10 instead of $39. One-time, no subscription, Mac app included.";
+  $('pro-text').textContent = "You've been riding for 3 minutes. Keep every ride, train with ERG workouts and track your FTP with PedalCraft Pro: $24 with code RIDE10 instead of $39. One-time, no subscription, Mac app included.";
   $('pro-key').classList.add('hidden'); $('pro-buy').classList.remove('hidden');
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get it for $24';
   offerOpen = true;
@@ -797,7 +797,7 @@ let nudged = new Set();
 setInterval(() => {
   // Anonyme Fahrdauer-Stufen (nur echte Fahrten): zeigt, wie lange Leute wirklich trainieren
   for (const m of [1, 3, 5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
-  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 600 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 180 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
   if (!ride.demo && !isPro() && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
 }, 5000);
 
