@@ -65,12 +65,17 @@ GUIDES = [
         "lead": "The Zwift Hub One shifts in its firmware, the Click only tells it which gear. PedalCraft sends those gears the same way Zwift does, so you keep virtual shifting after you cancel. Free, in your browser.",
         "sections": [
             ("What you keep", "<ul><li>Virtual shifting with the Zwift Click</li><li>Live power, cadence, speed and zones</li><li>Grade changes with the arrow keys</li><li>ERG workouts and an FTP test with PedalCraft Pro</li></ul>"),
-            ("Connect", "<ol><li>Quit Zwift on every device.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, then the Click.</li></ol>"),
+            ("Hub One or Hub Classic?", "<p><b>Hub One</b> has the single Zwift Cog and comes with a Zwift Click. It shifts virtually: the Click sends a gear, the Hub changes the resistance. PedalCraft does the same, so the Hub One keeps all its gears after you cancel Zwift.</p><p><b>Hub Classic</b> has a normal cassette and you shift with your bike's derailleur. That works with any app. PedalCraft connects it as a Bluetooth FTMS trainer, shows your power and lets you change the grade. A Zwift Click on a Hub Classic changes the simulated grade per press.</p>"),
+            ("Connect", "<ol><li>Quit Zwift and Zwift Companion on every device. The Hub talks to one app at a time.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Click <b>Connect trainer</b> and pick «Zwift Hub».</li><li>Press a button on each Click, then <b>Connect Click</b>.</li><li>Pedal and shift. The gear number on screen should change with every press.</li></ol>"),
+            ("What you lose when you cancel Zwift", "<ul><li>Watopia and the other worlds, group rides and races</li><li>Zwift's training plans</li></ul><p>The Hub itself is not locked to the subscription. It stays a normal Bluetooth smart trainer.</p>"),
+            ("Troubleshooting", "<ul><li><b>Hub doesn't show up:</b> Zwift is still connected somewhere, or the Hub is asleep. Pedal a few turns to wake it.</li><li><b>Click shifts but resistance doesn't change:</b> update the Hub firmware once in Zwift Companion, then quit Companion again.</li><li><b>Left Click button stops after a minute:</b> see <a href=\"/zwift-click-left-button-not-working/\">this guide</a>.</li></ul>"),
         ],
         "faq": [
             ("Does the Zwift Hub work without Zwift?", "Yes. It's a Bluetooth smart trainer. PedalCraft connects directly and uses the same virtual shifting messages as Zwift."),
             ("Do I need the Zwift Companion app?", "Only for firmware updates. To ride, PedalCraft connects directly."),
             ("Windows or Mac?", "Both, plus Android and Chromebook, in Chrome or Edge."),
+            ("Does virtual shifting work on the Hub Classic?", "Not in the trainer, the Classic has a real cassette. A Zwift Click can still change the simulated grade per press."),
+            ("Can I cancel Zwift and keep using the Hub One?", "Yes. The Hub One and its Click keep working with PedalCraft after you cancel."),
         ],
     },
     {
@@ -82,12 +87,16 @@ GUIDES = [
         "sections": [
             ("What you get for free", "<ul><li>Live power, cadence, speed, heart rate and power zones</li><li>Virtual gears: Zwift Click, Play or Ride, or the arrow keys</li><li>Grade changes</li><li>A rider that pedals at your cadence</li></ul>"),
             ("What you need", "<ul><li>Windows 10 or 11 with Bluetooth</li><li>Chrome or Edge</li><li>A Bluetooth smart trainer (FTMS or Zwift Cog)</li></ul>"),
+            ("Bluetooth on a Windows PC", "<p>Most laptops have Bluetooth built in. Many desktop PCs don't: a small USB Bluetooth adapter (Bluetooth 4.0 or newer) fixes that. Check in <b>Settings → Bluetooth & devices</b> that Bluetooth is on. You don't pair the trainer in Windows; the browser asks for it when you click Connect trainer.</p><p>If the list stays empty: close Zwift, the Wahoo app and other trainer apps, and pedal a few turns so the trainer wakes up.</p>"),
+            ("Free and paid trainer apps on Windows", "<table style=\"width:100%;border-collapse:collapse;font-size:16px\"><tr><th align=left>App</th><th align=left>Price</th><th align=left>Good for</th></tr><tr><td>Zwift</td><td>monthly</td><td>virtual worlds, racing</td></tr><tr><td>Rouvy</td><td>monthly</td><td>real-video routes</td></tr><tr><td>TrainerRoad</td><td>monthly</td><td>structured plans</td></tr><tr><td>MyWhoosh</td><td>free</td><td>virtual worlds, install needed</td></tr><tr><td>PedalCraft</td><td>free, Pro $39 once</td><td>no install, Zwift Click shifting, ERG workouts</td></tr></table>"),
             ("Not a Zwift replacement", "<p>No virtual world, no racing, no group rides. Just your trainer, your numbers and your gears, without a monthly fee.</p>"),
         ],
         "faq": [
             ("Is there a free indoor cycling app for Windows?", "Yes. PedalCraft runs free in Chrome or Edge on Windows and connects your smart trainer over Bluetooth."),
             ("Can I do structured workouts?", "With PedalCraft Pro: ERG workouts from 20 minutes to 2 hours and an FTP test, $39 once."),
             ("Are rides saved?", "In the free version, no. Pro saves rides in your browser and exports them for Strava."),
+            ("Do I need to install anything?", "No. It runs in a Chrome or Edge tab. Nothing is installed on your PC."),
+            ("My PC has no Bluetooth. What now?", "Plug in a USB Bluetooth adapter (4.0 or newer). ANT+ sticks don't work in the browser."),
         ],
     },
     {
@@ -100,6 +109,9 @@ GUIDES = [
         "sections": [
             ("Welche Trainer gehen", "<ul><li><b>Zwift-Cog-Trainer</b> (Wahoo KICKR CORE 2, Zwift Hub One): echtes virtuelles Schalten in der Trainer-Firmware, wie in Zwift.</li><li><b>Bluetooth-FTMS-Trainer</b>, also die meisten Smart-Trainer seit etwa 2020 (zum Beispiel Tacx Neo 2T und Flux S mit aktueller Firmware, Elite Direto, Suito und Justo, Wahoo KICKR, Saris H3): Jeder Gang ändert die simulierte Steigung, das fährt sich wie Schalten.</li><li>Ältere Trainer, die nur ANT+ oder Tacx FE-C können, gehen noch nicht.</li></ul><p>Unsicher? <a href=\"/ride/\">Gratis-Version öffnen</a> und auf Connect trainer klicken. Erscheint dein Trainer in der Liste, geht es.</p>"),
             ("So verbindest du", "<ol><li>Zwift und andere Trainer-Apps auf allen Geräten beenden.</li><li><a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome oder Edge öffnen.</li><li>Connect trainer, dann Connect Click.</li><li>Losfahren: + schwerer, − leichter.</li></ol>"),
+            ("Wie fühlt sich das Schalten an?", "<p>Auf Zwift-Cog-Trainern schaltet die Firmware selbst, das ist identisch mit Zwift. Auf allen anderen Trainern verändert jeder der 24 Gänge die simulierte Steigung um 1 %. Bei gleicher Trittfrequenz wird es also spürbar schwerer oder leichter, wie mit einer echten Kassette.</p>"),
+            ("Typische Probleme", "<ul><li><b>Trainer erscheint nicht:</b> Zwift, Tacx Training oder My E-Training läuft noch und hält die Verbindung. Überall beenden, auch auf dem Handy.</li><li><b>Click erscheint nicht:</b> kurz vorher eine Taste drücken, damit er aufwacht.</li><li><b>Firefox oder Safari:</b> können kein Bluetooth im Browser. Chrome oder Edge nehmen, auf dem iPhone die Gratis-App Bluefy.</li><li><b>Linke Taste stoppt nach einer Minute:</b> das ist eine Sperre im Click v2, PedalCraft weckt sie alle 50 Sekunden neu.</li></ul>"),
+            ("Das ist kein Zwift-Ersatz", "<p>Keine virtuelle Welt, keine Rennen. PedalCraft ist zum Fahren, Schalten und Trainieren ohne Monatsabo.</p>"),
         ],
         "faq": [
             ("Kann ich den Zwift Click mit einem Tacx oder Elite benutzen?", "Ja, wenn der Trainer Bluetooth FTMS kann, und das können die meisten aktuellen Modelle. Jeder Druck auf den Click ändert die simulierte Steigung."),
@@ -157,6 +169,8 @@ GUIDES = [
             ("Can the Zwift Click shift an Elite Suito?", "Yes. PedalCraft turns each Click press into a grade change on the Suito over Bluetooth FTMS."),
             ("Does it need Zwift?", "No. It runs in your browser without the Zwift app or an account."),
             ("Windows or Mac?", "Both, plus Android and Chromebook, in Chrome or Edge."),
+            ("Does virtual shifting work on the Hub Classic?", "Not in the trainer, the Classic has a real cassette. A Zwift Click can still change the simulated grade per press."),
+            ("Can I cancel Zwift and keep using the Hub One?", "Yes. The Hub One and its Click keep working with PedalCraft after you cancel."),
         ],
     },
     {
