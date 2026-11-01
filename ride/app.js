@@ -98,8 +98,14 @@ const ride = {
 };
 let trainer = null;
 
+// Bildschirm während der Fahrt wach halten (Handy/Tablet am Lenker), nach Tab-Wechsel neu anfordern
+let wake = null;
+async function keepAwake() { if (wake || !navigator.wakeLock || document.visibilityState !== 'visible') return; try { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } catch {} }
+document.addEventListener('visibilitychange', () => { if (ride.lastData && performance.now() - ride.lastData < 60000) keepAwake(); });
+
 function report({ power, cadence, speed, hr }) {
   const now = performance.now();
+  if (!ride.demo && !EMBED) { ride.lastData = now; keepAwake(); }
   // Einmal pro Sitzung melden, ob überhaupt Daten vom Trainer kommen (unterscheidet «nicht gefahren» von «keine Daten»)
   if (!ride.demo) { if (power != null || cadence != null) ping('data'); if (power > 0) ping('data-power'); if (cadence > 0) ping('data-cadence'); }
   if (power != null) { ride.power = Math.max(0, power); ride.t.power = now; }
@@ -843,7 +849,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 22; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 23; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.

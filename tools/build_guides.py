@@ -50,6 +50,8 @@ GUIDES = [
         "sections": [
             ("What works", "<ul><li>Shift paddles: harder and easier</li><li>Both controllers at the same time</li><li>Any Zwift Cog trainer (real virtual shifting) or Bluetooth FTMS trainer (grade per gear)</li></ul>"),
             ("Connect", "<ol><li>Quit Zwift on all devices.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect your trainer, then press a button on each Play controller and click Connect Click.</li></ol>"),
+            ("Play vs. Click", "<p>The Zwift Click only has shift buttons. Zwift Play controllers also have a joystick, brake and action buttons for steering and power-ups in Zwift. Outside Zwift those extra buttons have nothing to do, so in PedalCraft the Play controllers act like a Click: one side shifts harder, the other easier.</p>"),
+            ("Where the gears go", "<p>On a Zwift Cog trainer (KICKR CORE 2, Zwift Hub One) the trainer firmware shifts, exactly like in Zwift. On any other Bluetooth FTMS trainer each gear changes the simulated grade by one percent.</p>"),
         ],
         "faq": [
             ("Do Zwift Play controllers need a subscription?", "Not with PedalCraft. They connect over Bluetooth directly in the browser."),
@@ -147,6 +149,8 @@ GUIDES = [
             ("Which Tacx models", "<p>Tacx trainers with current firmware support Bluetooth FTMS, the standard PedalCraft uses: Neo 2T, Neo 3M, Flux S and 2, Flow Smart and others. Update the firmware in the Tacx Training app first. The very first Neo and Flux and the Vortex only speak Tacx FE-C and don't connect yet.</p>"),
             ("How shifting feels", "<p>Each gear changes the simulated grade by one percent. Shift up and the Tacx gets heavier, shift down and it gets lighter, the way it does on a road.</p>"),
             ("Connect in a minute", "<ol><li>Close Zwift and the Tacx app.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, pick your Tacx, then connect the Click.</li></ol>"),
+            ("Tacx in the device list", "<p>Your Tacx shows up with its model name in the browser's device list. If it doesn't show up at all, it is probably still connected to the Tacx Training app or Zwift on your phone. Close them and pedal a few turns.</p>"),
+            ("Neo: road feel and the Click", "<p>The Neo can simulate cobbles and descents in some apps. PedalCraft doesn't use those effects. It sets the grade, and the Click moves it up or down one percent per gear, which the Neo answers almost instantly.</p>"),
         ],
         "faq": [
             ("Does the Tacx Neo work with the Zwift Click without Zwift?", "Yes, with current firmware the Neo speaks Bluetooth FTMS and PedalCraft shifts it with the Click."),
@@ -164,13 +168,13 @@ GUIDES = [
             ("Which Elite models", "<p>Elite smart trainers with Bluetooth FTMS work, which covers the current Direto, Suito, Justo and Avanti models. Update the firmware in Elite's myETraining app if the trainer doesn't show up.</p>"),
             ("How to connect", "<ol><li>Quit Zwift on every device.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, pick your Elite, then connect the Click.</li></ol>"),
             ("What you get", "<p>Live watts, cadence, speed and zones, shifting with the Click, and grade changes with the arrow keys. PedalCraft Pro adds ERG workouts, an FTP test and a ride log.</p>"),
+            ("Elite in the device list", "<p>Your Elite shows up with its model name in the browser's device list. If the list is empty, close myETraining and Zwift on all devices and pedal a few turns to wake the trainer.</p>"),
+            ("Older Elite trainers", "<p>Some older Elite models only speak ANT+ FE-C, or Bluetooth without FTMS. A firmware update in myETraining often adds FTMS. If your trainer still doesn't appear in the list after the update, it can't be controlled from the browser.</p>"),
         ],
         "faq": [
             ("Can the Zwift Click shift an Elite Suito?", "Yes. PedalCraft turns each Click press into a grade change on the Suito over Bluetooth FTMS."),
             ("Does it need Zwift?", "No. It runs in your browser without the Zwift app or an account."),
             ("Windows or Mac?", "Both, plus Android and Chromebook, in Chrome or Edge."),
-            ("Does virtual shifting work on the Hub Classic?", "Not in the trainer, the Classic has a real cassette. A Zwift Click can still change the simulated grade per press."),
-            ("Can I cancel Zwift and keep using the Hub One?", "Yes. The Hub One and its Click keep working with PedalCraft after you cancel."),
         ],
     },
     {
@@ -183,11 +187,16 @@ GUIDES = [
             ("What you need", "<ul><li>Windows 10 or 11 with Bluetooth (built in or a USB adapter)</li><li>Chrome or Edge</li><li>A Zwift Click, Play or Ride and a Bluetooth smart trainer</li></ul>"),
             ("Connect", "<ol><li>Close Zwift.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a>.</li><li>Connect trainer, then the Click. Ride and shift.</li></ol>"),
             ("If the trainer doesn't show up", "<p>Make sure no other app or phone is connected to the trainer, and that Windows Bluetooth is on. Desktop PCs without Bluetooth need a small USB Bluetooth adapter.</p>"),
+            ("Don't pair in Windows settings", "<p>You don't add the trainer or the Click under <b>Settings → Bluetooth & devices</b>. The browser connects them itself when you click Connect. If you paired the Click in Windows before and it misbehaves, remove it there and connect it again in the browser.</p>"),
+            ("PC far from the trainer?", "<p>Bluetooth reaches a few metres. If your PC is in another corner of the room, a USB Bluetooth adapter on a short extension cable near the bike helps a lot with drop-outs.</p>"),
+            ("Big screen, small effort", "<p>A laptop or TV-connected PC makes a good ride display: watts, cadence, gear, heart rate and your zones in large type. Shift with the Click, or with the arrow keys if you don't have one.</p>"),
         ],
         "faq": [
             ("Do I need to install anything on Windows?", "No. PedalCraft runs in Chrome or Edge using Web Bluetooth."),
             ("Does ERG work on Windows?", "Yes, with PedalCraft Pro: ERG workouts, FTP test and a ride log, $39 once."),
             ("Does Firefox work?", "No, Firefox doesn't support Web Bluetooth. Use Chrome or Edge."),
+            ("Does it work without a Zwift Click?", "Yes. Shift with the + and − buttons on screen or the arrow keys."),
+            ("Do ANT+ sticks work?", "No. Browsers only talk Bluetooth. Use the trainer's Bluetooth connection."),
         ],
     },
     {
@@ -198,12 +207,17 @@ GUIDES = [
         "lead": "An Android phone or tablet is enough: open PedalCraft in Chrome, connect your trainer and Click, and ride. No app to install, no subscription.",
         "sections": [
             ("Connect", "<ol><li>Close Zwift and the Zwift Companion app.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome.</li><li>Allow Bluetooth and location if Android asks (Android needs it to scan).</li><li>Connect trainer, then the Click.</li></ol>"),
-            ("Tablet on the bars", "<p>A tablet on the handlebars makes a great display: big watts, cadence, gear and time.</p>"),
+            ("Tablet on the bars", "<p>A tablet on the handlebars makes a great display: big watts, cadence, gear and time. The screen stays on while you ride, so it doesn't lock halfway through an interval.</p>"),
+            ("Android permissions", "<ul><li><b>Android 12 and newer:</b> Chrome asks for «Nearby devices». Allow it, otherwise the device list stays empty.</li><li><b>Android 11 and older:</b> Bluetooth scanning needs location. Turn on location and allow it for Chrome.</li><li>If you denied it once: Settings → Apps → Chrome → Permissions.</li></ul>"),
+            ("Phone as the head unit", "<ul><li>Heart rate: connect a chest strap, or a watch that broadcasts heart rate, with <b>Connect heart rate</b>.</li><li>Keep the phone plugged in on long rides. Bluetooth and a bright screen use battery.</li><li>Stay close: Bluetooth gets flaky beyond a few metres or behind a metal frame.</li></ul>"),
+            ("Phone, Zwift Companion and the Click", "<p>If Zwift Companion is open on the same phone, it can grab the Click. Close it fully (swipe it away), then connect the Click in Chrome.</p>"),
         ],
         "faq": [
             ("Is there an app to install?", "No. It runs in Chrome on Android."),
             ("Does it work on iPhone?", "Not in Safari. Install the free Bluefy browser app and open pedalcraft.online/ride in it."),
             ("Can I save rides on Android?", "Yes, with PedalCraft Pro: rides are saved in the browser and you can download them for Strava."),
+            ("Which browser on Android?", "Chrome, Edge or Samsung Internet. Firefox for Android can't use Bluetooth."),
+            ("Does it work on a Chromebook?", "Yes, in Chrome, the same way as on Android."),
         ],
     },
     {
