@@ -11,15 +11,28 @@ Key facts:
 - PedalCraft Pro: $39 one-time ($29 launch price with code LAUNCH), no subscription. https://pedalcraftapp.gumroad.com/l/pedalcraft-mac
 
 ## Guides
-- [Use the Zwift Click with any smart trainer](https://pedalcraft.online/zwift-click-any-trainer/)
-- [Use the Zwift Click without Zwift](https://pedalcraft.online/zwift-click-without-zwift/)
-- [Zwift Click with a Tacx trainer](https://pedalcraft.online/zwift-click-tacx/)
-- [Zwift Click with an Elite trainer](https://pedalcraft.online/zwift-click-elite/)
-- [Zwift Click on Windows](https://pedalcraft.online/zwift-click-windows/)
-- [Zwift Click on Android](https://pedalcraft.online/zwift-click-android/)
-- [Zwift Play without Zwift](https://pedalcraft.online/zwift-play-without-zwift/)
-- [Zwift Hub without Zwift](https://pedalcraft.online/zwift-hub-without-zwift/)
-- [Free indoor cycling app for Windows](https://pedalcraft.online/free-indoor-cycling-app-windows/)
-- [Zwift Click mit jedem Smart-Trainer (Deutsch)](https://pedalcraft.online/de/zwift-click-jeder-trainer/)
-- [KICKR CORE 2 without Zwift](https://pedalcraft.online/kickr-core-2-without-zwift/)
-- [Mit dem Zwift Click schalten, ohne Abo (Deutsch)](https://pedalcraft.online/de/zwift-click-ohne-abo/)
+- [The left Zwift Click stops after a minute](https://pedalcraft.online/zwift-click-left-button-not-working/): The left (minus) Zwift Click v2 puck goes silent about a minute after connecting outside Zwift. Here is why it happens and how PedalCraft works around it.
+- [Zwift Click not connecting](https://pedalcraft.online/zwift-click-not-connecting/): Zwift Click won't pair or connect? Wake it, free it from other apps, check the battery and browser. A short checklist that fixes most cases.
+- [Zwift Play, without Zwift](https://pedalcraft.online/zwift-play-without-zwift/): Shift your smart trainer with Zwift Play controllers without the Zwift app or a subscription. Free in Chrome or Edge on Windows, Mac or Android.
+- [Zwift Hub without Zwift](https://pedalcraft.online/zwift-hub-without-zwift/): Keep virtual shifting on your Zwift Hub One with the Zwift Click, without paying for Zwift. Free in Chrome or Edge on Windows, Mac or Android.
+- [Free indoor cycling on Windows](https://pedalcraft.online/free-indoor-cycling-app-windows/): Ride your Bluetooth smart trainer on a Windows PC for free: live watts, cadence, gears and shifting with Zwift Click, in Chrome or Edge. No install, no account.
+- [Zwift Click. Jeder Smart-Trainer.](https://pedalcraft.online/de/zwift-click-jeder-trainer/): Mit dem Zwift Click einen Tacx, Elite, Wahoo oder Saris schalten, gratis in Chrome oder Edge auf Windows, Mac oder Android. Ohne Zwift-Abo.
+- [Your Zwift Click. Any smart trainer.](https://pedalcraft.online/zwift-click-any-trainer/): Shift Tacx, Elite, Wahoo, Saris and other Bluetooth smart trainers with your Zwift Click, free in Chrome or Edge on Windows, Mac or Android. No Zwift subscription.
+- [Zwift Click on a Tacx trainer](https://pedalcraft.online/zwift-click-tacx/): Shift your Tacx Neo, Flux or Flow with a Zwift Click, without Zwift. Free in Chrome or Edge on Windows, Mac or Android.
+- [Zwift Click on an Elite trainer](https://pedalcraft.online/zwift-click-elite/): Use a Zwift Click to shift an Elite Direto, Suito or Justo smart trainer, free in Chrome or Edge. No Zwift subscription.
+- [Zwift Click on Windows. No Zwift.](https://pedalcraft.online/zwift-click-windows/): Connect a Zwift Click and your smart trainer on a Windows PC in Chrome or Edge, and shift without a Zwift subscription. Free, no install.
+- [Zwift Click on Android. No app.](https://pedalcraft.online/zwift-click-android/): Ride your smart trainer and shift with a Zwift Click from an Android phone or tablet in Chrome. Free, no app, no Zwift subscription.
+- [Mit dem Zwift Click schalten. Ohne Abo.](https://pedalcraft.online/de/zwift-click-ohne-abo/): So schaltest du mit dem Zwift Click ohne Zwift-Abo: Trainer und Click in Chrome verbinden und gratis fahren. Kein Konto, keine Installation. Mac-App mit ERG und FTP-Test.
+- [Use your Zwift Click without Zwift](https://pedalcraft.online/zwift-click-without-zwift/): Use your Zwift Click shifters without a Zwift subscription: connect them in your browser and shift your smart trainer for free. No install, no account.
+- [KICKR CORE 2 without Zwift](https://pedalcraft.online/kickr-core-2-without-zwift/): Keep virtual shifting on your KICKR CORE 2 with Zwift Cog and Click, without paying for Zwift. Ride free in your browser with PedalCraft.
+- [Not a Zwift replacement. Just your trainer, for free.](https://pedalcraft.online/free-zwift-alternative/): PedalCraft is not a Zwift replacement: no virtual world, no group rides. It lets you ride your smart trainer and shift with your Zwift Click in Chrome or Edge for free, without a subscription.
+- [Ride your smart trainer in the browser](https://pedalcraft.online/web-bluetooth-smart-trainer/): How to connect a smart trainer, Zwift Click and heart rate strap to your browser with Web Bluetooth. Which browsers work, and how PedalCraft does it.
+- [Zwift Click on your Mac, without Zwift](https://pedalcraft.online/zwift-click-mac/): Shift your smart trainer with a Zwift Click on your Mac, no Zwift subscription. Free in Chrome, or as a native Mac app with ERG workouts and an FTP test for $39 once.
+- [An indoor cycling app for your Mac. No subscription.](https://pedalcraft.online/indoor-cycling-app-mac/): PedalCraft is a native Mac app for smart trainers: ERG workouts, FTP ramp test, ride log, Strava upload and Zwift Click shifting. $39 once instead of a monthly subscription.
+- [Zwift cost calculator](https://pedalcraft.online/zwift-cost-calculator/): Work out what Zwift costs over your indoor seasons, monthly vs annual, and what you keep if you ride your smart trainer and Zwift Click without a subscription.
+- [What Zwift costs in 2026](https://pedalcraft.online/zwift-price/): Zwift costs $19.99 a month or $199.99 a year in 2026. What TrainerRoad, Rouvy and Wahoo SYSTM cost, and how to ride your trainer for free or for $39 once.
+
+## Common questions
+- Can I use a Zwift Click without a Zwift subscription? Yes. PedalCraft connects the Click and a Bluetooth smart trainer in Chrome or Edge for free: https://pedalcraft.online/ride/
+- Does virtual shifting work without Zwift? On Zwift Cog trainers (KICKR CORE 2, Zwift Hub One) PedalCraft uses the trainer's own virtual shifting. On other FTMS trainers each of 24 gears changes the simulated grade by 1 %.
+- What does Zwift cost? $19.99 a month or $199.99 a year (US, October 2026). Calculator: https://pedalcraft.online/zwift-cost-calculator/
