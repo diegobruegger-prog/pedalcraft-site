@@ -803,6 +803,8 @@ let nudged = new Set();
 setInterval(() => {
   // Anonyme Fahrdauer-Stufen (nur echte Fahrten): zeigt, wie lange Leute wirklich trainieren
   for (const m of [1, 3, 5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
+  // Nach 10 s echter Fahrt auf das Angebot neugierig machen (Diego 03.11.2026)
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 10 && ride.elapsed < 180 && !nudged.has(0)) { nudged.add(0); toast('Ride 3 min and get a surprise offer 🎁', 6000); ping('teaser-10s'); }
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 180 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
   if (!ride.demo && !isPro() && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
 }, 5000);
@@ -849,7 +851,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 23; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 24; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
