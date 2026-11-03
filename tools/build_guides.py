@@ -7,6 +7,13 @@ import json, os, html
 BUY = "https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH"
 SITE = "https://pedalcraft.online"
 
+CALC = r"""<div class="card" id="calc"><style>#calc label{display:block;margin:10px 0 4px;color:var(--soft);font-size:15px}#calc input,#calc select{width:100%;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:#0A0A0B;color:#F5F5F7;font:inherit;font-size:16px;padding:0 12px}#calc .out{font-size:30px;font-weight:700;letter-spacing:-.03em;margin:18px 0 4px}#calc .vs{color:var(--soft);margin:0}</style>
+<label for="c-plan">Zwift plan</label><select id="c-plan"><option value="m">Monthly ($19.99), cancel in summer</option><option value="y">Annual ($199.99)</option></select>
+<label for="c-mon">Months a year you ride indoors</label><input id="c-mon" type="number" min="1" max="12" value="6">
+<label for="c-yrs">Years</label><input id="c-yrs" type="number" min="1" max="10" value="3">
+<div class="out" id="c-out"></div><p class="vs" id="c-vs"></p></div>
+<script>(function(){var f=function(){var m=Math.min(12,Math.max(1,+document.getElementById('c-mon').value||1)),y=Math.min(10,Math.max(1,+document.getElementById('c-yrs').value||1)),a=document.getElementById('c-plan').value==='y';var t=a?199.99*y:19.99*m*y;document.getElementById('c-out').textContent='Zwift: $'+Math.round(t)+' over '+y+(y>1?' years':' year');document.getElementById('c-vs').innerHTML='PedalCraft: <b>$0</b> in the browser, or <b>$39 once</b> for Pro. '+(t>39?'You keep $'+Math.round(t-39)+'.':'')+'';};['c-plan','c-mon','c-yrs'].forEach(function(i){document.getElementById(i).addEventListener('input',f)});f();var once=0;document.getElementById('calc').addEventListener('input',function(){if(once++)return;fetch('https://pedalcraft-stats.pages.dev/hit/calc-use',{mode:'no-cors',keepalive:true}).catch(function(){})});})();</script>"""
+
 GUIDES = [
     {
         "slug": "zwift-click-left-button-not-working",
@@ -355,6 +362,24 @@ GUIDES = [
         ],
     },
     {
+        "slug": "zwift-cost-calculator",
+        "title": "Zwift cost calculator: what Zwift really costs you (2026)",
+        "desc": "Work out what Zwift costs over your indoor seasons, monthly vs annual, and what you keep if you ride your smart trainer and Zwift Click without a subscription.",
+        "h1": "Zwift cost calculator",
+        "lead": "How many months a year do you ride indoors, and for how many winters? Put in your numbers and see what Zwift costs you in total.",
+        "sections": [
+            ("Your numbers", CALC),
+            ("Monthly or annual?", "<p>The annual plan ($199.99) only pays off if you keep Zwift for more than 10 months a year. Most people ride indoors from about October to March, so cancelling the monthly plan ($19.99) every summer is usually cheaper: six months cost about $120 a year.</p><p>US list prices, checked October 2026. Prices differ by country and change; check Zwift before you subscribe.</p>"),
+            ("What you lose without Zwift", "<p>The virtual worlds, group rides, races and Zwift's training plans. If you mostly ride alone, shift with your Zwift Click and look at your watts, you don't need them.</p>"),
+            ("Riding without a subscription", f"<p>The <a href=\"/ride/\">PedalCraft browser version</a> connects your smart trainer and Zwift Click, Play or Ride in Chrome or Edge, for free. <a href=\"{BUY}\">PedalCraft Pro</a> adds ERG workouts, an FTP test and a ride log for $39 once. It has no virtual world.</p>"),
+        ],
+        "faq": [
+            ("How much does Zwift cost per year?", "$199.99 on the annual plan, or $19.99 a month. Six indoor months on the monthly plan cost about $120."),
+            ("Is the Zwift annual plan worth it?", "Only if you ride Zwift more than about 10 months a year. Otherwise monthly and cancelling in summer is cheaper."),
+            ("Can I keep using my Zwift Click after cancelling?", "Yes. PedalCraft connects the Click and your trainer in the browser without a Zwift subscription."),
+        ],
+    },
+    {
         "slug": "zwift-price",
         "title": "How much does Zwift cost in 2026, and the cheaper options",
         "desc": "Zwift costs $19.99 a month or $199.99 a year in 2026. What TrainerRoad, Rouvy and Wahoo SYSTM cost, and how to ride your trainer for free or for $39 once.",
@@ -362,7 +387,7 @@ GUIDES = [
         "lead": "Zwift costs $19.99 a month or $199.99 a year in the US. Here is what the other big apps charge, and how to keep riding your smart trainer if you don't want another subscription.",
         "sections": [
             ("Prices in 2026", "<ul><li><b>Zwift</b>: $19.99 a month or $199.99 a year</li><li><b>TrainerRoad</b>: $21.99 a month or $209.99 a year</li><li><b>Rouvy</b>: $19.99 a month or $179.99 a year</li><li><b>Wahoo SYSTM</b> (Pro): $17.99 a month or $179.99 a year</li></ul><p>US list prices, checked October 2026. Prices differ by country and change; check each app before you subscribe.</p>"),
-            ("Over three years", "<p>On annual plans, three winters cost about $600 for Zwift, $630 for TrainerRoad and $540 for Rouvy or Wahoo SYSTM.</p>"),
+            ("Over three years", "<p>On annual plans, three winters cost about $600 for Zwift, $630 for TrainerRoad and $540 for Rouvy or Wahoo SYSTM. Put in your own months with the <a href=\"/zwift-cost-calculator/\">Zwift cost calculator</a>.</p>"),
             ("The no-subscription way", f"<p>If you mainly want to ride, shift with your Zwift Click and see your watts, the <a href=\"/ride/\">PedalCraft browser version</a> is free. The <a href=\"{BUY}\">Mac app</a> adds ERG workouts, an FTP test, a ride log and Strava upload for $39 once. It has no virtual world and no group rides.</p>"),
         ],
         "faq": [
