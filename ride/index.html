@@ -212,6 +212,29 @@
     <p class="note">One-time purchase, all future updates included. Works in Chrome and Edge on Windows, Mac, Android and Chromebook, plus the native Mac app (macOS 14+).</p>
   </div>
 </div>
+<div class="overlay hidden" id="notfound">
+  <div class="panel box">
+    <h2>Nothing in the list?</h2>
+    <ul style="color:var(--soft);line-height:1.55;padding-left:20px;margin:8px 0">
+      <li><b>Trainer:</b> pedal for a few seconds, that wakes it up.</li>
+      <li><b>Zwift Click:</b> press a button on it right before you connect.</li>
+      <li>Quit Zwift, Zwift Companion and your trainer's app on every device. Most trainers talk to only one app at a time.</li>
+      <li>Computer without Bluetooth? Open this page on an Android phone, or use a USB Bluetooth adapter.</li>
+    </ul>
+    <div class="actions">
+      <button class="btn primary" id="nf-retry">Try again</button>
+      <button class="btn" id="nf-demo">Try the demo</button>
+      <button class="btn" id="nf-close">Close</button>
+    </div>
+    <p style="margin:14px 0 0"><b>Not at your trainer right now?</b></p>
+    <form class="sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{mode:'no-cors',keepalive:true})}catch(e){}" data-src="notfound">
+      <input type="hidden" name="seller_id" value="7781126287159">
+      <input type="email" name="email" required placeholder="you@example.com" aria-label="Email">
+      <button type="submit">Email me the link</button>
+    </form>
+    <p class="subnote">We email you the link and the $29 launch code. Unsubscribe anytime.</p>
+  </div>
+</div>
 <div class="overlay hidden" id="pick">
   <div class="panel box wide">
     <h2>Pick a workout</h2>
@@ -230,6 +253,6 @@
 </div>
 <div class="toast hidden" id="toast"></div>
 
-<script type="module" src="app.js?v=25"></script>
+<script type="module" src="app.js?v=26"></script>
 </body>
 </html>

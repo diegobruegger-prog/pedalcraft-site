@@ -834,10 +834,15 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'ArrowRight') changeGrade(0.5); else if (e.key === 'ArrowLeft') changeGrade(-0.5);
 });
 const hasBT = !!(navigator.bluetooth && navigator.bluetooth.requestDevice);
-const needBT = fn => safe(async () => { ping('connect-tap'); if (!hasBT) { $('welcome').classList.remove('hidden'); return; } await fn(); });
+// Bluetooth-Liste abgebrochen oder leer: bisher passierte nichts, die meisten gaben hier auf (Diego 06.11.2026)
+const needBT = (fn, help = true) => { const run = async () => { ping('connect-tap'); if (!hasBT) { $('welcome').classList.remove('hidden'); return; } try { await fn(); } catch (e) { if (e && e.name === 'NotFoundError' && help && !EMBED) { $('notfound').classList.remove('hidden'); lastTry = run; ping('notfound-help'); } throw e; } }; return safe(run); };
+let lastTry = null;
+$('nf-retry').onclick = () => { $('notfound').classList.add('hidden'); ping('notfound-retry'); safe(lastTry)(); };
+$('nf-demo').onclick = () => { $('notfound').classList.add('hidden'); ping('notfound-demo'); startDemo(); };
+$('nf-close').onclick = () => $('notfound').classList.add('hidden');
 $('c-trainer').onclick = needBT(connectTrainer);
 $('c-ctrl').onclick = needBT(connectController);
-$('c-hr').onclick = needBT(connectHR);
+$('c-hr').onclick = needBT(connectHR, false);
 const closeWelcome = () => $('welcome').classList.add('hidden');
 $('start').onclick = needBT(async () => { closeWelcome(); await connectTrainer(); });
 $('demo').onclick = () => { closeWelcome(); startDemo(); };
@@ -866,7 +871,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 25; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 26; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.

@@ -445,6 +445,7 @@ PAGE = """<!doctype html>
 <video class="promo" src="/media/pedalcraft-16x9.mp4" poster="/media/pedalcraft-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
 <div class="cta"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
 {sections}
+<div class="cta"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
 <div class="card">{maccard}</div>
 <div class="card"><b>{subhead}</b><form class="sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{{mode:'no-cors',keepalive:true}})}}catch(e){{}}" data-src="guide">
   <input type="hidden" name="seller_id" value="7781126287159">
@@ -454,6 +455,7 @@ PAGE = """<!doctype html>
 <p class="subnote">We send you the link and the $29 launch code. Unsubscribe anytime.</p></div>
 <h2>FAQ</h2>
 {faq}
+<div class="cta end"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
 </main>
 <footer>
 <div>{links}</div>
