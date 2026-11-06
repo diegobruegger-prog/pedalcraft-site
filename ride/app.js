@@ -544,6 +544,7 @@ $('pro-key-go').onclick = async () => {
     if (await checkKey(key)) {
       pro = { key, t: Date.now() }; store.set('pc_pro', pro); ping('unlock-ok');
       $('pro').classList.add('hidden'); renderPro(); toast('PedalCraft Pro is unlocked. Have a good ride!', 5000);
+      if (endOffer) { endOffer = false; $('pro-close').textContent = 'Keep riding free'; saveRide(); }
     } else { ping('unlock-bad'); toast('That key did not work. Copy it again from your Gumroad receipt.', 6000); }
   } catch (e) { toast('Could not check the key. Are you online?', 5000); }
   $('pro-key-go').disabled = false; $('pro-key-go').textContent = 'Unlock';
@@ -784,9 +785,21 @@ function showRideOffer() {
   $('pro').classList.remove('hidden');
   ping('offer-ride10');
 }
+// Angebot nochmals am Fahrtende (Diego 06.11.2026): beim Treten kauft niemand, danach ist die Fahrt der Grund
+let endOffer = false;
+function showEndOffer() {
+  $('pro-title').textContent = 'Nice ride.';
+  $('pro-text').textContent = `${Math.floor(ride.elapsed / 60)} min, ${(ride.dist / 1000).toFixed(1)} km, ${Math.round(ride.kj)} kJ. This ride isn't saved and is gone when you close this tab. PedalCraft Pro keeps it and every ride after it, ready for Strava, plus ERG workouts and an FTP test: $24 with code RIDE10 instead of $39. One-time, no subscription. Buy in the new tab, paste your key here, and this ride is saved.`;
+  $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
+  $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get it for $24';
+  $('pro-close').textContent = 'Not now';
+  offerOpen = true; endOffer = true;
+  $('pro').classList.remove('hidden');
+  ping('offer-end');
+}
 document.querySelectorAll('.lock').forEach(b => b.onclick = () => showPro(b.dataset.f));
-$('pro-close').onclick = () => $('pro').classList.add('hidden');
-$('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); };
+$('pro-close').onclick = () => { $('pro').classList.add('hidden'); $('pro-close').textContent = 'Keep riding free'; endOffer = false; };
+$('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); if (endOffer) ping('buy-end'); };
 $('upsell-unlock').onclick = showUnlock;
 // Weitersagen: teilen oder Link kopieren (zählt nur, dass geteilt wurde)
 $('share').onclick = async () => {
@@ -799,13 +812,15 @@ $('pro-key-in').onkeydown = e => { if (e.key === 'Enter') $('pro-key-go').click(
 renderPro();
 if (location.hostname === 'localhost') window.__pc = { samples, saveRide, tcx, dbAll, ride, startWorkout, FTP_TEST, get wo() { return wo; } };   // nur zum Testen
 // Nach 10 und 30 Minuten echter Fahrt freundlich daran erinnern, dass die Fahrt nicht gespeichert wird
-let nudged = new Set();
+let nudged = new Set(), lastEl = -1, stillSince = 0;
 setInterval(() => {
   // Anonyme Fahrdauer-Stufen (nur echte Fahrten): zeigt, wie lange Leute wirklich trainieren
   for (const m of [1, 3, 5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
   // Nach 10 s echter Fahrt auf das Angebot neugierig machen (Diego 03.11.2026)
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 10 && ride.elapsed < 180 && !nudged.has(0)) { nudged.add(0); toast('Ride 3 min and get a surprise offer 🎁', 6000); ping('teaser-10s'); }
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 180 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
+  if (ride.elapsed !== lastEl) { lastEl = ride.elapsed; stillSince = performance.now(); }
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 300 && performance.now() - stillSince >= 60000 && !nudged.has('end')) { nudged.add('end'); showEndOffer(); }
   if (!ride.demo && !isPro() && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
 }, 5000);
 
@@ -851,7 +866,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 24; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 25; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
