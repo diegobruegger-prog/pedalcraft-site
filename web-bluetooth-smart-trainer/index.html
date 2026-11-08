@@ -13,7 +13,7 @@
 <link rel="icon" href="/img/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does Chrome ask me to pick each device?", "acceptedAnswer": {"@type": "Answer", "text": "Web Bluetooth only connects to devices you choose yourself, one at a time. That is a privacy feature of the browser."}}, {"@type": "Question", "name": "Does it work offline?", "acceptedAnswer": {"@type": "Answer", "text": "The page needs to load once; after that the Bluetooth connection is local between your browser and the trainer."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does Chrome ask me to pick each device?", "acceptedAnswer": {"@type": "Answer", "text": "Web Bluetooth only connects to devices you choose yourself, one at a time. That is a privacy feature of the browser."}}, {"@type": "Question", "name": "Does it work offline?", "acceptedAnswer": {"@type": "Answer", "text": "The page needs to load once; after that the Bluetooth connection is local between your browser and the trainer."}}, {"@type": "Question", "name": "Which trainers work?", "acceptedAnswer": {"@type": "Answer", "text": "Zwift Cog trainers such as the Wahoo KICKR CORE 2 and Zwift Hub One with real virtual shifting, and most Bluetooth FTMS smart trainers from Tacx, Elite, Wahoo, Saris and others."}}]}</script>
 <script src="/ad.js?v=7"></script>
 <style>
   :root { --bg:#0A0A0B; --card:#141416; --line:rgba(255,255,255,.08); --ink:#F5F5F7; --soft:#8E8E93; --accent:#3D8BFF; }
@@ -52,6 +52,12 @@
 <p>Everything happens in your browser tab. PedalCraft has no account and no server for your data; the free version keeps nothing once you close the tab.</p>
 <h2>Try it</h2>
 <p>Open <a href="/ride/">pedalcraft.online/ride</a>, connect your trainer, or start the demo.</p>
+<h2>Step by step in Chrome</h2>
+<ol><li>Quit Zwift and your trainer's app on every device, so the trainer is free.</li><li>Pedal for a few seconds so the trainer wakes up.</li><li>Open <a href="/ride/">pedalcraft.online/ride</a> and click <b>Connect trainer</b>. Chrome shows a list of nearby devices; pick yours.</li><li>Click <b>Connect Click</b>, press a button on the Click and pick it.</li><li>Optional: <b>Heart rate</b> for a chest strap.</li></ol>
+<h2>Common problems</h2>
+<ul><li><b>The list stays empty:</b> the device is asleep or connected to another app.</li><li><b>Windows PC without Bluetooth:</b> a small USB Bluetooth adapter is enough, or use an Android phone.</li><li><b>Android:</b> Chrome asks for the Nearby devices permission (older Android: location). Allow it.</li><li><b>Firefox or Safari:</b> open the page in Chrome or Edge instead.</li></ul>
+<h2>Phone or tablet on the handlebar</h2>
+<p>On Android, PedalCraft keeps the screen on while you ride, so the display doesn't go dark between shifts.</p>
 <div class="cta"><a class="pill" href="/ride/">Start riding</a><a class="pill ghost" href="/ride/?demo=1">Try the demo ›</a></div>
 <div class="card"><b>PedalCraft Pro</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log. In the browser on Windows, Mac and Android, plus a native Mac app. <a href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">$39 once, $29 at launch, no subscription</a>.</div>
 <div class="card"><b>Not at your computer? Get the link by email:</b><form class="sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{mode:'no-cors',keepalive:true})}catch(e){}" data-src="guide">
@@ -63,6 +69,7 @@
 <h2>FAQ</h2>
 <details><summary>Why does Chrome ask me to pick each device?</summary><p>Web Bluetooth only connects to devices you choose yourself, one at a time. That is a privacy feature of the browser.</p></details>
 <details><summary>Does it work offline?</summary><p>The page needs to load once; after that the Bluetooth connection is local between your browser and the trainer.</p></details>
+<details><summary>Which trainers work?</summary><p>Zwift Cog trainers such as the Wahoo KICKR CORE 2 and Zwift Hub One with real virtual shifting, and most Bluetooth FTMS smart trainers from Tacx, Elite, Wahoo, Saris and others.</p></details>
 <div class="cta end"><a class="pill" href="/ride/">Start riding</a><a class="pill ghost" href="/ride/?demo=1">Try the demo ›</a></div>
 </main>
 <footer>
