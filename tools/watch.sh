@@ -1,6 +1,6 @@
 #!/bin/zsh
 # Wartet, bis sich ein wichtiger Zähler ändert, und meldet dann "NEU ..."
-K="buy-click trainer ride-1m ride-3m ride-10m offer-ride10 buy-ride10 unlock-ok teaser-10s calc-use offer-end buy-end ride-saved notfound-help notfound-retry"
+K="buy-click trainer ride-1m ride-3m ride-10m offer-ride10 buy-ride10 unlock-ok teaser-10s calc-use offer-end buy-end ride-saved notfound-help notfound-retry bt-fallback"
 read_counts() {
   curl -s -A "Mozilla/5.0 pedalcraft-watch" https://pedalcraft-stats.pages.dev/all | K="$K" python3 -c '
 import json,os,sys

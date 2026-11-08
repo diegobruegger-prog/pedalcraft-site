@@ -320,8 +320,19 @@ async function connectHR() {
   await run();
 }
 
+// Bluefy (iPhone) und manche Browser lehnen einzelne Filter ab und werfen sofort einen Fehler (08.11.2026).
+// Dann einmal mit «alle Geräte zeigen» nachfragen, statt aufzugeben.
+async function pickDevice(opts) {
+  try { return await navigator.bluetooth.requestDevice(opts); }
+  catch (e) {
+    if (!e || e.name === 'NotFoundError' || e.name === 'SecurityError') throw e;
+    ping('bt-err-' + String(e.name || 'x').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30));
+    ping('bt-fallback');
+    return await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: opts.optionalServices });
+  }
+}
 async function connectTrainer() {
-  const dev = await navigator.bluetooth.requestDevice({
+  const dev = await pickDevice({
     filters: [{ services: [FTMS] }, { services: [ZW.svcFC82] }, { namePrefix: 'KICKR' }],
     optionalServices: [FTMS, ZW.svc, ZW.svcFC82, 'cycling_power', 'device_information'],
   });
@@ -332,7 +343,7 @@ async function connectTrainer() {
   ping('trainer');
 }
 async function connectController() {
-  const dev = await navigator.bluetooth.requestDevice({
+  const dev = await pickDevice({
     filters: [{ manufacturerData: [{ companyIdentifier: 0x094A }] }, { namePrefix: 'Zwift' }],
     optionalServices: [ZW.svc, ZW.svcFC82, 'battery_service'],
   });
@@ -346,7 +357,7 @@ async function connectController() {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const bytesOf = v => Array.from(new Uint8Array(v.buffer, v.byteOffset, v.byteLength));
 function setChip(id, on, text) { const el = document.getElementById(id); el.classList.toggle('on', on); el.querySelector('span').textContent = text; }
-function safe(fn) { return async () => { try { await fn(); } catch (e) { ping(e && e.name === 'NotFoundError' ? 'bt-cancel' : 'bt-error'); if (e && e.name !== 'NotFoundError') toast(e.message || String(e), 5000); } }; }
+function safe(fn) { return async () => { try { await fn(); } catch (e) { ping(e && e.name === 'NotFoundError' ? 'bt-cancel' : 'bt-error'); if (e && e.name !== 'NotFoundError') ping('bt-error-' + String(e.name || 'x').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30)); if (e && e.name !== 'NotFoundError') toast(e.message || String(e), 5000); } }; }
 
 // Anonymous usage counter (no personal data, no cookies): one ping per event type and session.
 const pinged = new Set();
@@ -871,7 +882,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 26; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 27; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
