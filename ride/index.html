@@ -160,6 +160,12 @@
         </div>
         <button class="btn" id="share" style="align-self:flex-start">Share with a friend who has a Zwift Click</button>
         <div class="note" id="upsell-note">This free version shows your ride live. Nothing is saved, nothing leaves your browser.</div>
+        <form class="sub" id="panel-sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{mode:'no-cors',keepalive:true})}catch(e){}" data-src="panel">
+          <input type="hidden" name="seller_id" value="7781126287159">
+          <input type="email" name="email" required placeholder="you@example.com" aria-label="Email">
+          <button type="submit">Email me the link</button>
+        </form>
+        <p class="subnote">Not at your trainer? We email you the link and the $29 launch code. Unsubscribe anytime.</p>
         <div class="note">One-time, works in Chrome and Edge on Windows, Mac, Android and Chromebook. The native Mac app is included.</div>
       </div>
     </section>
