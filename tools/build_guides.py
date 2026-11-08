@@ -481,6 +481,10 @@ PAGE = """<!doctype html>
   .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px 22px; margin-top:28px; }}
   .sub {{ display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 6px; }} .sub input {{ flex:1 1 200px; min-width:0; height:44px; padding:0 14px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:#0A0A0B; color:#F5F5F7; font:inherit; font-size:16px; }} .sub button {{ height:44px; padding:0 18px; border-radius:999px; border:0; background:#F5F5F7; color:#000; font:inherit; font-weight:600; cursor:pointer; }} .subnote {{ font-size:13px; color:#8E8E93; margin:0; }}
   .promo {{ width:100%; border-radius:14px; border:1px solid rgba(255,255,255,.08); margin:18px 0 6px; display:block; background:#141416; }}
+  .live {{ display:none; }} @media (min-width:700px) {{ .live {{ display:block; margin:18px 0 6px; }} .promo {{ display:none; }} }}
+  .stage {{ position:relative; width:100%; aspect-ratio:1440/900; overflow:hidden; border-radius:14px; border:1px solid rgba(255,255,255,.08); background:#17181B; }}
+  .stage iframe {{ position:absolute; top:0; left:0; width:1440px; height:900px; border:0; transform-origin:0 0; }}
+  .hint {{ color:var(--soft); font-size:15px; margin:8px 0 0; }}
   details {{ border-top:1px solid var(--line); padding:18px 0; }}
   summary {{ font-weight:700; cursor:pointer; }} details p {{ color:var(--soft); margin:8px 0 0; }}
   li {{ margin:4px 0; }} footer {{ color:var(--soft); font-size:14px; padding:48px 0 60px; }}
@@ -493,6 +497,8 @@ PAGE = """<!doctype html>
 <h1>{h1}</h1>
 <p class="lead">{lead}</p>
 <video class="promo" src="/media/pedalcraft-16x9.mp4" poster="/media/pedalcraft-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
+<div class="live"><div class="stage" id="stage"><iframe id="demo" title="PedalCraft live demo" tabindex="-1"></iframe></div><p class="hint">{livehint}</p></div>
+<script>(function(){{var s=document.getElementById('stage'),f=document.getElementById('demo');if(!s||innerWidth<700)return;f.src='/ride/?embed=1&v=27';function fit(){{f.style.transform='scale('+(s.clientWidth/1440)+')'}}fit();addEventListener('resize',fit);var vis=false;if('IntersectionObserver'in window)new IntersectionObserver(function(e){{vis=e[0].isIntersecting}},{{threshold:.4}}).observe(s);document.addEventListener('keydown',function(e){{if(!vis||(e.key!=='ArrowUp'&&e.key!=='ArrowDown'))return;e.preventDefault();f.contentWindow.postMessage({{shift:e.key==='ArrowUp'?1:-1}},location.origin);}});}})();</script>
 <div class="cta"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
 {sections}
 <div class="cta"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
@@ -529,6 +535,7 @@ def main():
                           links=links, slug=g["slug"].replace("/", "-"), lang=g.get("lang", "en"),
                           subhead="Nicht am Computer? Link per Mail:" if g.get("lang") == "de" else "Not at your computer? Get the link by email:",
                           cta1="Jetzt gratis fahren" if g.get("lang") == "de" else "Start riding",
+                          livehint=("Das ist die echte App mit einer Demofahrt. Schalte mit ↑ ↓, und klicke auf «Connect trainer», um deinen Trainer zu verbinden." if g.get("lang") == "de" else "This is the real app running a demo ride. Shift with ↑ ↓, then click Connect trainer to ride on yours."),
                           cta2="Demo ansehen ›" if g.get("lang") == "de" else "Try the demo ›",
                           maccard=(f'<b>PedalCraft Pro</b>: FTP-Rampentest, ERG-Workouts von 20 Minuten bis 2 Stunden, Fahrtenbuch. Im Browser auf Windows, Mac und Android, dazu die Mac-App. <a href="{BUY}">Einmal $39, zum Start $29, kein Abo</a>.' if g.get("lang") == "de" else f'<b>PedalCraft Pro</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log. In the browser on Windows, Mac and Android, plus a native Mac app. <a href="{BUY}">$39 once, $29 at launch, no subscription</a>.'))
         if g.get("lang") == "de":
