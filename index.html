@@ -96,6 +96,7 @@
 
 
   .frame.live .bar { position: relative; }
+  .ios { margin: 22px auto 0; max-width: 560px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: #141416; text-align: left; } .ios p { margin: 0 0 14px; color: var(--soft); font-size: 16px; } .ios b { color: var(--ink); } .ios .actions { margin: 0; } .ios button.more { background: none; border: 0; font: inherit; cursor: pointer; }
   .livetag { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; letter-spacing: .2px; }
   .livetag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #33C77B; box-shadow: 0 0 0 0 rgba(51,199,123,.6); animation: pulse 2s infinite; }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(51,199,123,.55); } 70% { box-shadow: 0 0 0 8px rgba(51,199,123,0); } 100% { box-shadow: 0 0 0 0 rgba(51,199,123,0); } }
@@ -154,6 +155,10 @@
     <div class="actions">
       <a class="btn" href="ride/">Start riding</a>
       <a class="more" id="buy-top" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Pro, $29 launch price</a>
+    </div>
+    <div id="ios" class="ios" hidden>
+      <p><b>On iPhone?</b> Safari can't talk to Bluetooth, the free app Bluefy can. Tap below, install it, open it and paste the link. We copy it for you.</p>
+      <div class="actions"><a class="btn" id="ios-bluefy" href="https://apps.apple.com/app/id1492822055" target="_blank" rel="noopener">Get Bluefy and copy link</a><button class="more" id="ios-share" type="button">Not at your trainer? Send the link to yourself</button></div>
     </div>
     <div class="shot reveal">
       <div class="frame live">
@@ -271,6 +276,17 @@
       if (!visible || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
       e.preventDefault(); f.contentWindow.postMessage({ shift: e.key === 'ArrowUp' ? 1 : -1 }, location.origin);
     });
+  })();
+  // iPhone/iPad: Safari hat kein Web Bluetooth. Weg über Bluefy direkt auf der Startseite zeigen (08.11.2026)
+  (function () {
+    var ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    if (!ios || /Bluefy/i.test(ua)) return;
+    var hit = function (k) { if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/' + k, { mode: 'no-cors', keepalive: true }).catch(function () {}); };
+    var url = 'https://pedalcraft.online/ride/';
+    document.getElementById('ios').hidden = false; hit('home-ios');
+    var top = document.querySelector('.hero > .actions .btn'); if (top) top.style.display = 'none';
+    document.getElementById('ios-bluefy').addEventListener('click', function () { hit('bluefy-get'); hit('home-bluefy-get'); try { navigator.clipboard.writeText(url); } catch (e) {} });
+    document.getElementById('ios-share').addEventListener('click', function () { hit('home-ios-share'); if (navigator.share) navigator.share({ title: 'PedalCraft', text: 'Ride my trainer free in the browser:', url: url }).catch(function () {}); else { try { navigator.clipboard.writeText(url); } catch (e) {} } });
   })();
   // Einblenden beim Scrollen
   (function () {

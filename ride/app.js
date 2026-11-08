@@ -875,14 +875,14 @@ if (!hasBT) {
   if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) {
     $('ios-bluefy').classList.remove('hidden'); $('nobt').classList.add('hidden');
     $('sendlink').classList.remove('primary');
-    $('bluefy-get').onclick = () => ping('bluefy-get');
+    $('bluefy-get').onclick = () => { ping('bluefy-get'); try { navigator.clipboard.writeText('https://pedalcraft.online/ride/'); } catch (e) {} };
     $('bluefy-copy').onclick = async () => { ping('bluefy-copy'); try { await navigator.clipboard.writeText('https://pedalcraft.online/ride/'); toast('Copied. Open Bluefy and paste it into the address bar.', 5000); } catch (e) { toast('pedalcraft.online/ride', 8000); } };
   }
 }
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 27; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 28; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
