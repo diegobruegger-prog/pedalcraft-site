@@ -20,10 +20,12 @@ function pbDecode(bytes) {
 }
 const unzig = v => (v >>> 1) ^ -(v & 1);
 
+// Bluefy (iPhone) bricht mit Zahlen- und Namens-UUIDs ab (09.11.2026). Darum überall volle 128-Bit-Strings, Chrome kann beides.
+const U = n => typeof n === 'number' ? '0000' + n.toString(16).padStart(4, '0') + '-0000-1000-8000-00805f9b34fb' : n;
 // ---------- Zwift protocol ----------
 const ZW = {
   svc: '00000001-19ca-4651-86e5-fa29dcdd09d1',
-  svcFC82: 0xFC82,
+  svcFC82: U(0xFC82),
   async: '00000002-19ca-4651-86e5-fa29dcdd09d1',
   rx: '00000003-19ca-4651-86e5-fa29dcdd09d1',
   tx: '00000004-19ca-4651-86e5-fa29dcdd09d1',
@@ -150,7 +152,7 @@ function toast(msg, ms = 3200) {
 }
 
 // ---------- Bluetooth: trainer ----------
-const FTMS = 0x1826, IBD = 0x2AD2, FTMS_CP = 0x2AD9;
+const FTMS = U(0x1826), IBD = U(0x2AD2), FTMS_CP = U(0x2AD9);
 
 class Trainer {
   constructor(device) { this.device = device; this.zwiftReady = false; this.ftms = null; this.rx = null; this.ftmsGranted = false; this.queue = Promise.resolve(); }
@@ -165,11 +167,11 @@ class Trainer {
       try { chars = await s.getCharacteristics(); } catch (e) { continue; }
       for (const c of chars) {
         const u = c.uuid;
-        if (u === BluetoothUUID.getCharacteristic(IBD)) { c.addEventListener('characteristicvaluechanged', e => this.onIBD(e.target.value)); await c.startNotifications(); }
-        else if (u === BluetoothUUID.getCharacteristic(FTMS_CP)) { this.ftms = c; c.addEventListener('characteristicvaluechanged', e => this.onCP(e.target.value)); await c.startNotifications().catch(() => {}); }
-        else if (u === ZW.async) async = c;
-        else if (u === ZW.tx) tx = c;
-        else if (u === ZW.rx) this.rx = c;
+        if (u.toLowerCase() === IBD) { c.addEventListener('characteristicvaluechanged', e => this.onIBD(e.target.value)); await c.startNotifications(); }
+        else if (u.toLowerCase() === FTMS_CP) { this.ftms = c; c.addEventListener('characteristicvaluechanged', e => this.onCP(e.target.value)); await c.startNotifications().catch(() => {}); }
+        else if (u.toLowerCase() === ZW.async) async = c;
+        else if (u.toLowerCase() === ZW.tx) tx = c;
+        else if (u.toLowerCase() === ZW.rx) this.rx = c;
       }
     }
     if (async && tx && this.rx) {
@@ -308,10 +310,10 @@ function updateCtrlChip() {
 
 // ---------- Bluetooth: heart rate ----------
 async function connectHR() {
-  const dev = await navigator.bluetooth.requestDevice({ filters: [{ services: ['heart_rate'] }] });
+  const dev = await navigator.bluetooth.requestDevice({ filters: [{ services: [U(0x180D)] }] });
   const run = async () => {
     const s = await dev.gatt.connect();
-    const c = await (await s.getPrimaryService('heart_rate')).getCharacteristic('heart_rate_measurement');
+    const c = await (await s.getPrimaryService(U(0x180D))).getCharacteristic(U(0x2A37));
     c.addEventListener('characteristicvaluechanged', e => { const v = e.target.value; const f = v.getUint8(0); report({ hr: f & 1 ? v.getUint16(1, true) : v.getUint8(1) }); });
     await c.startNotifications();
     setChip('c-hr', true, dev.name || 'Heart rate');
@@ -326,7 +328,7 @@ async function pickDevice(opts) {
   try { return await navigator.bluetooth.requestDevice(opts); }
   catch (e) {
     if (!e || e.name === 'NotFoundError' || e.name === 'SecurityError') throw e;
-    ping('bt-err-' + String(e.name || 'x').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30));
+    ping('bt-err-' + String(e.name || 'x').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30)); ping('bt-msg-' + String(e.message || e).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60));
     ping('bt-fallback');
     return await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: opts.optionalServices });
   }
@@ -334,7 +336,7 @@ async function pickDevice(opts) {
 async function connectTrainer() {
   const dev = await pickDevice({
     filters: [{ services: [FTMS] }, { services: [ZW.svcFC82] }, { namePrefix: 'KICKR' }],
-    optionalServices: [FTMS, ZW.svc, ZW.svcFC82, 'cycling_power', 'device_information'],
+    optionalServices: [FTMS, ZW.svc, ZW.svcFC82, U(0x1818), U(0x180A)],
   });
   stopDemo();
   trainer = new Trainer(dev);
@@ -345,7 +347,7 @@ async function connectTrainer() {
 async function connectController() {
   const dev = await pickDevice({
     filters: [{ manufacturerData: [{ companyIdentifier: 0x094A }] }, { namePrefix: 'Zwift' }],
-    optionalServices: [ZW.svc, ZW.svcFC82, 'battery_service'],
+    optionalServices: [ZW.svc, ZW.svcFC82, U(0x180F)],
   });
   const c = new Controller(dev);
   controllers.push(c); updateCtrlChip();
@@ -357,7 +359,7 @@ async function connectController() {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const bytesOf = v => Array.from(new Uint8Array(v.buffer, v.byteOffset, v.byteLength));
 function setChip(id, on, text) { const el = document.getElementById(id); el.classList.toggle('on', on); el.querySelector('span').textContent = text; }
-function safe(fn) { return async () => { try { await fn(); } catch (e) { ping(e && e.name === 'NotFoundError' ? 'bt-cancel' : 'bt-error'); if (e && e.name !== 'NotFoundError') ping('bt-error-' + String(e.name || 'x').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30)); if (e && e.name !== 'NotFoundError') toast(e.message || String(e), 5000); } }; }
+function safe(fn) { return async () => { try { await fn(); } catch (e) { ping(e && e.name === 'NotFoundError' ? 'bt-cancel' : 'bt-error'); if (e && e.name !== 'NotFoundError') ping('bt-error-' + String(e.name || 'x').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30)); if (e && e.name !== 'NotFoundError') ping('bt-msg-' + String(e.message || e).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60)); if (e && e.name !== 'NotFoundError') toast(e.message || String(e), 5000); } }; }
 
 // Anonymous usage counter (no personal data, no cookies): one ping per event type and session.
 const pinged = new Set();
@@ -882,7 +884,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 28; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 29; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
