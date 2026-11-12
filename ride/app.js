@@ -855,7 +855,12 @@ document.addEventListener('keydown', e => {
 });
 const hasBT = !!(navigator.bluetooth && navigator.bluetooth.requestDevice);
 // Bluetooth-Liste abgebrochen oder leer: bisher passierte nichts, die meisten gaben hier auf (Diego 06.11.2026)
-const needBT = (fn, help = true) => { const run = async () => { ping('connect-tap'); if (!hasBT) { $('welcome').classList.remove('hidden'); return; } try { await fn(); } catch (e) { if (e && e.name === 'NotFoundError' && help && !EMBED) { $('notfound').classList.remove('hidden'); lastTry = run; ping('notfound-help'); } throw e; } }; return safe(run); };
+// Vor der ersten Bluetooth-Liste: 29 von 33 brachen die Liste ab, ohne etwas zu waehlen (12.11.2026).
+// Hinweis erscheint gleichzeitig mit der Liste (keine Extra-Klicks), nur einmal pro Besuch.
+let btHinted = false;
+const btHint = fn => { if (btHinted || EMBED) return; btHinted = true; ping('bt-hint');
+  toast(fn === connectController ? 'Press a button on your Zwift Click now so it shows up in the list.' : 'Trainer not in the list? Pedal a few strokes to wake it, and quit Zwift or your trainer app first.', 9000); };
+const needBT = (fn, help = true) => { const run = async () => { ping('connect-tap'); if (!hasBT) { $('welcome').classList.remove('hidden'); return; } btHint(fn); try { await fn(); } catch (e) { if (e && e.name === 'NotFoundError' && help && !EMBED) { $('notfound').classList.remove('hidden'); lastTry = run; ping('notfound-help'); } throw e; } }; return safe(run); };
 let lastTry = null;
 $('nf-retry').onclick = () => { $('notfound').classList.add('hidden'); ping('notfound-retry'); safe(lastTry)(); };
 $('nf-demo').onclick = () => { $('notfound').classList.add('hidden'); ping('notfound-demo'); startDemo(); };
@@ -891,7 +896,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 30; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 31; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
