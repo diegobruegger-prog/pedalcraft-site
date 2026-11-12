@@ -415,13 +415,20 @@ setInterval(() => {
   if (now - ride.t.cadence > 3000) ride.cadence = 0;
   if (now - ride.t.speed > 3000) ride.speed = 0;
   if (now - ride.t.hr > 5000) ride.hr = null;
-  if (ride.power > 0 || ride.cadence > 0) {
+  // Echte Uhrzeit statt Tick-Zaehlung: Browser drosseln Timer in Hintergrund-Tabs (z. B. waehrend Netflix/YouTube),
+  // dann zaehlte die Fahrzeit kaum noch und Fahrten sahen nach Sekunden aus (12.11.2026)
+  tickAcc += Math.min((now - (lastTick || now)) / 1000, 300); lastTick = now;
+  if (document.hidden && ride.lastData && now - ride.lastData < 60000 && !ride.demo) ping('hidden-riding');
+  for (; tickAcc >= 1; tickAcc -= 1) if (ride.power > 0 || ride.cadence > 0) {
     ride.elapsed += 1; ride.dist += ride.speed / 3.6; ride.sum += ride.power; ride.n += 1; ride.kj += ride.power / 1000;
     if (!ride.demo) samples.push([Math.round(ride.power), ride.cadence, ride.hr || 0, Math.round(ride.speed * 10), Math.round(ride.dist)]);
     if (wo) workoutTick();
   }
   render();
 }, 1000);
+let lastTick = 0, tickAcc = 0;
+// Beim Verlassen anonym melden, wie lange wirklich gefahren wurde (Stufen), damit wir sehen, wo Leute aufhoeren
+addEventListener('pagehide', () => { if (ride.demo || !ride.elapsed) return; const s = ride.elapsed; ping('ridesec-' + (s < 10 ? '0' : s < 30 ? '10' : s < 60 ? '30' : s < 180 ? '60' : s < 600 ? '180' : '600')); });
 
 // ---------- Render numbers ----------
 const $ = id => document.getElementById(id);
@@ -884,7 +891,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 29; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 30; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
