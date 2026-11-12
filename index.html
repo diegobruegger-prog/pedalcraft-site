@@ -154,7 +154,7 @@
     <p class="lead">Open a tab, connect your trainer and Click, ride. No install, no account, no subscription. Free.</p>
     <div class="actions">
       <a class="btn" href="ride/">Start riding</a>
-      <a class="more" id="buy-top" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Pro, $29 launch price</a>
+      <a class="more" id="buy-top" href="#pricing">Pro, $29 launch price</a>
     </div>
     <div id="ios" class="ios" hidden>
       <p><b>On iPhone?</b> Safari can't talk to Bluetooth, the free app Bluefy can. Tap below, install it, open it and paste the link. We copy it for you.</p>
@@ -211,7 +211,7 @@
     <p class="note reveal">Three years on each app's annual plan, US list prices checked October 2026: TrainerRoad $209.99, Zwift $199.99, Rouvy $179.99, Wahoo SYSTM Pro $179.99 per year. They offer more than PedalCraft, like virtual worlds and training plans. This compares the price, nothing else. The browser version of PedalCraft is free.</p>
   </section>
 
-  <section>
+  <section id="pricing">
     <h2 class="center reveal">Free. Or $39, once.</h2>
     <div class="price reveal">
       <div>
@@ -296,7 +296,7 @@
     els.forEach(function (e) { io.observe(e); });
   })();
   if (location.hostname !== 'localhost' && !/bot|crawl|spider|headless|google-inspectiontool/i.test(navigator.userAgent)) fetch('https://pedalcraft-stats.pages.dev/hit/home', { mode: 'no-cors', keepalive: true }).catch(function () {});
-  document.getElementById('buy-top').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
+  document.getElementById('buy-top').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/pro-top', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
   document.getElementById('buy').addEventListener('click', function () { if (location.hostname !== 'localhost') fetch('https://pedalcraft-stats.pages.dev/hit/buy-click', { mode: 'no-cors', keepalive: true }).catch(function () {}); });
 </script>
 </body>
