@@ -405,6 +405,8 @@ function startDemo() {
     report({ power: Math.round(base + surge + Math.sin(t) * 8), cadence: 86 + Math.sin(t / 3) * 6 + (surge ? 8 : 0), speed: 22 + ride.gear * 0.6 - ride.grade * 0.9 + Math.sin(t / 5), hr: Math.round(118 + ride.gear + surge / 3) });
   }, 250);
   ping('demo');
+  // Nur 1 von 29 Demo-Nutzern hat geschaltet (12.11.2026): zeigen, wie man schaltet
+  if (!EMBED) toast(matchMedia('(pointer: coarse)').matches ? 'Tap + and − to shift, like the buttons on your Zwift Click. Watch the watts change.' : 'Press ↑ and ↓ to shift, like the buttons on your Zwift Click. Watch the watts change.', 9000);
 }
 function stopDemo() { if (demoTimer) { clearInterval(demoTimer); demoTimer = null; ride.demo = false; } }
 
@@ -896,7 +898,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 31; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 32; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
