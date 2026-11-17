@@ -797,6 +797,8 @@ function download(r) {
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([tcx(r)], { type: 'application/vnd.garmin.tcx+xml' }));
   a.download = `PedalCraft ${new Date(r.start).toISOString().slice(0, 16).replace('T', ' ').replace(':', '-')}.tcx`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
   ping('tcx-download');
+  // Strava-Beschreibung gleich mitliefern: jede hochgeladene Fahrt zeigt den Link (17.11.2026)
+  try { navigator.clipboard.writeText('Indoor ride with PedalCraft · pedalcraft.online').then(() => toast('Saved. A Strava description is copied too, just paste it when you upload.', 6000)).catch(() => {}); } catch (e) {}
 }
 async function showRides() {
   $('rides').classList.remove('hidden');
@@ -853,6 +855,7 @@ function renderPro() {
 // Angebot nach 3 Minuten echter Fahrt (Diego 28.10.2026): Trainer und Click funktionieren nachweislich, bester Moment fürs Angebot
 let offerOpen = false;
 function showRideOffer() {
+  $('pro-share-row').classList.add('hidden');
   $('pro-title').textContent = 'It works with your trainer.';
   $('pro-text').textContent = "You've been riding for 3 minutes. Keep every ride, train with ERG workouts and track your FTP with PedalCraft Pro: $24 with code RIDE10 instead of $39. One-time, no subscription, Mac app included.";
   $('pro-key').classList.add('hidden'); $('pro-buy').classList.remove('hidden');
@@ -868,7 +871,7 @@ function showEndOffer() {
   $('pro-text').textContent = `${Math.floor(ride.elapsed / 60)} min, ${(ride.dist / 1000).toFixed(1)} km, ${Math.round(ride.kj)} kJ. This ride isn't saved and is gone when you close this tab. PedalCraft Pro keeps it and every ride after it, ready for Strava, plus ERG workouts and an FTP test: $24 with code RIDE10 instead of $39. One-time, no subscription. Buy in the new tab, paste your key here, and this ride is saved.`;
   $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get it for $24';
-  $('pro-close').textContent = 'Not now';
+  $('pro-close').textContent = 'Not now'; $('pro-share-row').classList.remove('hidden');
   offerOpen = true; endOffer = true;
   $('pro').classList.remove('hidden');
   ping('offer-end');
@@ -885,13 +888,15 @@ function showWall() {
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get Pro for $24';
   const c = $('pro-close'); let n = 15; c.disabled = true; c.textContent = `Keep riding free in ${n}`;
   const t = setInterval(() => { n--; if (n > 0 && wallOpen) { c.textContent = `Keep riding free in ${n}`; return; } clearInterval(t); c.disabled = false; c.textContent = 'Keep riding free'; }, 1000);
+  $('pro-share-row').classList.remove('hidden');
   $('pro').classList.remove('hidden');
   ping('wall-20');
 }
-$('pro-close').onclick = () => { if ($('pro-close').disabled) return; if (wallOpen) { wallOpen = false; ping('wall-continue'); } $('pro').classList.add('hidden'); $('pro-close').textContent = 'Keep riding free'; endOffer = false; };
+$('pro-close').onclick = () => { if ($('pro-close').disabled) return; if (wallOpen) { wallOpen = false; ping('wall-continue'); } $('pro').classList.add('hidden'); $('pro-share-row').classList.add('hidden'); $('pro-close').textContent = 'Keep riding free'; endOffer = false; };
 $('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); if (endOffer) ping('buy-end'); if (wallOpen) ping('buy-wall'); };
 $('upsell-unlock').onclick = showUnlock;
 // Weitersagen: teilen oder Link kopieren (zählt nur, dass geteilt wurde)
+$('pro-share').onclick = e => { e.preventDefault(); ping('share-offer'); $('share').onclick(); };
 $('share').onclick = async () => {
   ping('share'); const url = 'https://pedalcraft.online/?ref=share';
   const text = 'Ride your smart trainer and shift with a Zwift Click, free in the browser, no Zwift subscription:';
@@ -988,7 +993,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 35; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 36; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.

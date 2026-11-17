@@ -6,7 +6,9 @@ Key facts:
 - Free browser app: https://pedalcraft.online/ride/ (Web Bluetooth, no install, no account, nothing saved).
 - Works with Zwift Cog trainers (Wahoo KICKR CORE 2, Zwift Hub One) using real virtual shifting in the trainer firmware, and with Bluetooth FTMS smart trainers (most current Tacx, Elite, Wahoo, Saris and others), where each gear changes the simulated grade.
 - Controllers: Zwift Click v1 and v2, Zwift Play, Zwift Ride.
-- Does not work on iPhone/Safari (no Web Bluetooth). Older trainers that only speak ANT+ or Tacx FE-C over Bluetooth are not supported yet.
+- iPhone/iPad: Safari has no Web Bluetooth; it works in the free Bluefy browser app.
+- Older trainers: since November 2026 also Tacx FE-C over Bluetooth (Vortex, Bushido, Genius, first Flux and Neo) and Wahoo's legacy control (KICKR Snap and KICKR before 2020). ANT+-only trainers can't work in a browser.
+- Free version: unlimited rides, with a short 15-second break every 20 minutes. Pro rides without breaks.
 - Not a Zwift replacement: no virtual world, no racing.
 - PedalCraft Pro: $39 one-time ($29 launch price with code LAUNCH), no subscription. https://pedalcraftapp.gumroad.com/l/pedalcraft-mac
 
@@ -34,7 +36,13 @@ Key facts:
 - [Zwift cost calculator](https://pedalcraft.online/zwift-cost-calculator/): Work out what Zwift costs over your indoor seasons, monthly vs annual, and what you keep if you ride your smart trainer and Zwift Click without a subscription.
 - [What Zwift costs in 2026](https://pedalcraft.online/zwift-price/): Zwift costs $19.99 a month or $199.99 a year in 2026. What TrainerRoad, Rouvy and Wahoo SYSTM cost, and how to ride your trainer for free or for $39 once.
 
+- [Zwift Click on an older Tacx](https://pedalcraft.online/zwift-click-older-tacx/): Shift an older Tacx Vortex, Bushido, Genius or first Flux with a Zwift Click, free in Chrome or Edge, over Tacx FE-C.
+- [KICKR Snap with a Zwift Click](https://pedalcraft.online/wahoo-kickr-snap-zwift-click/): Shift a Wahoo KICKR Snap or an older KICKR with a Zwift Click, free in the browser. No Zwift subscription.
+- [Zwift Click on a Saris trainer](https://pedalcraft.online/zwift-click-saris/): Shift a Saris H3, H4 or M2 with a Zwift Click, free in Chrome or Edge.
+- [Zwift Click on a Chromebook](https://pedalcraft.online/zwift-click-chromebook/): Ride your smart trainer and shift with a Zwift Click on a Chromebook, free in Chrome.
+
 ## Common questions
 - Can I use a Zwift Click without a Zwift subscription? Yes. PedalCraft connects the Click and a Bluetooth smart trainer in Chrome or Edge for free: https://pedalcraft.online/ride/
 - Does virtual shifting work without Zwift? On Zwift Cog trainers (KICKR CORE 2, Zwift Hub One) PedalCraft uses the trainer's own virtual shifting. On other FTMS trainers each of 24 gears changes the simulated grade by 1 %.
+- Does an old Tacx Vortex or KICKR Snap work without Zwift? Yes, PedalCraft speaks Tacx FE-C and Wahoo's older protocol over Bluetooth in Chrome or Edge.
 - What does Zwift cost? $19.99 a month or $199.99 a year (US, October 2026). Calculator: https://pedalcraft.online/zwift-cost-calculator/

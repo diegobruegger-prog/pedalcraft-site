@@ -119,7 +119,7 @@ GUIDES = [
         "h1": "Zwift Click. Jeder Smart-Trainer.",
         "lead": "Tacx, Elite, Wahoo, Saris: Wenn dein Trainer Bluetooth FTMS spricht, kann dein Zwift Click ihn schalten. Gratis im Browser, auf Windows, Mac oder Android. Ohne Zwift-Abo, ohne Konto.",
         "sections": [
-            ("Welche Trainer gehen", "<ul><li><b>Zwift-Cog-Trainer</b> (Wahoo KICKR CORE 2, Zwift Hub One): echtes virtuelles Schalten in der Trainer-Firmware, wie in Zwift.</li><li><b>Bluetooth-FTMS-Trainer</b>, also die meisten Smart-Trainer seit etwa 2020 (zum Beispiel Tacx Neo 2T und Flux S mit aktueller Firmware, Elite Direto, Suito und Justo, Wahoo KICKR, Saris H3): Jeder Gang ändert die simulierte Steigung, das fährt sich wie Schalten.</li><li>Ältere Trainer, die nur ANT+ oder Tacx FE-C können, gehen noch nicht.</li></ul><p>Unsicher? <a href=\"/ride/\">Gratis-Version öffnen</a> und auf Connect trainer klicken. Erscheint dein Trainer in der Liste, geht es.</p>"),
+            ("Welche Trainer gehen", "<ul><li><b>Zwift-Cog-Trainer</b> (Wahoo KICKR CORE 2, Zwift Hub One): echtes virtuelles Schalten in der Trainer-Firmware, wie in Zwift.</li><li><b>Bluetooth-FTMS-Trainer</b>, also die meisten Smart-Trainer seit etwa 2020 (zum Beispiel Tacx Neo 2T und Flux S mit aktueller Firmware, Elite Direto, Suito und Justo, Wahoo KICKR, Saris H3): Jeder Gang ändert die simulierte Steigung, das fährt sich wie Schalten.</li><li><b>Ältere Tacx und Wahoo</b> (Vortex, Bushido, Genius, erste Flux und Neo, KICKR Snap und KICKR vor 2020): seit November 2026 neu dabei, über Tacx FE-C bzw. das Wahoo-Protokoll. Sag uns, ob es mit deinem geht.</li><li>Trainer nur mit ANT+ (ohne Bluetooth) gehen im Browser nicht.</li></ul><p>Unsicher? <a href=\"/ride/\">Gratis-Version öffnen</a> und auf Connect trainer klicken. Erscheint dein Trainer in der Liste, geht es.</p>"),
             ("So verbindest du", "<ol><li>Zwift und andere Trainer-Apps auf allen Geräten beenden.</li><li><a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome oder Edge öffnen.</li><li>Connect trainer, dann Connect Click.</li><li>Losfahren: + schwerer, − leichter.</li></ol>"),
             ("Wie fühlt sich das Schalten an?", "<p>Auf Zwift-Cog-Trainern schaltet die Firmware selbst, das ist identisch mit Zwift. Auf allen anderen Trainern verändert jeder der 24 Gänge die simulierte Steigung um 1 %. Bei gleicher Trittfrequenz wird es also spürbar schwerer oder leichter, wie mit einer echten Kassette.</p>"),
             ("Typische Probleme", "<ul><li><b>Trainer erscheint nicht:</b> Zwift, Tacx Training oder My E-Training läuft noch und hält die Verbindung. Überall beenden, auch auf dem Handy.</li><li><b>Click erscheint nicht:</b> kurz vorher eine Taste drücken, damit er aufwacht.</li><li><b>Firefox oder Safari:</b> können kein Bluetooth im Browser. Chrome oder Edge nehmen, auf dem iPhone die Gratis-App Bluefy.</li><li><b>Linke Taste stoppt nach einer Minute:</b> das ist eine Sperre im Click v2, PedalCraft weckt sie alle 50 Sekunden neu.</li></ul>"),
@@ -138,7 +138,7 @@ GUIDES = [
         "h1": "Your Zwift Click. Any smart trainer.",
         "lead": "Tacx, Elite, Wahoo, Saris, JetBlack, Van Rysel: if your trainer speaks Bluetooth FTMS, your Zwift Click can shift it. Free in your browser, on Windows, Mac or Android. No Zwift subscription, no account.",
         "sections": [
-            ("Which trainers work", "<ul><li><b>Zwift Cog trainers</b> (Wahoo KICKR CORE 2, Zwift Hub One): real virtual shifting in the trainer firmware, like in Zwift.</li><li><b>Bluetooth FTMS trainers</b>, which is most smart trainers sold since about 2020 (for example Tacx Neo 2T and Flux S with current firmware, Elite Direto, Suito and Justo, Wahoo KICKR, Saris H3): every gear changes the simulated grade, so it rides like shifting.</li><li>Older trainers that only speak ANT+ or Tacx FE-C over Bluetooth don't connect yet.</li></ul><p>Not sure? <a href=\"/ride/\">Open the free version</a> and click Connect trainer. If your trainer shows up in the list, it works.</p>"),
+            ("Which trainers work", "<ul><li><b>Zwift Cog trainers</b> (Wahoo KICKR CORE 2, Zwift Hub One): real virtual shifting in the trainer firmware, like in Zwift.</li><li><b>Bluetooth FTMS trainers</b>, which is most smart trainers sold since about 2020 (for example Tacx Neo 2T and Flux S with current firmware, Elite Direto, Suito and Justo, Wahoo KICKR, Saris H3): every gear changes the simulated grade, so it rides like shifting.</li><li><b>Older Tacx and Wahoo</b> (Vortex, Bushido, Genius, first Flux and Neo, KICKR Snap and KICKR before 2020): new since November 2026, over Tacx FE-C or Wahoo's own protocol. Tell us if it works with yours.</li><li>Trainers with ANT+ only (no Bluetooth) can't work in a browser.</li></ul><p>Not sure? <a href=\"/ride/\">Open the free version</a> and click Connect trainer. If your trainer shows up in the list, it works.</p>"),
             ("How to connect", "<ol><li>Quit Zwift and other trainer apps on every device. Only one app can control the trainer.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Click <b>Connect trainer</b> and pick yours.</li><li>Press a button on each Click, then <b>Connect Click</b>.</li><li>Ride. <b>+</b> is harder, <b>−</b> is easier.</li></ol>"),
             ("Windows, Mac, Android", "<p>It runs in Chrome or Edge on Windows 10 and 11, macOS, Android and Chromebook. Your computer needs Bluetooth (built in, or a small USB Bluetooth adapter). On iPhone and iPad, use the free Bluefy browser app; Safari can't do Web Bluetooth.</p>"),
             ("Not a Zwift replacement", "<p>There's no virtual world and no racing. PedalCraft is a simple tool to ride, shift and train without a monthly fee.</p>"),
@@ -156,7 +156,7 @@ GUIDES = [
         "h1": "Zwift Click on a Tacx trainer",
         "lead": "Got a Tacx Neo, Flux or Flow and a Zwift Click? PedalCraft connects both in your browser and turns every Click into a gear change on the Tacx. Free, no subscription.",
         "sections": [
-            ("Which Tacx models", "<p>Tacx trainers with current firmware support Bluetooth FTMS, the standard PedalCraft uses: Neo 2T, Neo 3M, Flux S and 2, Flow Smart and others. Update the firmware in the Tacx Training app first. The very first Neo and Flux and the Vortex only speak Tacx FE-C and don't connect yet.</p>"),
+            ("Which Tacx models", "<p>Tacx trainers with current firmware support Bluetooth FTMS, the standard PedalCraft uses: Neo 2T, Neo 3M, Flux S and 2, Flow Smart and others. Update the firmware in the Tacx Training app first. The very first Neo and Flux, the Vortex, Bushido and Genius speak Tacx FE-C over Bluetooth. PedalCraft supports that too since November 2026, see <a href=\"/zwift-click-older-tacx/\">older Tacx</a>.</p>"),
             ("How shifting feels", "<p>Each gear changes the simulated grade by one percent. Shift up and the Tacx gets heavier, shift down and it gets lighter, the way it does on a road.</p>"),
             ("Connect in a minute", "<ol><li>Close Zwift and the Tacx app.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, pick your Tacx, then connect the Click.</li></ol>"),
             ("Tacx in the device list", "<p>Your Tacx shows up with its model name in the browser's device list. If it doesn't show up at all, it is probably still connected to the Tacx Training app or Zwift on your phone. Close them and pedal a few turns.</p>"),
@@ -444,6 +444,74 @@ GUIDES = [
             ("How much is Zwift per month in 2026?", "$19.99 a month in the US, or $199.99 a year on the annual plan."),
             ("Can I use my Zwift Click without paying for Zwift?", "Yes. PedalCraft connects the Click and your trainer in Chrome or Edge for free."),
             ("Is there a free Zwift alternative?", "MyWhoosh is free with a virtual world. PedalCraft is free in the browser without one, and focuses on riding, shifting and training."),
+        ],
+    },
+    {
+        "slug": "zwift-click-older-tacx",
+        "title": "Zwift Click with an older Tacx (Vortex, Bushido, Genius, Flux)",
+        "desc": "Shift an older Tacx Vortex, Bushido, Genius or first Flux with a Zwift Click, free in Chrome or Edge. Uses Tacx FE-C over Bluetooth, no Zwift needed.",
+        "h1": "Zwift Click on an older Tacx",
+        "lead": "Your Tacx is a few years old and doesn't show up in newer apps? Many older Tacx trainers speak Tacx FE-C over Bluetooth instead of the newer FTMS standard. PedalCraft now speaks both, so your Zwift Click can shift them in the browser. Free.",
+        "sections": [
+            ("Which models", "<p>Tacx Vortex Smart, Bushido Smart, Genius Smart, Flow Smart and the first Flux and Neo talk Tacx FE-C over Bluetooth. If yours already has a firmware update with FTMS, it connects the normal way anyway.</p>"),
+            ("New, so tell us", "<p>Support for Tacx FE-C is new since November 2026. It follows the published protocol, but we haven't ridden every model. If yours connects but doesn't change resistance, tell us which model it is and we fix it.</p>"),
+            ("Connect", "<ol><li>Close the Tacx Training app and Zwift on every device.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer and pick your Tacx. If it isn't in the list, tap Try again and then <i>My trainer isn't listed</i>.</li><li>Connect your Click.</li></ol>"),
+            ("How shifting works", "<p>Each gear changes the simulated grade by one percent. On a Vortex or Bushido the brake answers a bit slower than on a Neo, so give it a second.</p>"),
+        ],
+        "faq": [
+            ("Does the Tacx Vortex work without Zwift?", "Yes. PedalCraft connects to the Vortex Smart over Bluetooth (Tacx FE-C) in Chrome or Edge, and you can shift it with a Zwift Click."),
+            ("Does my old Tacx need a firmware update?", "No, FE-C works without it. A newer firmware with FTMS works too."),
+            ("Is it free?", "Yes. Riding and shifting in the browser is free."),
+        ],
+    },
+    {
+        "slug": "wahoo-kickr-snap-zwift-click",
+        "title": "Wahoo KICKR Snap with a Zwift Click, no Zwift needed",
+        "desc": "Shift a Wahoo KICKR Snap or an older KICKR with a Zwift Click, free in Chrome or Edge on Windows, Mac or Android. No Zwift subscription.",
+        "h1": "KICKR Snap with a Zwift Click",
+        "lead": "The KICKR Snap is one of the most common trainers out there. With PedalCraft you shift it with a Zwift Click right in your browser, without paying for Zwift.",
+        "sections": [
+            ("New and old Snaps", "<p>Newer KICKR Snap and KICKR units speak the Bluetooth FTMS standard. Older ones, roughly before 2020, only speak Wahoo's own control protocol. PedalCraft supports both since November 2026.</p>"),
+            ("Connect", "<ol><li>Close Zwift and the Wahoo app.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, pick KICKR SNAP, then connect the Click.</li></ol>"),
+            ("Wheel-on trainer tips", "<p>The Snap is a wheel-on trainer. Pump the rear tire to the same pressure every ride and tighten the roller the same amount, otherwise the watts drift. A short spin-down in the Wahoo app now and then keeps them honest.</p>"),
+            ("Older units: tell us", "<p>The Wahoo protocol for older units is new in PedalCraft. If yours connects but the resistance doesn't change when you shift, tell us the model and year and we fix it.</p>"),
+        ],
+        "faq": [
+            ("Can I use a Zwift Click with a KICKR Snap?", "Yes. PedalCraft connects both in Chrome or Edge and every Click changes the simulated grade on the Snap."),
+            ("Does an old KICKR Snap work?", "Yes, PedalCraft also speaks Wahoo's older control protocol since November 2026."),
+            ("Do I need a Zwift subscription?", "No. Riding and shifting is free in the browser."),
+        ],
+    },
+    {
+        "slug": "zwift-click-saris",
+        "title": "Zwift Click with a Saris trainer (H3, H4, M2)",
+        "desc": "Shift a Saris H3, H4 or M2 smart trainer with a Zwift Click, free in Chrome or Edge. No Zwift subscription needed.",
+        "h1": "Zwift Click on a Saris trainer",
+        "lead": "Saris trainers speak the Bluetooth FTMS standard, so PedalCraft can shift them with a Zwift Click right in the browser. Free, no account.",
+        "sections": [
+            ("Which Saris models", "<p>Saris H3, H4 and M2 connect over Bluetooth FTMS. Older CycleOps Hammer and Magnus units with current firmware usually do too.</p>"),
+            ("Connect", "<ol><li>Close Zwift and the Saris app.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge.</li><li>Connect trainer, pick your Saris, then connect the Click.</li></ol>"),
+            ("How it rides", "<p>Every gear changes the simulated grade by one percent. The H3 is heavy and quiet, so shifts feel smooth and quick.</p>"),
+        ],
+        "faq": [
+            ("Does a Saris H3 work with a Zwift Click without Zwift?", "Yes. PedalCraft connects the H3 over Bluetooth FTMS and the Click shifts it."),
+            ("Does ERG mode work on Saris?", "Yes, PedalCraft Pro sends target watts over FTMS."),
+        ],
+    },
+    {
+        "slug": "zwift-click-chromebook",
+        "title": "Zwift Click and a smart trainer on a Chromebook",
+        "desc": "Ride your smart trainer and shift with a Zwift Click on a Chromebook, free in Chrome. No install, no Zwift subscription.",
+        "h1": "Zwift Click on a Chromebook",
+        "lead": "Zwift doesn't run on a Chromebook. PedalCraft does, because it runs in Chrome, and Chrome on ChromeOS can talk to Bluetooth trainers and the Zwift Click.",
+        "sections": [
+            ("What you need", "<ul><li>A Chromebook with Bluetooth (almost all have it).</li><li>A Bluetooth smart trainer.</li><li>Optional: a Zwift Click or Zwift Play to shift.</li></ul>"),
+            ("Connect", "<ol><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome.</li><li>Connect trainer and pick it from the list.</li><li>Connect the Click and press a button on it.</li></ol>"),
+            ("Tips", "<p>Keep the Chromebook plugged in for long rides and the screen on. If the list stays empty, turn Bluetooth off and on in the ChromeOS quick settings.</p>"),
+        ],
+        "faq": [
+            ("Can I use Zwift on a Chromebook?", "Zwift has no ChromeOS app. PedalCraft runs in Chrome on a Chromebook and connects your trainer and Zwift Click."),
+            ("Is it free?", "Yes. Riding and shifting in the browser is free."),
         ],
     },
 ]
