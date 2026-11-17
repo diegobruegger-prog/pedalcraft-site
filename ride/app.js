@@ -154,6 +154,10 @@ function toast(msg, ms = 3200) {
 // ---------- Bluetooth: trainer ----------
 const FTMS = U(0x1826), IBD = U(0x2AD2), FTMS_CP = U(0x2AD9);
 
+// Aeltere Trainer (17.11.2026, Diego: «mach alle trainer»): Tacx FE-C ueber Bluetooth und Wahoo vor FTMS.
+// Ungetestet an echter Hardware, Protokolle nach oeffentlichen Beschreibungen. Pings fec-*/wahoo-* zeigen, ob es klappt.
+const FEC_SVC = '6e40fec1-b5a3-f393-e0a9-e50e24dcca9e', FEC_RX = '6e40fec2-b5a3-f393-e0a9-e50e24dcca9e', FEC_TX = '6e40fec3-b5a3-f393-e0a9-e50e24dcca9e';
+const WAHOO_CP = 'a026e005-0a7d-4ab3-97fa-f1500f9feb8b', CPM = U(0x2A63);
 class Trainer {
   constructor(device) { this.device = device; this.zwiftReady = false; this.ftms = null; this.rx = null; this.ftmsGranted = false; this.queue = Promise.resolve(); }
   async connect() {
@@ -172,6 +176,10 @@ class Trainer {
         else if (u.toLowerCase() === ZW.async) async = c;
         else if (u.toLowerCase() === ZW.tx) tx = c;
         else if (u.toLowerCase() === ZW.rx) this.rx = c;
+        else if (u.toLowerCase() === FEC_RX) { c.addEventListener('characteristicvaluechanged', e => this.onFEC(bytesOf(e.target.value))); await c.startNotifications().catch(() => {}); }
+        else if (u.toLowerCase() === FEC_TX) this.fecTx = c;
+        else if (u.toLowerCase() === WAHOO_CP) { this.wahoo = c; await c.startNotifications().catch(() => {}); }
+        else if (u.toLowerCase() === CPM) { c.addEventListener('characteristicvaluechanged', e => this.onCPM(e.target.value)); await c.startNotifications().catch(() => {}); }
       }
     }
     if (async && tx && this.rx) {
@@ -210,6 +218,7 @@ class Trainer {
     report({ power: t[1], cadence: t[2], speed: t[3] != null ? t[3] / 100 * 3.6 : null, hr: t[4] });
   }
   onIBD(v) {
+    this.ibdSeen = true;
     const flags = v.getUint16(0, true); let i = 2; const r = {};
     if (!(flags & 0x1)) { r.speed = v.getUint16(i, true) / 100; i += 2; }
     if (flags & 0x2) i += 2;
@@ -224,7 +233,47 @@ class Trainer {
     report(r);
   }
   onCP(v) { if (v.byteLength >= 3 && v.getUint8(0) === 0x80 && v.getUint8(1) === 0x00) this.ftmsGranted = v.getUint8(2) === 1; }
+  writeFEC(page) {
+    if (!this.fecTx) return;
+    const m = [0xA4, 0x09, 0x4E, 0x05, ...page]; m.push(m.reduce((a, b) => a ^ b, 0));
+    this.queue = this.queue.then(() => this.fecTx.writeValueWithoutResponse(new Uint8Array(m)).catch(() => this.fecTx.writeValueWithResponse(new Uint8Array(m)))).catch(() => {});
+  }
+  writeWahoo(bytes) {
+    if (!this.wahoo) return;
+    this.queue = this.queue.then(() => this.wahoo.writeValueWithResponse(new Uint8Array(bytes))).catch(() => {});
+  }
+  onFEC(b) {
+    if (b[0] !== 0xA4 || b[2] !== 0x4E || b.length < 12) return;
+    const p = b.slice(4, 12);
+    if (p[0] === 0x19) { ping('fec-data'); report({ cadence: p[2] === 0xFF ? null : p[2], power: p[5] | ((p[6] & 0x0F) << 8) }); }
+    else if (p[0] === 0x10) report({ speed: (p[4] | (p[5] << 8)) / 1000 * 3.6, hr: p[6] && p[6] !== 0xFF ? p[6] : null });
+  }
+  onCPM(v) {
+    if (this.ibdSeen || this.zwiftReady || v.byteLength < 4) return;
+    const f = v.getUint16(0, true); const r = { power: v.getInt16(2, true) }; let i = 4;
+    if (f & 0x1) i += 1; if (f & 0x4) i += 2;
+    const now = performance.now();
+    if (f & 0x10 && v.byteLength >= i + 6) {
+      const rev = v.getUint32(i, true), t = v.getUint16(i + 4, true); i += 6;
+      if (this.lw) { const dr = rev - this.lw.rev, dt = ((t - this.lw.t) & 0xFFFF) / 2048; if (dt > 0) r.speed = dr * 2.105 / dt * 3.6; }
+      this.lw = { rev, t };
+    }
+    if (f & 0x20 && v.byteLength >= i + 4) {
+      const rev = v.getUint16(i, true), t = v.getUint16(i + 2, true);
+      if (this.lc) { const dr = (rev - this.lc.rev) & 0xFFFF, dt = ((t - this.lc.t) & 0xFFFF) / 1024; if (dt > 0) { r.cadence = Math.round(dr / dt * 60); this.lcAt = now; } else if (now - (this.lcAt || 0) > 3000) r.cadence = 0; }
+      this.lc = { rev, t };
+    }
+    if (this.wahoo) ping('wahoo-data'); else ping('cp-data');
+    report(r);
+  }
   useFTMS() {
+    if (!this.ftms && this.fecTx) { ping('fec-trainer'); setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · gears'); this.sendSim(); return; }
+    if (!this.ftms && this.wahoo) {
+      ping('wahoo-trainer'); setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · gears');
+      this.writeWahoo([0x20, 0xEE, 0xFC]);                                   // Steuerung freischalten
+      this.writeWahoo([0x43, 0x4C, 0x1D, 0x28, 0x00, 0xFE, 0x01]);           // Sim-Modus: 75 kg, Crr 0.004, Cw 0.51
+      this.sendSim(); return;
+    }
     if (!this.ftms) { setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · read only'); return; }
     setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · FTMS gears');
     this.sendSim();
@@ -232,7 +281,9 @@ class Trainer {
   sendSim() {
     const grade = ride.grade + (ride.gear - NEUTRAL) * 1.0;
     const g = Math.round(grade * 100);
-    this.writeFTMS([0x11, 0, 0, g & 0xFF, (g >> 8) & 0xFF, 40, 51]);
+    if (this.ftms) return this.writeFTMS([0x11, 0, 0, g & 0xFF, (g >> 8) & 0xFF, 40, 51]);
+    if (this.fecTx) { const raw = Math.round((grade + 200) * 100); return this.writeFEC([0x33, 0xFF, 0xFF, 0xFF, 0xFF, raw & 0xFF, (raw >> 8) & 0xFF, 0xFF]); }
+    if (this.wahoo) { const w = Math.max(0, Math.min(65535, Math.round((Math.max(-100, Math.min(100, grade)) / 100 + 1) * 32768))); this.writeWahoo([0x46, w & 0xFF, (w >> 8) & 0xFF]); }
   }
   applyGear() { if (this.erg) return; if (this.zwiftReady) this.write(MSG.gear(Math.round(GEARS[ride.gear] * 10000))); else this.sendSim(); }
   applyGrade() { if (this.erg) return; if (this.zwiftReady) this.write(MSG.sim(Math.round(ride.grade * 100), false)); else this.sendSim(); }
@@ -240,10 +291,13 @@ class Trainer {
   setTarget(w) {
     this.erg = w;
     if (w != null) {
-      if (this.zwiftReady) this.write([0x04, ...pbField(3, w)]); else this.writeFTMS([0x05, w & 0xFF, (w >> 8) & 0xFF]);
+      if (this.zwiftReady) this.write([0x04, ...pbField(3, w)]);
+      else if (this.ftms) this.writeFTMS([0x05, w & 0xFF, (w >> 8) & 0xFF]);
+      else if (this.fecTx) { const q = Math.round(w * 4); this.writeFEC([0x31, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, q & 0xFF, (q >> 8) & 0xFF]); }
+      else if (this.wahoo) this.writeWahoo([0x42, w & 0xFF, (w >> 8) & 0xFF]);
     } else if (this.zwiftReady) {
       this.write(MSG.sim(Math.round(ride.grade * 100), true)); this.write(MSG.gear(Math.round(GEARS[ride.gear] * 10000)));
-    } else this.sendSim();
+    } else { if (this.wahoo && !this.ftms) this.writeWahoo([0x43, 0x4C, 0x1D, 0x28, 0x00, 0xFE, 0x01]); this.sendSim(); }
   }
   async onDisconnect() {
     this.zwiftReady = false; clearInterval(this.keepAlive);
@@ -335,8 +389,8 @@ async function pickDevice(opts) {
 }
 async function connectTrainer() {
   const dev = await pickDevice({
-    filters: [{ services: [FTMS] }, { services: [ZW.svcFC82] }, { namePrefix: 'KICKR' }],
-    optionalServices: [FTMS, ZW.svc, ZW.svcFC82, U(0x1818), U(0x180A)],
+    filters: [{ services: [FTMS] }, { services: [ZW.svcFC82] }, { services: [U(0x1818)] }, { namePrefix: 'KICKR' }, { namePrefix: 'Wahoo' }, { namePrefix: 'Tacx' }],
+    optionalServices: [FTMS, ZW.svc, ZW.svcFC82, U(0x1818), U(0x180A), FEC_SVC],
   });
   stopDemo();
   trainer = new Trainer(dev);
@@ -880,6 +934,27 @@ const btHint = fn => { if (btHinted || EMBED) return; btHinted = true; ping('bt-
 const needBT = (fn, help = true) => { const run = async () => { ping('connect-tap'); if (!hasBT) { $('welcome').classList.remove('hidden'); return; } btHint(fn); try { await fn(); } catch (e) { if (e && e.name === 'NotFoundError' && help && !EMBED) { $('notfound').classList.remove('hidden'); lastTry = run; ping('notfound-help'); } throw e; } }; return safe(run); };
 let lastTry = null;
 $('nf-retry').onclick = () => { $('notfound').classList.add('hidden'); ping('notfound-retry'); safe(lastTry)(); };
+// «Mein Trainer steht nicht in der Liste» (17.11.2026): zeigt alle Geraete. Wir zaehlen anonym nur Marke/Modell
+// (nur bekannte Trainer-Marken, nie Handy- oder Personennamen) und welches Protokoll er spricht, um gezielt Trainer nachzuruesten.
+const FEC = FEC_SVC;
+const BRANDS = /(tacx|wahoo|kickr|elite|saris|cycleops|jetblack|wattbike|stages|zwift|bkool|kinetic|magene|thinkrider|van ?rysel|decathlon|technogym|keiser|echelon|schwinn|bowflex|tunturi|kettler|yesoul|zycle|suito|direto|flux|neo|vortex|bushido|genius|snap|hammer|h3|hub)/i;
+function trainerKey(name) {
+  const n = String(name || '').toLowerCase();
+  if (!BRANDS.test(n) || /iphone|ipad|phone|galaxy|pixel|airpods|watch|macbook|tv|'/.test(n)) return 'other';
+  return n.replace(/[0-9a-f]{4,}|\d+/g, ' ').replace(/[^a-z ]+/g, ' ').trim().replace(/\s+/g, '-').slice(0, 30) || 'other';
+}
+$('nf-any').onclick = safe(async () => {
+  $('notfound').classList.add('hidden'); ping('nf-any');
+  const dev = await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: [FTMS, ZW.svc, ZW.svcFC82, U(0x1818), U(0x180A), FEC] });
+  ping('tname-' + trainerKey(dev.name));
+  const server = await dev.gatt.connect();
+  const ids = (await server.getPrimaryServices()).map(s => s.uuid.toLowerCase());
+  const has = { ftms: ids.includes(FTMS), fc82: ids.includes(ZW.svcFC82), fec: ids.includes(FEC), cp: ids.includes(U(0x1818)) };
+  ping('proto-' + (Object.keys(has).filter(k => has[k]).join('-') || 'none'));
+  if (has.ftms || has.fc82 || has.fec || has.cp) { dev.gatt.disconnect(); stopDemo(); trainer = new Trainer(dev); setChip('c-trainer', false, 'Connecting …'); await trainer.connect(); ping('trainer'); return; }
+  dev.gatt.disconnect();
+  toast("That device doesn't look like a smart trainer. Pick the trainer itself, not a phone or sensor.", 9000);
+});
 $('nf-demo').onclick = () => { $('notfound').classList.add('hidden'); ping('notfound-demo'); startDemo(); };
 $('nf-close').onclick = () => $('notfound').classList.add('hidden');
 $('c-trainer').onclick = needBT(connectTrainer);
@@ -913,7 +988,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 33; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 35; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
