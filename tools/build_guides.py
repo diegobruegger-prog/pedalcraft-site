@@ -583,6 +583,7 @@ PAGE = """<!doctype html>
 </main>
 <footer>
 <div>{links}</div>
+<p><a href="https://www.google.com/preferences/source?q=pedalcraft.online" target="_blank" rel="noopener" onclick="if(location.hostname!=='localhost')fetch('https://pedalcraft-stats.pages.dev/hit/pref-source',{{mode:'no-cors',keepalive:true}}).catch(function(){{}})">&#9733; Add PedalCraft as a preferred source on Google</a></p>
 <p>PedalCraft is not affiliated with Zwift, Wahoo or Strava. Compatibility is based on Bluetooth protocols documented in the open by the indoor-cycling community.</p>
 </footer>
 </div>
