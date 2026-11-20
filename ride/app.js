@@ -879,6 +879,7 @@ function showEndOffer() {
 document.querySelectorAll('.lock').forEach(b => b.onclick = () => showPro(b.dataset.f));
 // Pause alle 20 Minuten (17.11.2026): Leute fuhren 30 und 60 Min gratis, die Angebote nach 3 Min und am Ende
 // klickte niemand. Gratis bleibt gratis, aber nach 20 Min kommt eine kurze Pause mit dem Angebot (15 s warten).
+// 20.11.2026: Ein Fahrer liess das 3-Min-Angebot offen und fuhr 60 Min, die Pause kam nie. Jetzt ersetzt sie ein offenes Angebot.
 let wallOpen = false;
 function showWall() {
   wallOpen = true; offerOpen = true;
@@ -916,7 +917,7 @@ setInterval(() => {
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 180 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
   if (ride.elapsed !== lastEl) { lastEl = ride.elapsed; stillSince = performance.now(); }
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 300 && performance.now() - stillSince >= 60000 && !nudged.has('end')) { nudged.add('end'); showEndOffer(); }
-  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 1200) { const b = 'w' + Math.floor(ride.elapsed / 1200); if (!nudged.has(b) && $('pro').classList.contains('hidden')) { nudged.add(b); showWall(); } }
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 1200) { const b = 'w' + Math.floor(ride.elapsed / 1200); if (!nudged.has(b) && !wallOpen && ($('pro').classList.contains('hidden') || offerOpen) && document.activeElement !== $('pro-key')) { nudged.add(b); endOffer = false; showWall(); } }
   if (!ride.demo && !isPro() && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
 }, 5000);
 
@@ -993,7 +994,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 36; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 37; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
