@@ -159,7 +159,7 @@
           <button class="btn" id="upsell-unlock">I have a key</button>
         </div>
         <button class="btn" id="share" style="align-self:flex-start">Share with a friend who has a Zwift Click</button>
-        <div class="note" id="upsell-note">This free version shows your ride live. Nothing is saved, nothing leaves your browser.</div>
+        <div class="note" id="upsell-note">Free: 30 minutes per ride, as often as you like. Pro: unlimited ride time, every ride to Strava, ERG workouts and an FTP test.</div>
         <form class="sub" id="panel-sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{mode:'no-cors',keepalive:true})}catch(e){}" data-src="panel">
           <input type="hidden" name="seller_id" value="7781126287159">
           <input type="email" name="email" required placeholder="you@example.com" aria-label="Email">
@@ -182,7 +182,7 @@
 <div class="overlay" id="welcome">
   <div class="panel box">
     <h2>Ride in your browser</h2>
-    <p>Connect your smart trainer and Zwift Click via Bluetooth. Shift with the Clicks (or ↑ ↓), change the grade with ← →. Free, no account. Nothing is saved when you close the tab.</p>
+    <p>Connect your smart trainer and Zwift Click via Bluetooth. Shift with the Clicks (or ↑ ↓), change the grade with ← →. Free rides of 30 minutes, no account.</p>
     <p id="nobt" class="hidden" style="color:var(--warn)">Your browser can't use Bluetooth. Please open this page in <b>Chrome</b> or <b>Edge</b> on a computer or Android phone. Safari and iPhone don't support Web Bluetooth.</p>
     <div id="ios-bluefy" class="hidden">
       <p><b>On iPhone or iPad:</b> Safari can't talk to Bluetooth devices, but the free app <b>Bluefy</b> can. Install it, then open <b>pedalcraft.online/ride</b> in Bluefy.</p>
@@ -261,6 +261,6 @@
 </div>
 <div class="toast hidden" id="toast"></div>
 
-<script type="module" src="app.js?v=37"></script>
+<script type="module" src="app.js?v=39"></script>
 </body>
 </html>

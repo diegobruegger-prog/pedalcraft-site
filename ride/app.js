@@ -118,6 +118,7 @@ function report({ power, cadence, speed, hr }) {
 
 let shiftCount = 0;
 function shift(up) {
+  if (capped) { if ($('pro').classList.contains('hidden')) showCap(); return; }
   if (wo) { setIntensity(wo.intensity + (up ? 5 : -5)); return; }
   if (!ride.demo) { shiftCount++; for (const n of [1, 10, 50]) if (shiftCount === n) ping('shifts-' + n); }
   const next = ride.gear + (up ? 1 : -1);
@@ -475,6 +476,7 @@ setInterval(() => {
   // dann zaehlte die Fahrzeit kaum noch und Fahrten sahen nach Sekunden aus (12.11.2026)
   tickAcc += Math.min((now - (lastTick || now)) / 1000, 300); lastTick = now;
   if (document.hidden && ride.lastData && now - ride.lastData < 60000 && !ride.demo) ping('hidden-riding');
+  if (capped) tickAcc = 0;
   for (; tickAcc >= 1; tickAcc -= 1) if (ride.power > 0 || ride.cadence > 0) {
     ride.elapsed += 1; ride.dist += ride.speed / 3.6; ride.sum += ride.power; ride.n += 1; ride.kj += ride.power / 1000;
     if (!ride.demo) samples.push([Math.round(ride.power), ride.cadence, ride.hr || 0, Math.round(ride.speed * 10), Math.round(ride.dist)]);
@@ -484,7 +486,7 @@ setInterval(() => {
 }, 1000);
 let lastTick = 0, tickAcc = 0;
 // Beim Verlassen anonym melden, wie lange wirklich gefahren wurde (Stufen), damit wir sehen, wo Leute aufhoeren
-addEventListener('pagehide', () => { if (ride.demo || !ride.elapsed) return; const s = ride.elapsed; ping('ridesec-' + (s < 10 ? '0' : s < 30 ? '10' : s < 60 ? '30' : s < 180 ? '60' : s < 600 ? '180' : '600')); });
+addEventListener('pagehide', () => { keepRide(); if (ride.demo || !ride.elapsed) return; const s = ride.elapsed; ping('ridesec-' + (s < 10 ? '0' : s < 30 ? '10' : s < 60 ? '30' : s < 180 ? '60' : s < 600 ? '180' : '600')); });
 
 // ---------- Render numbers ----------
 const $ = id => document.getElementById(id);
@@ -621,6 +623,7 @@ $('pro-key-go').onclick = async () => {
       pro = { key, t: Date.now() }; store.set('pc_pro', pro); ping('unlock-ok');
       $('pro').classList.add('hidden'); renderPro(); toast('PedalCraft Pro is unlocked. Have a good ride!', 5000);
       if (endOffer) { endOffer = false; $('pro-close').textContent = 'Keep riding free'; saveRide(); }
+      if (capped) { capped = false; $('pro-close').textContent = 'Keep riding free'; }
     } else { ping('unlock-bad'); toast('That key did not work. Copy it again from your Gumroad receipt.', 6000); }
   } catch (e) { toast('Could not check the key. Are you online?', 5000); }
   $('pro-key-go').disabled = false; $('pro-key-go').textContent = 'Unlock';
@@ -788,6 +791,27 @@ async function saveRide() {
   showRides();
 }
 let saved = false;
+// Gratis-Fahrten gesperrt aufbewahren (21.11.2026): Ein Italiener fuhr 3x über 60 Min und kaufte nie. Jetzt sieht er
+// seine Fahrten im Log stehen (Verlustangst), Strava-Export und Download gibt es erst mit Pro. Nur lokal im Browser.
+let kept = { n: 0, secs: 0, dist: 0 }, keptThis = false;
+async function keptStats() { try { const rows = await dbAll(); kept = { n: rows.length, secs: rows.reduce((a, r) => a + r.secs, 0), dist: rows.reduce((a, r) => a + r.dist, 0) }; } catch (e) {} }
+keptStats();
+async function keepRide() {
+  if (isPro() || ride.demo || EMBED || samples.length < 300) return;
+  const r = { id: T_START.getTime(), start: T_START.getTime(), secs: samples.length, dist: Math.round(ride.dist), avg: ride.n ? Math.round(ride.sum / ride.n) : 0, kj: Math.round(ride.kj),
+    max: Math.max(...samples.map(x => x[0])), name: 'Free ride', locked: true, samples: samples.slice() };
+  try { await dbPut(r); if (!keptThis) { keptThis = true; ping('kept-ride'); } await keptStats(); } catch (e) {}
+}
+const hm = s => s >= 3600 ? `${Math.floor(s / 3600)} h ${Math.floor(s % 3600 / 60)} min` : `${Math.floor(s / 60)} min`;
+const keptLine = () => kept.n > 1 ? `With Pro, all ${kept.n} rides you did here (${hm(kept.secs)}, ${(kept.dist / 1000).toFixed(0)} km) go straight to Strava.` : 'With Pro, this ride goes straight to Strava.';
+function showLocked() {
+  $('pro-share-row').classList.add('hidden');
+  $('pro-title').textContent = 'Get your rides into Strava.';
+  $('pro-text').textContent = `${keptLine()} Plus unlimited ride time, ERG workouts and an FTP test: $24 with code RIDE10 instead of $39. One-time, no subscription. Paste your key below and they open right away.`;
+  $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
+  $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Unlock for $24';
+  offerOpen = true; $('pro').classList.remove('hidden'); ping('locked-offer');
+}
 function tcx(r) {
   const t0 = r.start, iso = s => new Date(t0 + s * 1000).toISOString();
   const pts = r.samples.map(([p, c, hr, sp, d], i) => `<Trackpoint><Time>${iso(i)}</Time><DistanceMeters>${d}</DistanceMeters>${hr ? `<HeartRateBpm><Value>${hr}</Value></HeartRateBpm>` : ''}<Cadence>${c}</Cadence><Extensions><TPX xmlns="http://www.garmin.com/xmlschemas/ActivityExtension/v2"><Speed>${(sp / 36).toFixed(2)}</Speed><Watts>${p}</Watts></TPX></Extensions></Trackpoint>`).join('');
@@ -804,13 +828,13 @@ async function showRides() {
   $('rides').classList.remove('hidden');
   const list = $('rides-list'); list.innerHTML = '<p class="note">Loading …</p>';
   const rows = await dbAll(); list.innerHTML = '';
-  if (!rows.length) { list.innerHTML = '<p class="note">No saved rides yet. Ride, then press “Save this ride”.</p>'; return; }
+  if (!rows.length) { list.innerHTML = isPro() ? '<p class="note">No saved rides yet. Ride, then press “Save this ride”.</p>' : '<p class="note">No rides yet. Every ride over 5 minutes lands here automatically.</p>'; return; }
   for (const r of rows) {
     const el = document.createElement('div'); el.className = 'rrow';
-    el.innerHTML = `<div><b></b><span class="note"></span></div><button class="btn">.tcx for Strava</button><button class="btn rdel" aria-label="Delete">✕</button>`;
+    el.innerHTML = `<div><b></b><span class="note"></span></div><button class="btn">${isPro() ? '.tcx for Strava' : '🔒 .tcx for Strava'}</button><button class="btn rdel" aria-label="Delete">✕</button>`;
     el.querySelector('b').textContent = new Date(r.start).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' · ' + r.name;
     el.querySelector('.note').textContent = `${mmss(r.secs)} · ${(r.dist / 1000).toFixed(1)} km · ${r.avg} W avg · ${r.max} W max · ${r.kj} kJ`;
-    el.querySelectorAll('button')[0].onclick = () => download(r);
+    el.querySelectorAll('button')[0].onclick = () => { if (isPro()) download(r); else { ping('locked-tcx'); $('rides').classList.add('hidden'); showLocked(); } };
     el.querySelector('.rdel').onclick = async () => { if (confirm('Delete this ride?')) { await dbDel(r.id); showRides(); } };
     list.appendChild(el);
   }
@@ -833,6 +857,8 @@ function showPro(f) {
     if (f === 'ftpset') { const v = prompt('Your FTP in watts:', ride.ftp); const n = parseInt(v, 10); if (n >= 60 && n <= 600) { ride.ftp = n; store.set('pc_ftp', n); renderPro(); } return; }
   }
   if (f === 'unlock') return showUnlock();
+  if (f === 'rides') { ping('rides-free'); return showRides(); }
+  if (f === 'save') { keepRide(); return showLocked(); }
   const [t, txt] = PRO[f] || PRO.workout;
   $('pro-title').textContent = t;
   let extra = '';
@@ -850,7 +876,7 @@ function renderPro() {
   document.querySelectorAll('.lock .pro').forEach(i => i.textContent = on ? '' : 'PRO');
   $('lock-ftpset').classList.toggle('hidden', !on); $('lock-ftpset').querySelector('.t').textContent = 'FTP: ' + ride.ftp + ' W (change)';
   $('upsell-buy').classList.toggle('hidden', on); $('upsell-unlock').classList.toggle('hidden', on); $('head-buy').classList.toggle('hidden', on);
-  $('upsell-note').textContent = on ? 'Rides are saved in this browser only. Download them as .tcx and upload at strava.com/upload.' : 'This free version shows your ride live. Nothing is saved, nothing leaves your browser.';
+  $('upsell-note').textContent = on ? 'Rides are saved in this browser only. Download them as .tcx and upload at strava.com/upload.' : 'Free: 30 minutes per ride, as often as you like. Pro: unlimited ride time, every ride to Strava, ERG workouts and an FTP test.';
 }
 // Angebot nach 3 Minuten echter Fahrt (Diego 28.10.2026): Trainer und Click funktionieren nachweislich, bester Moment fürs Angebot
 let offerOpen = false;
@@ -868,7 +894,7 @@ function showRideOffer() {
 let endOffer = false;
 function showEndOffer() {
   $('pro-title').textContent = 'Nice ride.';
-  $('pro-text').textContent = `${Math.floor(ride.elapsed / 60)} min, ${(ride.dist / 1000).toFixed(1)} km, ${Math.round(ride.kj)} kJ. This ride isn't saved and is gone when you close this tab. PedalCraft Pro keeps it and every ride after it, ready for Strava, plus ERG workouts and an FTP test: $24 with code RIDE10 instead of $39. One-time, no subscription. Buy in the new tab, paste your key here, and this ride is saved.`;
+  $('pro-text').textContent = `${Math.floor(ride.elapsed / 60)} min, ${(ride.dist / 1000).toFixed(1)} km, ${Math.round(ride.kj)} kJ. ${keptLine()} PedalCraft Pro also gives you unlimited ride time, plus ERG workouts and an FTP test: $24 with code RIDE10 instead of $39. One-time, no subscription. Buy in the new tab, paste your key here, and they open right away.`;
   $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get it for $24';
   $('pro-close').textContent = 'Not now'; $('pro-share-row').classList.remove('hidden');
@@ -881,10 +907,33 @@ document.querySelectorAll('.lock').forEach(b => b.onclick = () => showPro(b.data
 // klickte niemand. Gratis bleibt gratis, aber nach 20 Min kommt eine kurze Pause mit dem Angebot (15 s warten).
 // 20.11.2026: Ein Fahrer liess das 3-Min-Angebot offen und fuhr 60 Min, die Pause kam nie. Jetzt ersetzt sie ein offenes Angebot.
 let wallOpen = false;
+// 30 Minuten pro Gratis-Fahrt (Diego 21.11.2026): danach neu starten oder Pro. Texte zielen auf das, was man bekommt.
+let capped = false;
+const L = (navigator.language || 'en').slice(0, 2);
+const T = ({
+  en: { left5: '5 minutes left in this free ride. Pro rides as long as you like.', title: '30 minutes done. Strong.', text: n => `Free rides run 30 minutes. Want to keep going? With PedalCraft Pro you ride as long as you like. ${n} You also get ERG workouts from 20 minutes to 2 hours and an FTP test that sets your zones. $24 with code RIDE10 instead of $39. One-time, no subscription, Mac app included.`, buy: 'Ride on with Pro · $24', again: 'Start a new free ride' },
+  de: { left5: 'Noch 5 Minuten in dieser Gratisfahrt. Mit Pro fährst du so lange du willst.', title: '30 Minuten geschafft. Stark.', text: n => `Gratisfahrten dauern 30 Minuten. Weiterfahren? Mit PedalCraft Pro fährst du so lange du willst. ${n} Dazu ERG-Trainings von 20 Minuten bis 2 Stunden und ein FTP-Test, der deine Zonen setzt. 24 $ mit Code RIDE10 statt 39 $. Einmal zahlen, kein Abo, Mac-App inklusive.`, buy: 'Mit Pro weiterfahren · 24 $', again: 'Neue Gratisfahrt starten' },
+  it: { left5: 'Ancora 5 minuti in questa uscita gratuita. Con Pro pedali quanto vuoi.', title: '30 minuti fatti. Grande.', text: n => `Le uscite gratuite durano 30 minuti. Vuoi continuare? Con PedalCraft Pro pedali quanto vuoi. ${n} In più allenamenti ERG da 20 minuti a 2 ore e un test FTP che imposta le tue zone. 24 $ con il codice RIDE10 invece di 39 $. Pagamento unico, nessun abbonamento, app per Mac inclusa.`, buy: 'Continua con Pro · 24 $', again: 'Nuova uscita gratuita' },
+})[['de', 'it'].includes(L) ? L : 'en'];
+const capStrava = () => { const k = Math.max(kept.n, 1); return L === 'de' ? (k > 1 ? `Alle ${k} Fahrten von hier (${hm(kept.secs)}) gehen direkt zu Strava.` : 'Deine Fahrt geht direkt zu Strava.') : L === 'it' ? (k > 1 ? `Tutte le ${k} uscite fatte qui (${hm(kept.secs)}) vanno dritte su Strava.` : 'La tua uscita va dritta su Strava.') : (k > 1 ? `All ${k} rides you did here (${hm(kept.secs)}) go straight to Strava.` : 'Your ride goes straight to Strava.'); };
+function showCap() {
+  capped = true; keepRide();
+  const X = T;
+  $('pro-share-row').classList.remove('hidden');
+  $('pro-title').textContent = X.title;
+  $('pro-text').textContent = X.text(capStrava());
+  $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
+  $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = X.buy;
+  $('pro-close').disabled = false; $('pro-close').textContent = X.again;
+  wallOpen = false; offerOpen = true; endOffer = false;
+  $('pro').classList.remove('hidden');
+  ping('cap-30');
+}
+
 function showWall() {
   wallOpen = true; offerOpen = true;
   $('pro-title').textContent = `${Math.floor(ride.elapsed / 60)} minutes, nice.`;
-  $('pro-text').textContent = "You're clearly using this. PedalCraft Pro saves every ride for Strava, adds ERG workouts and an FTP test, and rides without these breaks: $24 with code RIDE10 instead of $39. One-time, no subscription. Paste your key below and this ride is kept.";
+  $('pro-text').textContent = `You're clearly using this. ${keptLine()} PedalCraft Pro adds ERG workouts and an FTP test and rides without these breaks: $24 with code RIDE10 instead of $39. One-time, no subscription.`;
   $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get Pro for $24';
   const c = $('pro-close'); let n = 15; c.disabled = true; c.textContent = `Keep riding free in ${n}`;
@@ -893,8 +942,8 @@ function showWall() {
   $('pro').classList.remove('hidden');
   ping('wall-20');
 }
-$('pro-close').onclick = () => { if ($('pro-close').disabled) return; if (wallOpen) { wallOpen = false; ping('wall-continue'); } $('pro').classList.add('hidden'); $('pro-share-row').classList.add('hidden'); $('pro-close').textContent = 'Keep riding free'; endOffer = false; };
-$('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); if (endOffer) ping('buy-end'); if (wallOpen) ping('buy-wall'); };
+$('pro-close').onclick = () => { if ($('pro-close').disabled) return; if (capped) { ping('cap-restart'); location.reload(); return; } if (wallOpen) { wallOpen = false; ping('wall-continue'); } $('pro').classList.add('hidden'); $('pro-share-row').classList.add('hidden'); $('pro-close').textContent = 'Keep riding free'; endOffer = false; };
+$('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); if (endOffer) ping('buy-end'); if (wallOpen) ping('buy-wall'); if (capped) ping('buy-cap'); };
 $('upsell-unlock').onclick = showUnlock;
 // Weitersagen: teilen oder Link kopieren (zählt nur, dass geteilt wurde)
 $('pro-share').onclick = e => { e.preventDefault(); ping('share-offer'); $('share').onclick(); };
@@ -917,8 +966,10 @@ setInterval(() => {
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 180 && !nudged.has(10)) { nudged.add(10); showRideOffer(); }
   if (ride.elapsed !== lastEl) { lastEl = ride.elapsed; stillSince = performance.now(); }
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 300 && performance.now() - stillSince >= 60000 && !nudged.has('end')) { nudged.add('end'); showEndOffer(); }
-  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 1200) { const b = 'w' + Math.floor(ride.elapsed / 1200); if (!nudged.has(b) && !wallOpen && ($('pro').classList.contains('hidden') || offerOpen) && document.activeElement !== $('pro-key')) { nudged.add(b); endOffer = false; showWall(); } }
-  if (!ride.demo && !isPro() && ride.elapsed >= 1800 && !nudged.has(30)) { nudged.add(30); toast("30 minutes in. This ride won't be saved here; code RIDE10 gets you the Mac app for $24.", 8000); }
+  if (!isPro() && !ride.demo && samples.length >= 300 && samples.length - (keepRide.at || 0) >= 60) { keepRide.at = samples.length; keepRide(); }
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 1800 && !capped) showCap();
+  if (false) { const b = 'w' + Math.floor(ride.elapsed / 1200); if (!nudged.has(b) && !wallOpen && ($('pro').classList.contains('hidden') || offerOpen) && document.activeElement !== $('pro-key')) { nudged.add(b); endOffer = false; showWall(); } }
+  if (!ride.demo && !isPro() && ride.elapsed >= 1500 && !nudged.has(30)) { nudged.add(30); toast(T.left5, 8000); ping('cap-25'); }
 }, 5000);
 
 // ---------- Wire up ----------
@@ -994,7 +1045,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 37; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 39; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.

@@ -106,7 +106,7 @@ GUIDES = [
         "faq": [
             ("Is there a free indoor cycling app for Windows?", "Yes. PedalCraft runs free in Chrome or Edge on Windows and connects your smart trainer over Bluetooth."),
             ("Can I do structured workouts?", "With PedalCraft Pro: ERG workouts from 20 minutes to 2 hours and an FTP test, $39 once."),
-            ("Are rides saved?", "In the free version, no. Pro saves rides in your browser and exports them for Strava."),
+            ("Are rides saved?", "Pro saves every ride and exports it for Strava. Free rides run up to 30 minutes."),
             ("Do I need to install anything?", "No. It runs in a Chrome or Edge tab. Nothing is installed on your PC."),
             ("My PC has no Bluetooth. What now?", "Plug in a USB Bluetooth adapter (4.0 or newer). ANT+ sticks don't work in the browser."),
         ],
@@ -285,14 +285,14 @@ GUIDES = [
             ("What you give up without Zwift", "<ul><li>Virtual worlds, group rides and races</li><li>Zwift's workout library and training plans</li><li>Drops, levels and the Zwift community</li></ul><p>The trainer, the Cog and the Click keep working. You only lose the Zwift app around them.</p>"),
             ("Other ways to ride the KICKR CORE 2", "<ul><li><b>Wahoo SYSTM</b> or <b>Rouvy</b>: full training apps, also with a subscription.</li><li><b>The Wahoo app</b>: updates the trainer firmware and sets resistance, but it is not a riding app.</li><li><b>PedalCraft</b>: free, in the browser, reads the Click and uses the trainer's own virtual shifting.</li></ul>"),
             ("If shifting doesn't change the resistance", "<ul><li>Zwift is still open on another device. Quit it, also on your phone.</li><li>Update the trainer firmware once in the Wahoo app, then close the Wahoo app again.</li></ul>"),
-            ("Want structured training?", "<p>The free version shows your ride live and saves nothing. <a href=\"/#mac\">PedalCraft Pro</a> adds an FTP ramp test, ERG workouts from 20 minutes to 2 hours and a ride log, for $39 once. No subscription.</p>"),
+            ("Want structured training?", "<p>The free version gives you rides of up to 30 minutes, as many as you like. <a href=\"/#mac\">PedalCraft Pro</a> adds an FTP ramp test, ERG workouts from 20 minutes to 2 hours and a ride log, for $39 once. No subscription.</p>"),
         ],
         "faq": [
             ("Can I use the KICKR CORE 2 virtual shifting without Zwift?", "Yes. PedalCraft sends the gear to the trainer the same way Zwift does, so the trainer firmware shifts."),
             ("Does the KICKR CORE 2 work without the Zwift Click?", "Yes. Without the Click you shift with the + and − buttons on screen or the arrow keys on your keyboard."),
             ("Do I need the Wahoo app?", "No. PedalCraft connects to the trainer directly over Bluetooth."),
             ("Can I use it on Windows or Android?", "Yes, in Chrome or Edge. On iPhone use the free Bluefy browser."),
-            ("Will my rides be saved?", "Not in the free version. PedalCraft Pro saves every ride and exports it as a TCX file for Strava."),
+            ("Will my rides be saved?", "PedalCraft Pro saves every ride and exports it as a TCX file for Strava. Free rides run up to 30 minutes."),
         ],
     },
     {
@@ -324,7 +324,7 @@ GUIDES = [
         "sections": [
             ("Which browsers work", "<ul><li><b>Chrome</b> and <b>Edge</b> on macOS, Windows and Android: yes</li><li><b>Safari</b> and <b>Firefox</b>: no, they don't support Web Bluetooth</li><li><b>iPhone and iPad</b>: with the free <b>Bluefy</b> browser app</li></ul>"),
             ("What the browser talks to", "<ul><li><b>FTMS</b>, the standard Bluetooth fitness machine profile: power, cadence, speed and resistance</li><li><b>Zwift's virtual shifting protocol</b> on Zwift Cog trainers, so the trainer firmware shifts</li><li><b>Zwift Click, Play and Ride</b> controllers for the shift buttons</li><li>The standard <b>heart rate</b> profile</li></ul>"),
-            ("Privacy", "<p>Everything happens in your browser tab. PedalCraft has no account and no server for your data; the free version keeps nothing once you close the tab.</p>"),
+            ("Privacy", "<p>Everything happens in your browser tab. PedalCraft has no account and no server for your data; rides stay in your browser only.</p>"),
             ("Try it", "<p>Open <a href=\"/ride/\">pedalcraft.online/ride</a>, connect your trainer, or start the demo.</p>"),
             ("Step by step in Chrome", "<ol><li>Quit Zwift and your trainer's app on every device, so the trainer is free.</li><li>Pedal for a few seconds so the trainer wakes up.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> and click <b>Connect trainer</b>. Chrome shows a list of nearby devices; pick yours.</li><li>Click <b>Connect Click</b>, press a button on the Click and pick it.</li><li>Optional: <b>Heart rate</b> for a chest strap.</li></ol>"),
             ("Common problems", "<ul><li><b>The list stays empty:</b> the device is asleep or connected to another app.</li><li><b>Windows PC without Bluetooth:</b> a small USB Bluetooth adapter is enough, or use an Android phone.</li><li><b>Android:</b> Chrome asks for the Nearby devices permission (older Android: location). Allow it.</li><li><b>Firefox or Safari:</b> open the page in Chrome or Edge instead.</li></ul>"),
@@ -346,7 +346,7 @@ GUIDES = [
             ("Free: in Chrome or Edge", "<ol><li>Quit Zwift on all devices.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> in Chrome or Edge. Safari does not support Web Bluetooth.</li><li>Connect your trainer, then your Click, and shift.</li></ol>"),
             ("The Mac app", f"<p>The <a href=\"{BUY}\">PedalCraft Mac app</a> runs natively on macOS 14 or later, Apple Silicon and Intel. It keeps the Click connected in the background, holds your watts in ERG workouts from 20 minutes to 2 hours, runs an FTP ramp test, saves every ride and uploads it to Strava. A mini window shows your numbers on top of Netflix or YouTube, even in full screen. $39 once, all updates included.</p>"),
             ("Which Click works", "<p>Zwift Click v1 and v2, Zwift Play and Zwift Ride. On Zwift Cog trainers such as the Wahoo KICKR CORE 2 or Zwift Hub, the trainer firmware shifts, just like in Zwift.</p>"),
-            ("Chrome or the Mac app?", "<ul><li><b>Chrome (free):</b> ride, shift, see watts and cadence. Nothing is saved when you close the tab.</li><li><b>PedalCraft Pro ($39 once):</b> ERG workouts, FTP test, ride log and Strava files, in Chrome and as a native Mac app with the mini window.</li></ul><p>Start free in Chrome. If you ride more than a few times, Pro saves you the hassle.</p>"),
+            ("Chrome or the Mac app?", "<ul><li><b>Chrome (free):</b> ride, shift, see watts and cadence, 30 minutes per ride.</li><li><b>PedalCraft Pro ($39 once):</b> ERG workouts, FTP test, ride log and Strava files, in Chrome and as a native Mac app with the mini window.</li></ul><p>Start free in Chrome. If you ride more than a few times, Pro saves you the hassle.</p>"),
             ("Bluetooth permission on macOS", "<p>The first time, macOS asks whether Chrome may use Bluetooth. Allow it. If you clicked no, open System Settings → Privacy &amp; Security → Bluetooth and switch Chrome on, then reload the page.</p>"),
         ],
         "faq": [

@@ -3,12 +3,12 @@
 > Ride a Bluetooth smart trainer and shift with a Zwift Click, Zwift Play or Zwift Ride without a Zwift subscription. Free in Chrome or Edge on Windows, Mac, Android and Chromebook. PedalCraft Pro ($39 once) adds ERG workouts, an FTP ramp test and a ride log, plus a native Mac app.
 
 Key facts:
-- Free browser app: https://pedalcraft.online/ride/ (Web Bluetooth, no install, no account, nothing saved).
+- Free browser app: https://pedalcraft.online/ride/ (Web Bluetooth, no install, no account).
 - Works with Zwift Cog trainers (Wahoo KICKR CORE 2, Zwift Hub One) using real virtual shifting in the trainer firmware, and with Bluetooth FTMS smart trainers (most current Tacx, Elite, Wahoo, Saris and others), where each gear changes the simulated grade.
 - Controllers: Zwift Click v1 and v2, Zwift Play, Zwift Ride.
 - iPhone/iPad: Safari has no Web Bluetooth; it works in the free Bluefy browser app.
 - Older trainers: since November 2026 also Tacx FE-C over Bluetooth (Vortex, Bushido, Genius, first Flux and Neo) and Wahoo's legacy control (KICKR Snap and KICKR before 2020). ANT+-only trainers can't work in a browser.
-- Free version: unlimited rides, with a short 15-second break every 20 minutes. Pro rides without breaks.
+- Free version: rides of up to 30 minutes, as many as you like. Pro: unlimited ride time, Strava files, ERG workouts, FTP test.
 - Not a Zwift replacement: no virtual world, no racing.
 - PedalCraft Pro: $39 one-time ($29 launch price with code LAUNCH), no subscription. https://pedalcraftapp.gumroad.com/l/pedalcraft-mac
 
