@@ -5,7 +5,7 @@
 Key facts:
 - Free browser app: https://pedalcraft.online/ride/ (Web Bluetooth, no install, no account).
 - Works with Zwift Cog trainers (Wahoo KICKR CORE 2, Zwift Hub One) using real virtual shifting in the trainer firmware, and with Bluetooth FTMS smart trainers (most current Tacx, Elite, Wahoo, Saris and others), where each gear changes the simulated grade.
-- Controllers: Zwift Click v1 and v2, Zwift Play, Zwift Ride.
+- Controllers: Zwift Click v1 and v2, Zwift Play, Zwift Ride, and any OpenBikeControl controller over Bluetooth (for example BikeControl or the Stages SB200).
 - iPhone/iPad: Safari has no Web Bluetooth; it works in the free Bluefy browser app.
 - Older trainers: since November 2026 also Tacx FE-C over Bluetooth (Vortex, Bushido, Genius, first Flux and Neo) and Wahoo's legacy control (KICKR Snap and KICKR before 2020). ANT+-only trainers can't work in a browser.
 - Free version: rides of up to 30 minutes, as many as you like. Pro: unlimited ride time, Strava files, ERG workouts, FTP test.

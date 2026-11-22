@@ -153,6 +153,7 @@ function toast(msg, ms = 3200) {
 }
 
 // ---------- Bluetooth: trainer ----------
+const OBC = { svc: 'd273f680-d548-419d-b9d1-fa0472345229', state: 'd273f681-d548-419d-b9d1-fa0472345229', haptic: 'd273f682-d548-419d-b9d1-fa0472345229', info: 'd273f683-d548-419d-b9d1-fa0472345229' };
 const FTMS = U(0x1826), IBD = U(0x2AD2), FTMS_CP = U(0x2AD9);
 
 // Aeltere Trainer (17.11.2026, Diego: «mach alle trainer»): Tacx FE-C ueber Bluetooth und Wahoo vor FTMS.
@@ -315,8 +316,9 @@ class Controller {
     this.device.addEventListener('gattserverdisconnected', () => this.onDisconnect());
     const server = await this.device.gatt.connect();
     let svc = null;
+    try { const o = await server.getPrimaryService(OBC.svc); return this.connectOBC(o); } catch (e) {}
     for (const u of [ZW.svc, ZW.svcFC82]) { try { svc = await server.getPrimaryService(u); break; } catch (e) {} }
-    if (!svc) throw new Error('No Zwift service on this device');
+    if (!svc) throw new Error('No Zwift or OpenBikeControl service on this device');
     this.rx = await svc.getCharacteristic(ZW.rx);
     const async = await svc.getCharacteristic(ZW.async), tx = await svc.getCharacteristic(ZW.tx);
     async.addEventListener('characteristicvaluechanged', e => this.onAsync(bytesOf(e.target.value)));
@@ -326,7 +328,34 @@ class Controller {
     if (!this.ready) toast(this.label + ': no answer. Press a button and try again.');
     updateCtrlChip();
   }
-  write(b) { return (this.rx.properties.writeWithoutResponse ? this.rx.writeValueWithoutResponse(new Uint8Array(b)) : this.rx.writeValueWithResponse(new Uint8Array(b))).catch(() => {}); }
+  // OpenBikeControl (offenes Protokoll, github.com/OpenBikeControl): [0x01, id, state, id, state ...]
+  async connectOBC(svc) {
+    this.obc = true;
+    const st = await svc.getCharacteristic(OBC.state);
+    st.addEventListener('characteristicvaluechanged', e => this.onOBC(bytesOf(e.target.value)));
+    await st.startNotifications();
+    try { this.haptic = await svc.getCharacteristic(OBC.haptic); } catch (e) {}
+    try {
+      const info = await svc.getCharacteristic(OBC.info), enc = t => [...new TextEncoder().encode(t)];
+      const id = enc('pedalcraft'), ver = enc(String(APP_VERSION)), btn = [0x01, 0x02, 0x03, 0x30, 0x31];
+      await info.writeValue(new Uint8Array([0x04, 0x01, id.length, ...id, ver.length, ...ver, btn.length, ...btn]));
+    } catch (e) {}
+    this.ready = true; ping('obc'); updateCtrlChip();
+  }
+  onOBC(d) {
+    if (d[0] !== 0x01) return;
+    for (let i = 1; i + 1 < d.length; i += 2) {
+      const id = d[i], v = d[i + 1], was = this.pressed.has(id);
+      if (v === 0x00) { this.pressed.delete(id); continue; }
+      if (id === 0x03) { if (v >= 0x02 && !capped && !wo) { ride.gear = Math.max(0, Math.min(GEARS.length - 1, v - 2)); beep(900, 0.05); trainer?.applyGear(); render(); } continue; }
+      if (was) continue;
+      this.pressed.add(id);
+      if (id === 0x01) shift(true); else if (id === 0x02) shift(false);
+      else if (id === 0x30) wo ? shift(true) : changeGrade(0.5);
+      else if (id === 0x31) wo ? shift(false) : changeGrade(-0.5);
+    }
+  }
+  write(b) { if (this.obc) return Promise.resolve(); return (this.rx.properties.writeWithoutResponse ? this.rx.writeValueWithoutResponse(new Uint8Array(b)) : this.rx.writeValueWithResponse(new Uint8Array(b))).catch(() => {}); }
   onSync(d) {
     if (isRideOn(d) && !this.ready) {
       this.ready = true; updateCtrlChip();
@@ -401,8 +430,8 @@ async function connectTrainer() {
 }
 async function connectController() {
   const dev = await pickDevice({
-    filters: [{ manufacturerData: [{ companyIdentifier: 0x094A }] }, { namePrefix: 'Zwift' }],
-    optionalServices: [ZW.svc, ZW.svcFC82, U(0x180F)],
+    filters: [{ manufacturerData: [{ companyIdentifier: 0x094A }] }, { namePrefix: 'Zwift' }, { services: [OBC.svc] }],
+    optionalServices: [ZW.svc, ZW.svcFC82, OBC.svc, U(0x180F)],
   });
   const c = new Controller(dev);
   controllers.push(c); updateCtrlChip();
@@ -955,7 +984,7 @@ $('share').onclick = async () => {
 };
 $('pro-key-in').onkeydown = e => { if (e.key === 'Enter') $('pro-key-go').click(); };
 renderPro();
-if (location.hostname === 'localhost') window.__pc = { samples, saveRide, tcx, dbAll, ride, startWorkout, FTP_TEST, get wo() { return wo; } };   // nur zum Testen
+if (location.hostname === 'localhost') window.__pc = { Controller, samples, saveRide, tcx, dbAll, ride, startWorkout, FTP_TEST, get wo() { return wo; } };   // nur zum Testen
 // Nach 10 und 30 Minuten echter Fahrt freundlich daran erinnern, dass die Fahrt nicht gespeichert wird
 let nudged = new Set(), lastEl = -1, stillSince = 0;
 setInterval(() => {
@@ -1045,7 +1074,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 39; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 40; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
