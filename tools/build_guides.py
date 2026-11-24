@@ -105,7 +105,7 @@ GUIDES = [
         ],
         "faq": [
             ("Is there a free indoor cycling app for Windows?", "Yes. PedalCraft runs free in Chrome or Edge on Windows and connects your smart trainer over Bluetooth."),
-            ("Can I do structured workouts?", "With PedalCraft Pro: ERG workouts from 20 minutes to 2 hours and an FTP test, $39 once."),
+            ("Can I do structured workouts?", "One 20 minute ERG workout is free. PedalCraft Pro adds the full library from 20 minutes to 2 hours and an FTP test, $39 once."),
             ("Are rides saved?", "Pro saves every ride and exports it for Strava. Free rides run up to 30 minutes."),
             ("Do I need to install anything?", "No. It runs in a Chrome or Edge tab. Nothing is installed on your PC."),
             ("My PC has no Bluetooth. What now?", "Plug in a USB Bluetooth adapter (4.0 or newer). ANT+ sticks don't work in the browser."),
@@ -203,7 +203,7 @@ GUIDES = [
         ],
         "faq": [
             ("Do I need to install anything on Windows?", "No. PedalCraft runs in Chrome or Edge using Web Bluetooth."),
-            ("Does ERG work on Windows?", "Yes, with PedalCraft Pro: ERG workouts, FTP test and a ride log, $39 once."),
+            ("Does ERG work on Windows?", "Yes. One 20 minute ERG workout is free. PedalCraft Pro adds the full library, an FTP test and a ride log, $39 once."),
             ("Does Firefox work?", "No, Firefox doesn't support Web Bluetooth. Use Chrome or Edge."),
             ("Does it work without a Zwift Click?", "Yes. Shift with the + and − buttons on screen or the arrow keys."),
             ("Do ANT+ sticks work?", "No. Browsers only talk Bluetooth. Use the trainer's Bluetooth connection."),
@@ -234,7 +234,7 @@ GUIDES = [
         "slug": "de/zwift-click-ohne-abo",
         "lang": "de",
         "title": "Mit dem Zwift Click schalten, ohne Zwift-Abo",
-        "desc": "So schaltest du mit dem Zwift Click ohne Zwift-Abo: Trainer und Click in Chrome verbinden und gratis fahren. Kein Konto, keine Installation. Mac-App mit ERG und FTP-Test.",
+        "desc": "So schaltest du mit dem Zwift Click ohne Zwift-Abo: Trainer und Click in Chrome verbinden und gratis fahren. Kein Konto, keine Installation. Pro mit ERG-Trainings und FTP-Test im Browser und als Mac-App.",
         "h1": "Mit dem Zwift Click schalten. Ohne Abo.",
         "lead": "Dein Zwift Click funktioniert auch ohne Zwift. PedalCraft verbindet Trainer und Click direkt im Browser und übernimmt das virtuelle Schalten. Gratis, ohne Konto, ohne Installation.",
         "sections": [
@@ -242,12 +242,12 @@ GUIDES = [
             ("So verbindest du ihn", "<ol><li>Zwift auf allen Geräten beenden, auch auf dem Handy. Nur eine App kann den Trainer steuern.</li><li><a href=\"/ride/\">pedalcraft.online/ride</a> öffnen und auf <b>Connect trainer</b> klicken.</li><li>Auf jedem Click einmal drücken, damit er aufwacht, dann <b>Connect Click</b> wählen.</li><li>Losfahren. <b>+</b> schaltet schwerer, <b>−</b> leichter.</li></ol>"),
             ("Wie das Schalten ohne Zwift funktioniert", "<p>Auf Trainern mit Zwift-Cog (zum Beispiel KICKR CORE 2 oder Zwift Hub) schickt PedalCraft den Gang an den Trainer, und die Trainer-Firmware ändert den Widerstand, genau wie in Zwift. Andere Bluetooth-FTMS-Trainer bekommen pro Gang eine simulierte Steigung.</p>"),
             ("Kein Zwift-Ersatz", "<p>PedalCraft hat keine virtuelle Welt, keine Rennen und keine Gruppenfahrten. Es ist ein einfaches Werkzeug zum Fahren, Schalten und Trainieren, ohne monatliche Kosten.</p>"),
-            ("Wenn du trainieren willst", f"<p>Die <a href=\"{BUY}\">Mac-App</a> bringt ERG-Workouts von 20 Minuten bis 2 Stunden, einen FTP-Rampentest, ein Fahrtenbuch und Strava-Upload. Einmal $39, zum Start $29, alle Updates inklusive. Läuft auf Apple Silicon und Intel ab macOS 14. Funktioniert sie mit deinem Trainer nicht, gibt es das Geld zurück.</p>"),
+            ("Wenn du trainieren willst", f"<p>Ein ERG-Training von 20 Minuten ist gratis. <a href=\"{BUY}\">PedalCraft Pro</a> bringt ERG-Trainings von 20 Minuten bis 2 Stunden, einen FTP-Rampentest, unbegrenzte Fahrzeit und ein Fahrtenbuch mit .tcx-Datei für Strava. Es läuft im Browser auf Windows, Android, Chromebook und Mac, dazu gibt es die Mac-App (ab macOS 14) mit automatischem Strava-Upload. Einmal $39, zum Start $29, alle Updates inklusive. Funktioniert es mit deinem Trainer nicht, gibt es innert 30 Tagen das Geld zurück.</p>"),
         ],
         "faq": [
             ("Brauche ich ein Zwift-Abo, um mit dem Click zu schalten?", "Nein. PedalCraft verbindet den Click direkt über Bluetooth, ohne Zwift-App und ohne Konto."),
             ("Geht das auf dem iPhone?", "Nicht in Safari. Mit der Gratis-App Bluefy geht es: installieren und darin pedalcraft.online/ride öffnen."),
-            ("Was kostet es?", "Die Browser-Version ist gratis. Die Mac-App kostet einmal $39, zum Start $29."),
+            ("Was kostet es?", "Gratis fährst du 30 Minuten pro Fahrt, so oft du willst. PedalCraft Pro kostet einmal $39, zum Start $29, und gilt für Browser und Mac-App."),
         ],
     },
     {
@@ -270,7 +270,7 @@ GUIDES = [
             ("Can I cancel Zwift and keep using the Click?", "Yes. The Click keeps working with PedalCraft after you cancel. Your Zwift account and rides stay with Zwift."),
             ("Does it work on iPhone?", "Not in Safari. Install the free Bluefy browser app and open pedalcraft.online/ride in it, or use Chrome or Edge on a computer or Android device."),
             ("Does it work with Zwift Play and Zwift Ride?", "Yes. The shift buttons on Zwift Play controllers and the Zwift Ride bike connect the same way as the Click."),
-            ("Is it free?", "Riding and shifting in the browser is free. PedalCraft Pro adds ERG workouts, an FTP test and a ride log for $39 once, no subscription."),
+            ("Is it free?", "Riding and shifting in the browser is free, 30 minutes per ride, as often as you like. PedalCraft Pro adds unlimited ride time, ERG workouts, an FTP test and a ride log for $39 once, no subscription."),
         ],
     },
     {
@@ -306,12 +306,12 @@ GUIDES = [
             ("What it is not", "<p>PedalCraft has no 3D world, no group rides and no races. It is a focused tool for riding and training. If that is what you want, you save the subscription.</p>"),
             ("Free and paid options at a glance", "<table style=\"width:100%;border-collapse:collapse;font-size:16px\"><tr><th align=left>App</th><th align=left>Price</th><th align=left>Virtual world</th></tr><tr><td>Zwift</td><td>$19.99 a month</td><td>Yes</td></tr><tr><td>Rouvy</td><td>$19.99 a month</td><td>Real routes on video</td></tr><tr><td>MyWhoosh</td><td>Free</td><td>Yes</td></tr><tr><td>PedalCraft</td><td>Free, Pro $39 once</td><td>No</td></tr></table><p>US list prices, checked October 2026. Work out your own total with the <a href=\"/zwift-cost-calculator/\">Zwift cost calculator</a>.</p>"),
             ("Who PedalCraft is for", "<ul><li>You already own a Zwift Click, Play or Ride and don't want to pay just to shift.</li><li>You ride with a series or YouTube on and only want your watts, cadence and gears.</li><li>You ride indoors only in winter and don't want a subscription all year.</li><li>You have a Zwift Cog trainer such as the <a href=\"/kickr-core-2-without-zwift/\">Wahoo KICKR CORE 2</a> or <a href=\"/zwift-hub-without-zwift/\">Zwift Hub</a> and want to keep its virtual shifting.</li></ul>"),
-            ("When you want more", f"<p>The <a href=\"{BUY}\">Mac app</a> ($39 once) adds an FTP ramp test, a workout library with ERG, a ride log with summary images and Strava upload.</p>"),
+            ("When you want more", f"<p><a href=\"{BUY}\">PedalCraft Pro</a> ($39 once) adds unlimited ride time, an FTP ramp test, a workout library with ERG and a ride log with a .tcx file for Strava. It runs in the browser on Windows, Android, Chromebook and Mac. On a Mac you also get the native app with automatic Strava upload.</p>"),
         ],
         "faq": [
             ("Is PedalCraft a Zwift replacement?", "No. It has no virtual world, no group rides and no races. It is a simple tool to ride, shift and train with your trainer and Click without a subscription."),
-            ("Is PedalCraft really free?", "The browser version is free with no time limit. Only the Mac app with workouts and the ride log is paid, once."),
-            ("Which trainers work?", "It is built for the Wahoo KICKR CORE 2 and works with most Bluetooth FTMS smart trainers."),
+            ("Is PedalCraft really free?", "Free rides run 30 minutes each, as often as you like, plus one free 20 minute ERG workout. PedalCraft Pro ($39 once) removes the limit and adds workouts, an FTP test and a ride log, in the browser and as a Mac app."),
+            ("Which trainers work?", "Most Bluetooth smart trainers: Wahoo KICKR, Tacx, Elite, Saris, Zwift Hub and others that speak FTMS. It was first built on a Wahoo KICKR CORE 2."),
             ("Is it affiliated with Zwift?", "No. PedalCraft is independent and uses Bluetooth protocols documented in the open by the indoor-cycling community."),
         ],
     },
@@ -324,7 +324,7 @@ GUIDES = [
         "sections": [
             ("Which browsers work", "<ul><li><b>Chrome</b> and <b>Edge</b> on macOS, Windows and Android: yes</li><li><b>Safari</b> and <b>Firefox</b>: no, they don't support Web Bluetooth</li><li><b>iPhone and iPad</b>: with the free <b>Bluefy</b> browser app</li></ul>"),
             ("What the browser talks to", "<ul><li><b>FTMS</b>, the standard Bluetooth fitness machine profile: power, cadence, speed and resistance</li><li><b>Zwift's virtual shifting protocol</b> on Zwift Cog trainers, so the trainer firmware shifts</li><li><b>Zwift Click, Play and Ride</b> controllers for the shift buttons</li><li>The standard <b>heart rate</b> profile</li></ul>"),
-            ("Privacy", "<p>Everything happens in your browser tab. PedalCraft has no account and no server for your data; rides stay in your browser only.</p>"),
+            ("Privacy", "<p>Everything happens in your browser tab. PedalCraft has no account and no cookies. Your rides stay in your browser. We measure anonymous usage (pages, clicks, device type), nothing that identifies you.</p>"),
             ("Try it", "<p>Open <a href=\"/ride/\">pedalcraft.online/ride</a>, connect your trainer, or start the demo.</p>"),
             ("Step by step in Chrome", "<ol><li>Quit Zwift and your trainer's app on every device, so the trainer is free.</li><li>Pedal for a few seconds so the trainer wakes up.</li><li>Open <a href=\"/ride/\">pedalcraft.online/ride</a> and click <b>Connect trainer</b>. Chrome shows a list of nearby devices; pick yours.</li><li>Click <b>Connect Click</b>, press a button on the Click and pick it.</li><li>Optional: <b>Heart rate</b> for a chest strap.</li></ol>"),
             ("Common problems", "<ul><li><b>The list stays empty:</b> the device is asleep or connected to another app.</li><li><b>Windows PC without Bluetooth:</b> a small USB Bluetooth adapter is enough, or use an Android phone.</li><li><b>Android:</b> Chrome asks for the Nearby devices permission (older Android: location). Allow it.</li><li><b>Firefox or Safari:</b> open the page in Chrome or Edge instead.</li></ul>"),
@@ -369,7 +369,7 @@ GUIDES = [
         ],
         "faq": [
             ("Which Macs are supported?", "macOS 14 or later, on Apple Silicon and Intel."),
-            ("Which trainers work?", "It is built for the Wahoo KICKR CORE 2 and works with most Bluetooth FTMS smart trainers."),
+            ("Which trainers work?", "Most Bluetooth smart trainers: Wahoo KICKR, Tacx, Elite, Saris, Zwift Hub and others that speak FTMS. It was first built on a Wahoo KICKR CORE 2."),
             ("Can I get a refund?", "Yes. If it doesn't work with your trainer, write within 30 days of buying and you get your money back."),
         ],
     },
@@ -438,7 +438,7 @@ GUIDES = [
         "sections": [
             ("Prices in 2026", "<ul><li><b>Zwift</b>: $19.99 a month or $199.99 a year</li><li><b>TrainerRoad</b>: $21.99 a month or $209.99 a year</li><li><b>Rouvy</b>: $19.99 a month or $179.99 a year</li><li><b>Wahoo SYSTM</b> (Pro): $17.99 a month or $179.99 a year</li></ul><p>US list prices, checked October 2026. Prices differ by country and change; check each app before you subscribe.</p>"),
             ("Over three years", "<p>On annual plans, three winters cost about $600 for Zwift, $630 for TrainerRoad and $540 for Rouvy or Wahoo SYSTM. Put in your own months with the <a href=\"/zwift-cost-calculator/\">Zwift cost calculator</a>.</p>"),
-            ("The no-subscription way", f"<p>If you mainly want to ride, shift with your Zwift Click and see your watts, the <a href=\"/ride/\">PedalCraft browser version</a> is free. The <a href=\"{BUY}\">Mac app</a> adds ERG workouts, an FTP test, a ride log and Strava upload for $39 once. It has no virtual world and no group rides.</p>"),
+            ("The no-subscription way", f"<p>If you mainly want to ride, shift with your Zwift Click and see your watts, the <a href=\"/ride/\">PedalCraft browser version</a> is free. Free rides run 30 minutes each. <a href=\"{BUY}\">PedalCraft Pro</a> adds unlimited ride time, ERG workouts, an FTP test and a ride log for $39 once, in the browser on Windows, Android, Chromebook and Mac, plus a native Mac app. It has no virtual world and no group rides.</p>"),
         ],
         "faq": [
             ("How much is Zwift per month in 2026?", "$19.99 a month in the US, or $199.99 a year on the annual plan."),
@@ -461,7 +461,7 @@ GUIDES = [
         "faq": [
             ("Does the Tacx Vortex work without Zwift?", "Yes. PedalCraft connects to the Vortex Smart over Bluetooth (Tacx FE-C) in Chrome or Edge, and you can shift it with a Zwift Click."),
             ("Does my old Tacx need a firmware update?", "No, FE-C works without it. A newer firmware with FTMS works too."),
-            ("Is it free?", "Yes. Riding and shifting in the browser is free."),
+            ("Is it free?", "Yes. Riding and shifting in the browser is free, 30 minutes per ride, as often as you like."),
         ],
     },
     {
@@ -511,7 +511,7 @@ GUIDES = [
         ],
         "faq": [
             ("Can I use Zwift on a Chromebook?", "Zwift has no ChromeOS app. PedalCraft runs in Chrome on a Chromebook and connects your trainer and Zwift Click."),
-            ("Is it free?", "Yes. Riding and shifting in the browser is free."),
+            ("Is it free?", "Yes. Riding and shifting in the browser is free, 30 minutes per ride, as often as you like."),
         ],
     },
 ]
@@ -606,7 +606,7 @@ def main():
                           cta1="Jetzt gratis fahren" if g.get("lang") == "de" else "Start riding",
                           livehint=("Das ist die echte App mit einer Demofahrt. Schalte mit ↑ ↓, und klicke auf «Connect trainer», um deinen Trainer zu verbinden." if g.get("lang") == "de" else "This is the real app running a demo ride. Shift with ↑ ↓, then click Connect trainer to ride on yours."),
                           cta2="Demo ansehen ›" if g.get("lang") == "de" else "Try the demo ›",
-                          maccard=(f'<b>PedalCraft Pro</b>: FTP-Rampentest, ERG-Workouts von 20 Minuten bis 2 Stunden, Fahrtenbuch. Im Browser auf Windows, Mac und Android, dazu die Mac-App. <a href="{BUY}">Einmal $39, zum Start $29, kein Abo</a>.' if g.get("lang") == "de" else f'<b>PedalCraft Pro</b>: FTP ramp test, ERG workouts from 20 minutes to 2 hours, ride log. In the browser on Windows, Mac and Android, plus a native Mac app. <a href="{BUY}">$39 once, $29 at launch, no subscription</a>.'))
+                          maccard=(f'Gratis: 30 Minuten pro Fahrt, so oft du willst, und ein ERG-Training von 20 Minuten. <b>PedalCraft Pro</b>: unbegrenzte Fahrzeit, ERG-Trainings von 20 Minuten bis 2 Stunden, FTP-Rampentest, Fahrtenbuch mit .tcx für Strava. Im Browser auf Windows, Mac, Android und Chromebook, dazu die Mac-App. <a href="{BUY}">Einmal $39, zum Start $29, kein Abo</a>. Geld zurück innert 30 Tagen, wenn es mit deinem Trainer nicht geht.' if g.get("lang") == "de" else f'Free: 30 minute rides, as many as you like, and one 20 minute ERG workout. <b>PedalCraft Pro</b>: unlimited ride time, ERG workouts from 20 minutes to 2 hours, FTP ramp test, ride log with .tcx for Strava. In the browser on Windows, Mac, Android and Chromebook, plus a native Mac app. <a href="{BUY}">$39 once, $29 at launch, no subscription</a>. Money back within 30 days if it does not work with your trainer.'))
         if g.get("lang") == "de":
             out = out.replace("Email me the link", "Link per Mail senden").replace("We send you the link and the $29 launch code. Unsubscribe anytime.", "Wir schicken dir den Link und den $29-Launch-Code. Abmeldung jederzeit.")
         os.makedirs(g["slug"], exist_ok=True)

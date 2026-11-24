@@ -838,7 +838,7 @@ async function keepRide() {
   try { await dbPut(r); if (!keptThis) { keptThis = true; ping('kept-ride'); } await keptStats(); } catch (e) {}
 }
 const hm = s => s >= 3600 ? `${Math.floor(s / 3600)} h ${Math.floor(s % 3600 / 60)} min` : `${Math.floor(s / 60)} min`;
-const keptLine = () => kept.n > 1 ? `With Pro, all ${kept.n} rides you did here (${hm(kept.secs)}, ${(kept.dist / 1000).toFixed(0)} km) go straight to Strava.` : 'With Pro, this ride goes straight to Strava.';
+const keptLine = () => kept.n > 1 ? `With Pro, all ${kept.n} rides you did here (${hm(kept.secs)}, ${(kept.dist / 1000).toFixed(0)} km) are ready for Strava as .tcx files.` : 'With Pro, this ride is ready for Strava as a .tcx file.';
 function showLocked() {
   $('pro-share-row').classList.add('hidden');
   $('pro-title').textContent = 'Get your rides into Strava.';
@@ -935,7 +935,7 @@ function renderPro() {
   if (trialLeft()) { const b = document.querySelector('.lock[data-f=workout]'); b.querySelector('.ic').textContent = '🎁'; b.querySelector('.pro').textContent = X3.tag; }
   $('lock-ftpset').classList.toggle('hidden', !on); $('lock-ftpset').querySelector('.t').textContent = 'FTP: ' + ride.ftp + ' W (change)';
   $('upsell-buy').classList.toggle('hidden', on); $('upsell-unlock').classList.toggle('hidden', on); $('head-buy').classList.toggle('hidden', on);
-  $('upsell-note').textContent = on ? 'Rides are saved in this browser only. Download them as .tcx and upload at strava.com/upload.' : 'Pro runs right here in this browser, no Mac needed. Pay once, no subscription. Free: 30 minutes per ride, as often as you like. Pro: unlimited ride time, every ride to Strava, ERG workouts and an FTP test.';
+  $('upsell-note').textContent = on ? 'Rides are saved in this browser only. Download them as .tcx and upload at strava.com/upload.' : 'Pro runs right here in this browser, no Mac needed. Pay once, no subscription. Free: 30 minutes per ride, as often as you like. Pro: unlimited ride time, every ride as a file for Strava, ERG workouts and an FTP test.';
 }
 // Angebot nach 3 Minuten echter Fahrt (Diego 28.10.2026): Trainer und Click funktionieren nachweislich, bester Moment fürs Angebot
 let offerOpen = false;
@@ -974,7 +974,7 @@ const T = ({
   de: { left5: 'Noch 5 Minuten in dieser Gratisfahrt. Mit Pro fährst du so lange du willst.', title: '30 Minuten geschafft. Stark.', text: n => `Gratisfahrten dauern 30 Minuten. Weiterfahren? Mit PedalCraft Pro fährst du so lange du willst. ${n} Dazu ERG-Trainings von 20 Minuten bis 2 Stunden und ein FTP-Test, der deine Zonen setzt. 24 $ mit Code RIDE10 statt 39 $. Einmal zahlen, kein Abo, Mac-App inklusive.`, buy: 'Mit Pro weiterfahren · 24 $', again: 'Neue Gratisfahrt starten' },
   it: { left5: 'Ancora 5 minuti in questa uscita gratuita. Con Pro pedali quanto vuoi.', title: '30 minuti fatti. Grande.', text: n => `Le uscite gratuite durano 30 minuti. Vuoi continuare? Con PedalCraft Pro pedali quanto vuoi. ${n} In più allenamenti ERG da 20 minuti a 2 ore e un test FTP che imposta le tue zone. 24 $ con il codice RIDE10 invece di 39 $. Pagamento unico, nessun abbonamento, app per Mac inclusa.`, buy: 'Continua con Pro · 24 $', again: 'Nuova uscita gratuita' },
 })[['de', 'it'].includes(L) ? L : 'en'];
-const capStrava = () => { const k = Math.max(kept.n, 1); return L === 'de' ? (k > 1 ? `Alle ${k} Fahrten von hier (${hm(kept.secs)}) gehen direkt zu Strava.` : 'Deine Fahrt geht direkt zu Strava.') : L === 'it' ? (k > 1 ? `Tutte le ${k} uscite fatte qui (${hm(kept.secs)}) vanno dritte su Strava.` : 'La tua uscita va dritta su Strava.') : (k > 1 ? `All ${k} rides you did here (${hm(kept.secs)}) go straight to Strava.` : 'Your ride goes straight to Strava.'); };
+const capStrava = () => { const k = Math.max(kept.n, 1); return L === 'de' ? (k > 1 ? `Alle ${k} Fahrten von hier (${hm(kept.secs)}) kannst du als .tcx zu Strava laden.` : 'Deine Fahrt kannst du als .tcx zu Strava laden.') : L === 'it' ? (k > 1 ? `Tutte le ${k} uscite fatte qui (${hm(kept.secs)}) sono pronte per Strava come file .tcx.` : 'La tua uscita è pronta per Strava come file .tcx.') : (k > 1 ? `All ${k} rides you did here (${hm(kept.secs)}) are ready for Strava as .tcx files.` : 'Your ride is ready for Strava as a .tcx file.'); };
 function showCap() {
   capped = true; keepRide();
   const X = T;
@@ -1105,7 +1105,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 45; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 46; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PedalCraft · indoor cycling app for your smart trainer, free in your browser</title>
+<title>PedalCraft · indoor cycling in your browser, free to try</title>
 <meta name="description" content="Indoor cycling app for your bike and smart trainer. Ride free in the browser and shift with your Zwift Click. No install, no account, no subscription. Pro with workouts, FTP test and ride log on Windows, Mac and Android: $39 once.">
 <meta property="og:title" content="PedalCraft · indoor cycling in your browser">
 <meta property="og:description" content="Ride free in the browser, shift with Zwift Click. Pro with workouts, FTP test and ride log for $39 once, on Windows, Mac and Android.">
@@ -45,6 +45,7 @@
   h1 { font-size: clamp(52px, 9.4vw, 112px); line-height: .98; letter-spacing: -.045em; font-weight: 700; margin: 0; }
   h1 .dim { color: var(--faint); }
   .hero p.lead { font-size: clamp(19px, 2.2vw, 24px); color: var(--soft); max-width: 620px; margin: 28px auto 40px; letter-spacing: -.2px; line-height: 1.4; }
+  .hero p.works { font-size: 15px; color: var(--soft); opacity: .8; margin: -22px auto 34px; max-width: 560px; }
   .hero .actions { display: flex; gap: 28px; justify-content: center; align-items: center; flex-wrap: wrap; }
   .shot { margin: 96px auto 0; max-width: 1040px; position: relative; }
   .shot::before { content: ""; position: absolute; inset: 8% 10% -6%; background: radial-gradient(closest-side, rgba(61,139,255,.28), transparent); filter: blur(40px); z-index: 0; }
@@ -151,7 +152,8 @@
   <header class="hero">
     <p class="eyebrow">For your bike on a smart trainer, no Zwift needed</p>
     <h1>Indoor cycling.<br><span class="dim">In your browser.</span></h1>
-    <p class="lead">Open a tab, connect your smart trainer and ride. Free 30 minute rides, shifting with Zwift Click. No install, no account, no subscription.</p>
+    <p class="lead">Open a tab, connect your smart trainer and ride. Free 30 minute rides. Shift with a Zwift Click or the arrow keys. No install, no account, no subscription.</p>
+    <p class="works">Works with Wahoo KICKR, Tacx, Elite, Saris, Zwift Hub and most Bluetooth smart trainers.</p>
     <div class="actions">
       <a class="btn" href="ride/">Start riding</a>
       <a class="more" id="buy-top" href="#pricing">Pro, $29 launch price</a>
@@ -176,9 +178,9 @@
 
   <section>
     <div class="three">
-      <div class="reveal"><h3>Nothing to install.</h3><p>It runs in Chrome or Edge on Mac, Windows and Android. Bookmark it, done.</p></div>
-      <div class="reveal"><h3>Nothing to sign up for.</h3><p>No account, no email, no tracking. Close the tab and nothing is left behind.</p></div>
-      <div class="reveal"><h3>Nothing to pay.</h3><p>Watts, cadence, speed, zones, gears and heart rate. Free, and it stays free.</p></div>
+      <div class="reveal"><h3>Nothing to install.</h3><p>It runs in Chrome or Edge on Windows, Mac, Android and Chromebook. On iPhone, use the free Bluefy browser.</p></div>
+      <div class="reveal"><h3>Nothing to sign up for.</h3><p>No account, no email, no cookies. We only count anonymous usage, nothing that identifies you.</p></div>
+      <div class="reveal"><h3>Nothing to pay.</h3><p>Watts, cadence, speed, zones, gears and heart rate. Free for 30 minutes per ride, as often as you like. One 20 minute ERG workout is free too.</p></div>
     </div>
   </section>
 
@@ -194,12 +196,12 @@
           <li><b>On the Mac:</b> automatic Strava upload and a mini window over Netflix.</li>
         </ul>
       </div>
-      <div class="frame reveal"><img src="img/workout-en.png" alt="Workout in ERG mode in the PedalCraft Mac app" width="2480" height="1600" loading="lazy"></div>
+      <div class="frame reveal"><img src="img/workout-en.png" alt="A PedalCraft workout in ERG mode" width="2480" height="1600" loading="lazy"></div>
     </div>
   </section>
 
   <section id="compare" class="center">
-    <h2 class="center reveal">Everyone else<br><span style="color:var(--faint)">charges every month.</span></h2>
+    <h2 class="center reveal">Most training apps<br><span style="color:var(--faint)">charges every month.</span></h2>
     <p class="body reveal">What three winters on the trainer cost.</p>
     <div class="bars reveal">
       <div class="row"><span class="n">TrainerRoad</span><span class="track"><i style="width:100%"></i></span><span class="v">$630</span></div>
@@ -217,14 +219,14 @@
       <div>
         <div class="what">Browser</div>
         <div class="amt">Free</div>
-        <p>Ride and shift in Chrome or Edge, 30 minutes per ride, as often as you like.</p>
+        <p>Ride and shift in Chrome or Edge, 30 minutes per ride, as often as you like. Shift with a Zwift Click, the arrow keys or the on-screen buttons. One 20 minute ERG workout included.</p>
         <a class="btn" href="ride/">Start riding</a>
       </div>
       <div>
         <div class="what">Pro</div>
         <div class="amt">$39 <small>one-time</small></div>
         <p class="launch">Launch price: <b>$29</b> for the first 50 riders.</p>
-        <p>Unlimited ride time, workouts, FTP test and ride log. Works in Chrome or Edge on Windows, Mac, Android and Chromebook with your license key, plus the native Mac app (macOS 14+). Firefox, Safari and iPhone can't use Bluetooth in the browser, so try the free version first. All updates included. Doesn't work with your trainer? Money back within 30 days.</p>
+        <p>Unlimited ride time, ERG workouts from 20 minutes to 2 hours, FTP test and a ride log with .tcx files for Strava.</p><p>You get a license key by email. Paste it once at pedalcraft.online/ride and Pro is unlocked, in Chrome or Edge on Windows, Mac, Android and Chromebook. The native Mac app (macOS 14+) is included.</p><p>Try the free version first to see that your trainer connects. All updates included. Doesn't work with your trainer? Money back within 30 days.</p>
         <a class="btn" id="buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Buy for $29</a>
       </div>
     </div>
@@ -242,15 +244,17 @@
       <details><summary>Do I need a Zwift account?</summary>
         <p>No. PedalCraft talks to your trainer and shifters directly over Bluetooth. Quit Zwift on all devices before riding.</p></details>
       <details><summary>Which trainers work?</summary>
-        <p>It is built for the Wahoo KICKR CORE 2. Trainers with Zwift virtual shifting get firmware shifting, other Bluetooth FTMS trainers get grade-based gears and ERG workouts.</p></details>
+        <p>Most Bluetooth smart trainers: Wahoo KICKR, Tacx, Elite, Saris, Zwift Hub and others that speak FTMS. It was first built on a Wahoo KICKR CORE 2. You don't need a Zwift Click: the arrow keys and on-screen buttons shift too. Trainers with Zwift virtual shifting get firmware shifting, other Bluetooth FTMS trainers get grade-based gears and ERG workouts.</p></details>
       <details><summary>Windows, iPhone, Safari?</summary>
-        <p>The browser version works in Chrome and Edge on Windows, Mac and Android. iPhone and Safari don't support Web Bluetooth. The full app is Mac only for now.</p></details>
+        <p>Free and Pro both run in Chrome or Edge on Windows, Mac, Android and Chromebook. On iPhone and iPad use the free Bluefy browser, because Safari and Firefox can't do Bluetooth. The native Mac app is an extra that comes with Pro.</p></details>
       <details><summary>My Click v2 “−” stops after a minute.</summary>
         <p>Zwift locks the left puck unless you rode in Zwift recently. PedalCraft restarts it every 50 seconds, so “easier” may pause for a second now and then. The right puck is never locked.</p></details>
+      <details><summary>What happens after I buy?</summary>
+        <p>You get a license key by email. Open pedalcraft.online/ride in Chrome or Edge, click «Unlock Pro (I have a key)» and paste it. Pro is then open in that browser. The Mac app download is in the same email.</p></details>
       <details id="install"><summary>How do I install the Mac app?</summary>
         <p>After buying you get a download link by email and in your Gumroad library. Unzip PedalCraft.zip and double-click Install.command. The first time, macOS asks once: click Done, then System Settings → Privacy &amp; Security → Open Anyway. Allow Bluetooth, done.</p></details>
       <details><summary>What about my data?</summary>
-        <p>No account, no tracking. The browser version keeps nothing. The Mac app stores rides only on your Mac. We count anonymous page visits and connections, nothing else.</p></details>
+        <p>No account, no cookies. Rides stay in your browser, or on your Mac in the Mac app. We measure anonymous usage (pages, clicks, device type), nothing that identifies you.</p></details>
     </div>
   </section>
 
