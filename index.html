@@ -40,14 +40,14 @@
   .more:hover { text-decoration: underline; }
   .more::after { content: " ›"; }
 
-  .hero { text-align: center; padding: 120px 0 0; }
+  .hero { text-align: center; padding: 64px 0 0; }
   .eyebrow { font-size: 17px; font-weight: 600; color: var(--soft); margin: 0 0 18px; letter-spacing: -.1px; }
-  h1 { font-size: clamp(52px, 9.4vw, 112px); line-height: .98; letter-spacing: -.045em; font-weight: 700; margin: 0; }
+  h1 { font-size: clamp(48px, 7vw, 84px); line-height: .98; letter-spacing: -.045em; font-weight: 700; margin: 0; }
   h1 .dim { color: var(--faint); }
-  .hero p.lead { font-size: clamp(19px, 2.2vw, 24px); color: var(--soft); max-width: 620px; margin: 28px auto 40px; letter-spacing: -.2px; line-height: 1.4; }
-  .hero p.works { font-size: 15px; color: var(--soft); opacity: .8; margin: -22px auto 34px; max-width: 560px; }
+  .hero p.lead { font-size: clamp(19px, 2.2vw, 24px); color: var(--soft); max-width: 620px; margin: 20px auto 26px; letter-spacing: -.2px; line-height: 1.4; }
+  .hero p.works { font-size: 15px; color: var(--soft); opacity: .8; margin: 18px auto 0; max-width: 700px; }
   .hero .actions { display: flex; gap: 28px; justify-content: center; align-items: center; flex-wrap: wrap; }
-  .shot { margin: 96px auto 0; max-width: 1040px; position: relative; }
+  .shot { margin: 36px auto 0; max-width: 1040px; position: relative; }
   .shot::before { content: ""; position: absolute; inset: 8% 10% -6%; background: radial-gradient(closest-side, rgba(61,139,255,.28), transparent); filter: blur(40px); z-index: 0; }
   .frame { position: relative; z-index: 1; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #141416; box-shadow: 0 40px 120px rgba(0,0,0,.6); }
   .frame .bar { height: 30px; display: flex; align-items: center; gap: 7px; padding: 0 12px; border-bottom: 1px solid var(--line); }
@@ -137,8 +137,8 @@
     .price { grid-template-columns: 1fr; }
     .price > div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); margin-top: 48px; }
     section { padding-top: 120px; }
-    .hero { padding-top: 72px; }
-    .shot { margin-top: 64px; }
+    .hero { padding-top: 44px; }
+    .shot { margin-top: 32px; }
   }
   @media (max-width: 560px) { body { font-size: 17px; } h1 { font-size: clamp(36px, 12.2vw, 64px); } .eyebrow { font-size: 14px; } .hero .actions { gap: 20px; } .wrap { padding: 0 16px; } .frame .bar { display: none; } }
 </style>
@@ -152,14 +152,14 @@
   </nav>
 
   <header class="hero">
-    <p class="eyebrow">For your bike on a smart trainer, no Zwift needed</p>
+    <p class="eyebrow">For your bike on a smart trainer</p>
     <h1>Indoor cycling.<br><span class="dim">In your browser.</span></h1>
-    <p class="lead">Open a tab, connect your smart trainer and ride. Free 30 minute rides. Shift with a Zwift Click or the arrow keys. No install, no account, no subscription.</p>
-    <p class="works">Works with Wahoo KICKR, Tacx, Elite, Saris, Zwift Hub and most Bluetooth smart trainers.</p>
+    <p class="lead">Connect your smart trainer, press your Zwift Click and feel the gear change. All in a browser tab. Rides of 30 minutes are free.</p>
     <div class="actions">
       <a class="btn" href="ride/">Start riding</a>
       <a class="more" id="buy-top" href="#pricing">Pro, $29 launch price</a>
     </div>
+    <p class="works">Works with Wahoo KICKR, Tacx, Elite, Saris, Zwift Hub and most Bluetooth smart trainers.</p>
     <div id="ios" class="ios" hidden>
       <p><b>On iPhone?</b> Safari can't talk to Bluetooth, the free app Bluefy can. Tap below, install it, open it and paste the link. We copy it for you.</p>
       <div class="actions"><a class="btn" id="ios-bluefy" href="https://apps.apple.com/app/id1492822055" target="_blank" rel="noopener">Get Bluefy and copy link</a><button class="more" id="ios-share" type="button">Not at your trainer? Send the link to yourself</button></div>
@@ -229,7 +229,7 @@
       <div>
         <div class="what">Pro</div>
         <div class="amt">$39 <small>one-time</small></div>
-        <p class="launch">Launch price: <b>$29</b> for the first 50 riders.</p>
+        <p class="launch">Launch price: <b>$29</b> for the first 50 riders. Less than two months of Zwift ($19.99 a month, US price). <a href="/zwift-cost-calculator/">Do your own math</a></p>
         <p>Unlimited ride time, ERG workouts from 20 minutes to 2 hours, FTP test and a ride log with .tcx files for Strava.</p><p>You get a license key by email. Paste it once at pedalcraft.online/ride and Pro is unlocked, in Chrome or Edge on Windows, Mac, Android and Chromebook. The native Mac app (macOS 14+) is included.</p><p>Try the free version first to see that your trainer connects. All updates included. Doesn't work with your trainer? Money back within 30 days.</p>
         <a class="btn" id="buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Buy for $29</a>
       </div>
