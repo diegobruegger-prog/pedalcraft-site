@@ -564,7 +564,7 @@ PAGE = """<!doctype html>
 <main>
 <h1>{h1}</h1>
 <p class="lead">{lead}</p>
-<video class="promo" src="/media/pedalcraft-16x9.mp4" poster="/media/pedalcraft-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
+<video class="promo" src="/media/pedalcraft-pro.mp4" poster="/media/pedalcraft-pro-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
 <div class="live"><div class="stage" id="stage"><iframe id="demo" title="PedalCraft live demo" tabindex="-1"></iframe></div><p class="hint">{livehint}</p></div>
 <script>(function(){{var s=document.getElementById('stage'),f=document.getElementById('demo');if(!s||innerWidth<700)return;f.src='/ride/?embed=1&v=27';function fit(){{f.style.transform='scale('+(s.clientWidth/1440)+')'}}fit();addEventListener('resize',fit);var vis=false;if('IntersectionObserver'in window)new IntersectionObserver(function(e){{vis=e[0].isIntersecting}},{{threshold:.4}}).observe(s);document.addEventListener('keydown',function(e){{if(!vis||(e.key!=='ArrowUp'&&e.key!=='ArrowDown'))return;e.preventDefault();f.contentWindow.postMessage({{shift:e.key==='ArrowUp'?1:-1}},location.origin);}});}})();</script>
 <div class="cta"><a class="pill" href="/ride/">{cta1}</a><a class="pill ghost" href="/ride/?demo=1">{cta2}</a></div>
