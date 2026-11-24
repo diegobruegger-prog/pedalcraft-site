@@ -1117,6 +1117,12 @@ if (!hasBT) {
     try { await navigator.clipboard.writeText(url); toast('Link copied. Paste it into Chrome on your computer.', 4000); } catch (e) { toast(url, 8000); }
   };
   $('nobt-buy').onclick = () => ping('buy-click');
+  // Android ohne Web Bluetooth (Facebook-, Instagram-, TikTok-Browser, Firefox): direkt in Chrome öffnen (24.11.2026)
+  if (SEG.os === 'android') {
+    const l = $('openchrome'); l.classList.remove('hidden'); $('sendlink').classList.remove('primary');
+    l.href = 'intent://pedalcraft.online/ride/' + (location.search || '') + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.android.chrome') + ';end';
+    l.onclick = () => ping('open-chrome');
+  }
   // Computer mit Firefox oder Safari: Link für Chrome/Edge kopieren statt «an Computer senden»
   if (['win', 'mac', 'other', 'chromeos'].includes(SEG.os)) {
     $('sendlink').textContent = 'Copy link for Chrome or Edge';
@@ -1133,7 +1139,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (!leaving && ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 47; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 48; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.

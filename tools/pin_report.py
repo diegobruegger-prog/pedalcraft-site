@@ -5,7 +5,7 @@ n=sys.argv[1] if len(sys.argv)>1 else '30'
 j=json.loads(subprocess.check_output(['curl','-s','-A','Mozilla/5.0',f'https://pedalcraft-stats.pages.dev/journeys?days={n}']))
 j=j if isinstance(j,list) else j['journeys']
 ev=lambda x:[s[1] for s in x['steps']]
-for Q in ('pinterest','tiktok'):
+for Q in ('pinterest','tiktok','meta'):
     P=[x for x in j if any(e.startswith('from:') and Q in e for e in ev(x))]
     real=[x for x in P if x['steps'][-1][0]>0 or any(e.startswith(('tap:','scroll','leave','buy')) for e in ev(x))]
     f=lambda p:sum(any(e.startswith(p) for e in ev(x)) for x in real)
