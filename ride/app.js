@@ -972,6 +972,7 @@ function showWall() {
   ping('wall-20');
 }
 $('pro-close').onclick = () => { if ($('pro-close').disabled) return; if (capped) { ping('cap-restart'); location.reload(); return; } if (wallOpen) { wallOpen = false; ping('wall-continue'); } $('pro').classList.add('hidden'); $('pro-share-row').classList.add('hidden'); $('pro-close').textContent = 'Keep riding free'; endOffer = false; };
+for (const id of ['head-buy', 'upsell-buy']) $(id)?.addEventListener('click', () => ping('buy-click'));
 $('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); if (endOffer) ping('buy-end'); if (wallOpen) ping('buy-wall'); if (capped) ping('buy-cap'); };
 $('upsell-unlock').onclick = showUnlock;
 // Weitersagen: teilen oder Link kopieren (zählt nur, dass geteilt wurde)
@@ -1074,7 +1075,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 40; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 41; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
