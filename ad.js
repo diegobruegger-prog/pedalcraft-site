@@ -58,8 +58,8 @@
       j('from:' + SRC);
       var pn = /[?&]p=([a-z0-9-]{2,50})/.exec(location.search); if (pn && /[?&]pc=pin/.test(location.search)) j('pin:' + pn[1]);
       // Anzeigenvariante und Zielgruppe aus dem Link (?ad=b&grp=devices), gilt für alle Besucher dieser Anzeige gleich
-      var aq = new URLSearchParams(location.search), CLEAN = /^[a-z0-9-]{1,24}$/;
-      ['ad', 'grp'].forEach(function (k) { var v = (aq.get(k) || '').toLowerCase(); if (CLEAN.test(v)) j(k + ':' + v); });
+      var aq = new URLSearchParams(location.search), CLEAN = /^[a-z0-9-]{1,32}$/;
+      ['ad', 'grp', 'pl'].forEach(function (k) { var v = slug(aq.get(k) || ''); if (aq.get(k) && CLEAN.test(v)) j(k + ':' + v); });
       j('time:' + new Date().getDay() + ':h' + new Date().getHours());
       // Tägliche Nutzer: ein Zähler pro Tag (UTC) und Besuch, dazu wie viele die Fahrseite öffnen
       var day = new Date().toISOString().slice(0, 10);
@@ -120,7 +120,7 @@
       : [['price', 'The price'], ['unsure', 'Will it work with my gear?'], ['pay', 'Checkout was a hassle'], ['trust', 'I do not know you yet'], ['later', 'Later'], ['bought', 'I bought it']]); }, 600); }
   });
   var DE = /^de/i.test(document.documentElement.lang || '');
-  function ask(id, q, opts) {
+  function ask(id, q, opts, next) {
     if (EMBED || document.getElementById('pc-ask')) return;
     var d = document.createElement('div'); d.id = 'pc-ask'; d.setAttribute('role', 'group'); d.setAttribute('aria-label', q);
     d.style.cssText = 'position:fixed;left:16px;bottom:16px;z-index:9999;max-width:min(320px,calc(100vw - 32px));box-sizing:border-box;background:#fff;color:#111;border-radius:14px;padding:14px;box-shadow:0 8px 32px rgba(0,0,0,.28);font:14px/1.4 system-ui,sans-serif';
@@ -134,7 +134,7 @@
       b.onclick = function () {
         j('ask-' + id + ':' + o[0]); send('ask-' + id + '-' + o[0]);
         d.textContent = DE ? 'Danke, das hilft.' : 'Thanks, that helps.';
-        setTimeout(function () { d.remove(); }, 1800);
+        setTimeout(function () { d.remove(); if (next) next(); }, next ? 700 : 1800);
       };
       d.appendChild(b);
     });
@@ -145,7 +145,9 @@
     try {
       if (EMBED || /^\/ride\//.test(location.pathname) || document.hidden || sessionStorage.getItem('pc_gear')) return;
       sessionStorage.setItem('pc_gear', '1');
-      ask('gear', DE ? 'Welchen Trainer fährst du?' : 'Which trainer do you ride?', [['kickr-core2', 'KICKR Core 2'], ['kickr', DE ? 'Anderer KICKR' : 'Other KICKR'], ['tacx', 'Tacx'], ['elite', 'Elite'], ['hub', 'Zwift Hub'], ['other', DE ? 'Anderer' : 'Other'], ['none', DE ? 'Keinen' : 'None']]);
+      ask('gear', DE ? 'Welchen Trainer fährst du?' : 'Which trainer do you ride?', [['kickr-core2', 'KICKR Core 2'], ['kickr', DE ? 'Anderer KICKR' : 'Other KICKR'], ['tacx', 'Tacx'], ['elite', 'Elite'], ['hub', 'Zwift Hub'], ['other', DE ? 'Anderer' : 'Other'], ['none', DE ? 'Keinen' : 'None']], function () {
+        ask('app', DE ? 'Womit fährst du heute?' : 'What do you ride with today?', [['zwift', 'Zwift'], ['rouvy', 'Rouvy'], ['trainerroad', 'TrainerRoad'], ['mywhoosh', 'MyWhoosh'], ['garmin', 'Garmin / Tacx app'], ['wahoo', 'Wahoo app'], ['nothing', DE ? 'Nichts, nur Musik' : 'Nothing, just music']]);
+      });
     } catch (e) {}
   }, 25000);
   document.addEventListener('click', function (e) {
