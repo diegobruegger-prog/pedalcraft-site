@@ -161,9 +161,9 @@ const FTMS = U(0x1826), IBD = U(0x2AD2), FTMS_CP = U(0x2AD9);
 const FEC_SVC = '6e40fec1-b5a3-f393-e0a9-e50e24dcca9e', FEC_RX = '6e40fec2-b5a3-f393-e0a9-e50e24dcca9e', FEC_TX = '6e40fec3-b5a3-f393-e0a9-e50e24dcca9e';
 const WAHOO_CP = 'a026e005-0a7d-4ab3-97fa-f1500f9feb8b', CPM = U(0x2A63);
 class Trainer {
-  constructor(device) { this.device = device; this.zwiftReady = false; this.ftms = null; this.rx = null; this.ftmsGranted = false; this.queue = Promise.resolve(); }
+  constructor(device) { this.device = device; this.zwiftReady = false; this.ftms = null; this.rx = null; this.ftmsGranted = false; this.queue = Promise.resolve();
+    this.device.addEventListener('gattserverdisconnected', () => this.onDisconnect()); }
   async connect() {
-    this.device.addEventListener('gattserverdisconnected', () => this.onDisconnect());
     const server = await this.device.gatt.connect();
     setChip('c-trainer', true, this.device.name || 'Trainer');
     const services = await server.getPrimaryServices();
@@ -269,17 +269,19 @@ class Trainer {
     report(r);
   }
   useFTMS() {
-    if (!this.ftms && this.fecTx) { ping('fec-trainer'); setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · gears'); this.sendSim(); return; }
+    if (!this.ftms && this.fecTx) { ping('fec-trainer'); setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · gears'); this.sendSim(); this.resumeErg(); return; }
     if (!this.ftms && this.wahoo) {
       ping('wahoo-trainer'); setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · gears');
       this.writeWahoo([0x20, 0xEE, 0xFC]);                                   // Steuerung freischalten
       this.writeWahoo([0x43, 0x4C, 0x1D, 0x28, 0x00, 0xFE, 0x01]);           // Sim-Modus: 75 kg, Crr 0.004, Cw 0.51
-      this.sendSim(); return;
+      this.sendSim(); this.resumeErg(); return;
     }
     if (!this.ftms) { setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · read only'); return; }
     setChip('c-trainer', true, (this.device.name || 'Trainer') + ' · FTMS gears');
-    this.sendSim();
+    this.sendSim(); this.resumeErg();
   }
+  resumeErg() { if (this.erg != null) this.setTarget(this.erg); }   // nach einem Verbindungsabbruch mitten im Training
+  get canErg() { return !!(this.zwiftReady || this.ftms || this.fecTx || this.wahoo); }
   sendSim() {
     const grade = ride.grade + (ride.gear - NEUTRAL) * 1.0;
     const g = Math.round(grade * 100);
@@ -302,18 +304,21 @@ class Trainer {
     } else { if (this.wahoo && !this.ftms) this.writeWahoo([0x43, 0x4C, 0x1D, 0x28, 0x00, 0xFE, 0x01]); this.sendSim(); }
   }
   async onDisconnect() {
-    this.zwiftReady = false; clearInterval(this.keepAlive);
+    if (this.dead || this.reconnecting) return;
+    this.reconnecting = true; this.zwiftReady = false; this.ftmsGranted = false; clearInterval(this.keepAlive);
     setChip('c-trainer', false, 'Trainer reconnecting …');
-    for (let i = 0; i < 20; i++) { try { await sleep(2000); await this.connect(); return; } catch (e) {} }
-    setChip('c-trainer', false, 'Connect trainer');
+    try {
+      for (let i = 0; i < 20 && !this.dead; i++) { try { await sleep(2000); await this.connect(); return; } catch (e) {} }
+      if (!this.dead) setChip('c-trainer', false, 'Connect trainer');
+    } finally { this.reconnecting = false; }
   }
 }
 
 // ---------- Bluetooth: Zwift Click / Play / Ride ----------
 class Controller {
-  constructor(device) { this.device = device; this.pressed = new Set(); this.ready = false; this.label = device.name || 'Controller'; }
+  constructor(device) { this.device = device; this.pressed = new Set(); this.ready = false; this.label = device.name || 'Controller';
+    this.device.addEventListener('gattserverdisconnected', () => this.onDisconnect()); }
   async connect() {
-    this.device.addEventListener('gattserverdisconnected', () => this.onDisconnect());
     const server = await this.device.gatt.connect();
     let svc = null;
     try { const o = await server.getPrimaryService(OBC.svc); return this.connectOBC(o); } catch (e) {}
@@ -366,10 +371,12 @@ class Controller {
     }
     if (d[0] === 0x3C) {
       const pid = findProductId(d.slice(1));
-      if (pid === 0x0B && !this.isLeftV2) { // Click v2 left puck: Zwift locks it, restart every 50 s
-        this.isLeftV2 = true; this.label = 'Click −'; updateCtrlChip();
-        this.write(MSG.clickV2Unlock);
-        this.restart = setTimeout(() => this.ready && this.write(MSG.reset), 50000);
+      if (pid === 0x0B) { // Click v2 left puck: Zwift locks it, restart every 50 s (nach JEDEM Neustart wieder, 24.11.2026)
+        if (!this.isLeftV2) { this.isLeftV2 = true; this.label = 'Click −'; updateCtrlChip(); }
+        if (!this.restart) {
+          this.write(MSG.clickV2Unlock);
+          this.restart = setTimeout(() => { this.restart = null; if (this.ready) this.write(MSG.reset); }, 50000);
+        }
       } else if (pid === 0x0A) { this.label = 'Click +'; updateCtrlChip(); }
     }
   }
@@ -382,8 +389,10 @@ class Controller {
     } else if (op === 0xFE) toast('Another app took over the controller. Quit Zwift.');
   }
   async onDisconnect() {
-    this.ready = false; clearInterval(this.keep); clearTimeout(this.restart); updateCtrlChip();
-    for (let i = 0; i < 30; i++) { try { await sleep(1500); await this.connect(); return; } catch (e) {} }
+    if (this.dead || this.reconnecting) return;
+    this.reconnecting = true; this.ready = false; clearInterval(this.keep); clearTimeout(this.restart); this.restart = null; updateCtrlChip();
+    try { for (let i = 0; i < 30 && !this.dead; i++) { try { await sleep(1500); await this.connect(); return; } catch (e) {} } }
+    finally { this.reconnecting = false; }
   }
 }
 const controllers = [];
@@ -425,7 +434,7 @@ async function connectTrainer() {
   stopDemo();
   trainer = new Trainer(dev);
   setChip('c-trainer', false, 'Connecting …');
-  await trainer.connect();
+  try { await trainer.connect(); } catch (e) { trainer.dead = true; trainer = null; setChip('c-trainer', false, 'Connect trainer'); throw e; }
   ping('trainer');
 }
 async function connectController() {
@@ -435,7 +444,7 @@ async function connectController() {
   });
   const c = new Controller(dev);
   controllers.push(c); updateCtrlChip();
-  await c.connect();
+  try { await c.connect(); } catch (e) { c.dead = true; controllers.splice(controllers.indexOf(c), 1); updateCtrlChip(); throw e; }
   ping('click');
 }
 
@@ -443,7 +452,7 @@ async function connectController() {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const bytesOf = v => Array.from(new Uint8Array(v.buffer, v.byteOffset, v.byteLength));
 function setChip(id, on, text) { const el = document.getElementById(id); el.classList.toggle('on', on); el.querySelector('span').textContent = text; }
-function safe(fn) { return async () => { try { await fn(); } catch (e) { ping(e && e.name === 'NotFoundError' ? 'bt-cancel' : 'bt-error'); if (e && e.name !== 'NotFoundError') ping('bt-error-' + String(e.name || 'x').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30)); if (e && e.name !== 'NotFoundError') ping('bt-msg-' + String(e.message || e).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60)); if (e && e.name !== 'NotFoundError') toast(e.message || String(e), 5000); } }; }
+function safe(fn) { return async () => { try { await fn(); } catch (e) { ping(e && e.name === 'NotFoundError' ? 'bt-cancel' : 'bt-error'); if (e && e.name !== 'NotFoundError') ping('bt-error-' + String(e.name || 'x').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30)); if (e && e.name !== 'NotFoundError') ping('bt-msg-' + String(e.message || e).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 60)); if (e && e.name !== 'NotFoundError') toast('Bluetooth could not connect. Wake the device, quit other apps that use it, then try again.', 6000); } }; }
 
 // Anonymous usage counter (no personal data, no cookies): one ping per event type and session.
 const pinged = new Set();
@@ -462,9 +471,10 @@ var SEG_EVENTS = new Set(['visit', 'demo', 'connect-tap', 'nobt', 'trainer', 'cl
 var SEG = (() => {
   let ref = '';
   try { ref = new URL(document.referrer).hostname.replace(/^www\./, ''); } catch {}
-  let src = sessionStorage.getItem('pc_src');
+  const ss = k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
+  let src = ss('pc_src');
   if (!src) {
-    const ad = /pc_kw=/.test(location.search) || sessionStorage.getItem('pc_kw');
+    const ad = /pc_kw=/.test(location.search) || ss('pc_kw');
     src = ad ? 'ads' : !ref ? 'direct' : ref === location.hostname ? 'site'
       : /google\./.test(ref) ? 'google' : /bing\.|duckduckgo|ecosia|yahoo/.test(ref) ? 'search'
       : /reddit/.test(ref) ? 'reddit' : /gumroad/.test(ref) ? 'gumroad' : /youtube|youtu\.be/.test(ref) ? 'youtube'
@@ -492,7 +502,13 @@ function startDemo() {
   // Nur 1 von 29 Demo-Nutzern hat geschaltet (12.11.2026): zeigen, wie man schaltet
   if (!EMBED) toast(matchMedia('(pointer: coarse)').matches ? 'Tap + and − to shift, like the buttons on your Zwift Click. Watch the watts change.' : 'Press ↑ and ↓ to shift, like the buttons on your Zwift Click. Watch the watts change.', 9000);
 }
-function stopDemo() { if (demoTimer) { clearInterval(demoTimer); demoTimer = null; ride.demo = false; } }
+function stopDemo() {
+  if (!demoTimer) return;
+  clearInterval(demoTimer); demoTimer = null; ride.demo = false;
+  // Demo-Zeit zählt nicht zur echten Fahrt (sonst kamen Angebot und 30-Min-Stopp zu früh)
+  if (wo) stopWorkout();
+  ride.elapsed = 0; ride.dist = 0; ride.sum = 0; ride.n = 0; ride.kj = 0; nudged.clear();
+}
 
 // ---------- Tick (1 s): totals, auto-pause, staleness ----------
 setInterval(() => {
@@ -508,9 +524,12 @@ setInterval(() => {
   if (capped) tickAcc = 0;
   for (; tickAcc >= 1; tickAcc -= 1) if (ride.power > 0 || ride.cadence > 0) {
     ride.elapsed += 1; ride.dist += ride.speed / 3.6; ride.sum += ride.power; ride.n += 1; ride.kj += ride.power / 1000;
+    if (!ride.demo && !samples.length) T_START = new Date();
     if (!ride.demo) samples.push([Math.round(ride.power), ride.cadence, ride.hr || 0, Math.round(ride.speed * 10), Math.round(ride.dist)]);
     if (wo) workoutTick();
   }
+  // FTP-Test: wer ganz aufhört zu treten, beendet den Test (vorher lief er ewig weiter)
+  if (wo && wo.w.test && !wo.done && !capped && ride.power === 0 && ride.cadence === 0 && wo.t >= wo.w.rampFrom && wo.t < wo.w.rampTo && ++wo.low >= 10) endRamp();
   render();
 }, 1000);
 let lastTick = 0, tickAcc = 0;
@@ -629,9 +648,9 @@ const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ==
 let pro = store.get('pc_pro', null);
 ride.ftp = store.get('pc_ftp', 200);
 const X3 = ({
-  en: { tag: '1 FREE', tease: 'Your first ERG workout is free 🎁', title: 'Your first ERG workout is free.', text: 'Pick a 20 minute workout. Your trainer sets the watts, you just pedal. No card, no account.', go: 'Pick my free workout', ftp: 'Your FTP in watts sets how hard the workout is. Not sure? 150 is easy, 200 is medium, 250 is strong.', done: 'Workout done. Well ridden!', stop: 'That was your free workout.', after: 'Want more? PedalCraft Pro has workouts from 20 minutes to 2 hours, an FTP test, unlimited ride time and every ride for Strava. $24 with code RIDE10 instead of $39. One-time, no subscription. It runs right here in your browser. Doesn’t work with your trainer? Money back within 30 days.', buy: 'Unlock all workouts · $24' },
-  de: { tag: '1x GRATIS', tease: 'Dein erstes ERG-Training ist gratis 🎁', title: 'Dein erstes ERG-Training ist gratis.', text: 'Wähle ein 20-Minuten-Training. Dein Trainer stellt die Watt ein, du trittst nur. Keine Karte, kein Konto.', go: 'Gratis-Training wählen', ftp: 'Deine FTP in Watt bestimmt, wie hart das Training wird. Unsicher? 150 ist locker, 200 mittel, 250 stark.', done: 'Training geschafft. Stark!', stop: 'Das war dein Gratis-Training.', after: 'Lust auf mehr? PedalCraft Pro hat Trainings von 20 Minuten bis 2 Stunden, einen FTP-Test, unbegrenzte Fahrzeit und jede Fahrt für Strava. 24 $ mit Code RIDE10 statt 39 $. Einmal zahlen, kein Abo. Läuft direkt hier im Browser. Geht nicht mit deinem Trainer? Geld zurück innert 30 Tagen.', buy: 'Alle Trainings freischalten · 24 $' },
-  it: { tag: '1 GRATIS', tease: 'Il tuo primo allenamento ERG è gratis 🎁', title: 'Il tuo primo allenamento ERG è gratis.', text: 'Scegli un allenamento di 20 minuti. Il rullo regola i watt, tu devi solo pedalare. Niente carta, niente account.', go: 'Scegli il mio allenamento', ftp: 'La tua FTP in watt decide quanto è duro l’allenamento. Non la sai? 150 è facile, 200 medio, 250 forte.', done: 'Allenamento finito. Grande!', stop: 'Questo era il tuo allenamento gratis.', after: 'Ne vuoi ancora? PedalCraft Pro offre allenamenti da 20 minuti a 2 ore, un test FTP, tempo illimitato e ogni uscita per Strava. 24 $ con il codice RIDE10 invece di 39 $. Pagamento unico, nessun abbonamento. Funziona qui nel browser. Non va con il tuo rullo? Rimborso entro 30 giorni.', buy: 'Sblocca tutti gli allenamenti · 24 $' },
+  en: { tag: '1 FREE', tease: 'Your first ERG workout is free 🎁', title: 'Your first ERG workout is free.', text: 'Pick a 20 minute workout. Your trainer sets the watts, you just pedal. No card, no account.', go: 'Pick my free workout', need: 'Connect your trainer first, then pick your free workout.', noerg: 'This trainer only sends data and can’t be controlled, so ERG workouts won’t work with it.', stopq: 'Stop your free workout? You can’t start it again.', ftp: 'Your FTP in watts sets how hard the workout is. Not sure? 150 is easy, 200 is medium, 250 is strong.', done: 'Workout done. Well ridden!', stop: 'That was your free workout.', after: 'Want more? PedalCraft Pro has workouts from 20 minutes to 2 hours, an FTP test, unlimited ride time and every ride for Strava. $24 with code RIDE10 instead of $39. One-time, no subscription. It runs right here in your browser. Doesn’t work with your trainer? Money back within 30 days.', buy: 'Unlock all workouts · $24' },
+  de: { tag: '1x GRATIS', tease: 'Dein erstes ERG-Training ist gratis 🎁', title: 'Dein erstes ERG-Training ist gratis.', text: 'Wähle ein 20-Minuten-Training. Dein Trainer stellt die Watt ein, du trittst nur. Keine Karte, kein Konto.', go: 'Gratis-Training wählen', need: 'Verbinde zuerst deinen Trainer, dann wähle dein Gratis-Training.', noerg: 'Dieser Trainer sendet nur Daten und lässt sich nicht steuern, ERG-Trainings gehen damit nicht.', stopq: 'Gratis-Training beenden? Du kannst es nicht nochmals starten.', ftp: 'Deine FTP in Watt bestimmt, wie hart das Training wird. Unsicher? 150 ist locker, 200 mittel, 250 stark.', done: 'Training geschafft. Stark!', stop: 'Das war dein Gratis-Training.', after: 'Lust auf mehr? PedalCraft Pro hat Trainings von 20 Minuten bis 2 Stunden, einen FTP-Test, unbegrenzte Fahrzeit und jede Fahrt für Strava. 24 $ mit Code RIDE10 statt 39 $. Einmal zahlen, kein Abo. Läuft direkt hier im Browser. Geht nicht mit deinem Trainer? Geld zurück innert 30 Tagen.', buy: 'Alle Trainings freischalten · 24 $' },
+  it: { tag: '1 GRATIS', tease: 'Il tuo primo allenamento ERG è gratis 🎁', title: 'Il tuo primo allenamento ERG è gratis.', text: 'Scegli un allenamento di 20 minuti. Il rullo regola i watt, tu devi solo pedalare. Niente carta, niente account.', go: 'Scegli il mio allenamento', need: 'Collega prima il rullo, poi scegli il tuo allenamento gratis.', noerg: 'Questo rullo invia solo dati e non si può controllare: gli allenamenti ERG non funzionano.', stopq: 'Fermare l’allenamento gratis? Non potrai riavviarlo.', ftp: 'La tua FTP in watt decide quanto è duro l’allenamento. Non la sai? 150 è facile, 200 medio, 250 forte.', done: 'Allenamento finito. Grande!', stop: 'Questo era il tuo allenamento gratis.', after: 'Ne vuoi ancora? PedalCraft Pro offre allenamenti da 20 minuti a 2 ore, un test FTP, tempo illimitato e ogni uscita per Strava. 24 $ con il codice RIDE10 invece di 39 $. Pagamento unico, nessun abbonamento. Funziona qui nel browser. Non va con il tuo rullo? Rimborso entro 30 giorni.', buy: 'Sblocca tutti gli allenamenti · 24 $' },
 })[['de', 'it'].includes((navigator.language || 'en').slice(0, 2)) ? navigator.language.slice(0, 2) : 'en'];
 const isPro = () => !!(pro && pro.key);
 async function checkKey(key) {
@@ -639,7 +658,12 @@ async function checkKey(key) {
   return (await r.json()).ok === true;
 }
 // Beim Start still nachprüfen; nur ein klares Nein sperrt (offline bleibt Pro an)
-if (isPro() && location.hostname !== 'localhost') checkKey(pro.key).then(ok => { if (!ok) { pro = null; store.set('pc_pro', null); renderPro(); toast('Your PedalCraft Pro key is no longer valid.', 6000); } }).catch(() => {});
+if (isPro() && location.hostname !== 'localhost') checkKey(pro.key).then(ok => {
+  // Ein einzelnes Nein kann auch ein Ausfall bei Gumroad sein: erst sperren, wenn es nach über 20 Stunden immer noch Nein heisst
+  if (ok) { if (pro.bad) { delete pro.bad; store.set('pc_pro', pro); } return; }
+  if (!pro.bad) { pro.bad = Date.now(); store.set('pc_pro', pro); return; }
+  if (Date.now() - pro.bad > 20 * 3600e3) { pro = null; store.set('pc_pro', null); renderPro(); toast('Your PedalCraft Pro key is no longer valid.', 6000); }
+}).catch(() => {});
 
 function showUnlock() {
   $('pro-title').textContent = 'Unlock PedalCraft Pro';
@@ -756,8 +780,8 @@ function showPicker() {
 }
 function startWorkout(w) {
   if (!trainer && !ride.demo) { toast('Connect your trainer first, then start the workout.', 5000); return; }
-  wo = { w, t: 0, intensity: 100, target: null, best60: 0, win: [], low: 0 };
-  $('wbar').classList.remove('hidden'); $('wbar-end').textContent = w.test ? 'I’m done' : 'Stop';
+  wo = { w, t: 0, intensity: 100, target: null, best60: 0, win: [], low: 0 }; ride.woName = w.name;
+  $('wbar').classList.remove('hidden'); try { $('wbar').scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {} $('wbar-end').textContent = w.test ? 'I’m done' : 'Stop';
   ping(w.test ? 'ftp-start' : 'workout-start');
   workoutTick(true);
 }
@@ -794,19 +818,19 @@ function endRamp() {
     $('pro-title').textContent = 'Your FTP: ' + ftp + ' W';
     $('pro-text').textContent = `Best minute: ${wo.best60} W. FTP is 75% of that. Your zones and workouts now use ${ftp} W. Now cool down for 8 minutes.`;
     ride.ftp = ftp; store.set('pc_ftp', ftp); renderPro();
-    $('pro-key').classList.add('hidden'); $('pro-buy').classList.add('hidden'); $('pro').classList.remove('hidden');
-  }
+    $('pro-key').classList.add('hidden'); $('pro-buy').classList.add('hidden'); $('pro-trial').classList.add('hidden'); $('pro-close').textContent = 'OK'; $('pro').classList.remove('hidden');
+  } else toast('Too short for a result. Ride at least one full minute of the ramp.', 6000);
 }
 function finishWorkout() { toast(wo.w.name + ' done. Well ridden!', 5000); ping('workout-done'); stopWorkout(); if (!isPro()) trialEnd(true); }
 function stopWorkout() { wo = null; trainer?.setTarget(null); $('wbar').classList.add('hidden'); }
-$('wbar-end').onclick = () => { if (wo && wo.w.test && !wo.done) endRamp(); else { const used = wo && !isPro() && !ride.demo && wo.t >= TRIAL_USE; stopWorkout(); if (used) trialEnd(false); } };
+$('wbar-end').onclick = () => { if (wo && wo.w.test && !wo.done) endRamp(); else { const used = wo && !isPro() && !ride.demo && wo.t >= TRIAL_USE; if (used && !confirm(X3.stopq)) return; stopWorkout(); if (used) trialEnd(false); } };
 $('wbar-minus').onclick = () => setIntensity(wo.intensity - 5);
 $('wbar-plus').onclick = () => setIntensity(wo.intensity + 5);
 $('pick-close').onclick = () => $('pick').classList.add('hidden');
 
 // ---------- Pro: Fahrten speichern (IndexedDB) und als .tcx für Strava laden ----------
 const samples = [];
-const T_START = new Date();
+let T_START = new Date();   // wird beim ersten echten Messwert neu gesetzt (Tab kann lange offen sein)
 function db() {
   return new Promise((res, rej) => { const r = indexedDB.open('pedalcraft', 1); r.onupgradeneeded = () => r.result.createObjectStore('rides', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
 }
@@ -816,8 +840,8 @@ async function dbDel(id) { const d = await db(); return new Promise(res => { con
 async function saveRide() {
   if (samples.length < 60) { toast('Ride at least a minute, then save.', 4000); return; }
   const best = n => { let s = 0, b = 0; for (let i = 0; i < samples.length; i++) { s += samples[i][0]; if (i >= n) s -= samples[i - n][0]; if (i >= n - 1) b = Math.max(b, s / n); } return Math.round(b); };
-  const r = { id: Date.now(), start: T_START.getTime(), secs: samples.length, dist: Math.round(ride.dist), avg: ride.n ? Math.round(ride.sum / ride.n) : 0, kj: Math.round(ride.kj),
-    max: Math.max(...samples.map(x => x[0])), name: wo ? wo.w.name : 'Free ride', samples: samples.slice() };
+  const r = { id: T_START.getTime(), start: T_START.getTime(), secs: samples.length, dist: Math.round(ride.dist), avg: ride.n ? Math.round(ride.sum / ride.n) : 0, kj: Math.round(ride.kj),
+    max: Math.max(...samples.map(x => x[0])), name: wo ? wo.w.name : ride.woName || 'Free ride', samples: samples.slice() };
   try { await dbPut(r); } catch (e) { toast('Could not save: ' + (e.message || e), 6000); return; }
   saved = true; ping('ride-saved');
   const b20 = samples.length >= 1200 ? best(1200) : 0, sug = Math.round(b20 * 0.95);
@@ -832,9 +856,9 @@ let kept = { n: 0, secs: 0, dist: 0 }, keptThis = false;
 async function keptStats() { try { const rows = await dbAll(); kept = { n: rows.length, secs: rows.reduce((a, r) => a + r.secs, 0), dist: rows.reduce((a, r) => a + r.dist, 0) }; } catch (e) {} }
 keptStats();
 async function keepRide() {
-  if (isPro() || ride.demo || EMBED || samples.length < 300) return;
+  if (ride.demo || EMBED || samples.length < 300) return;
   const r = { id: T_START.getTime(), start: T_START.getTime(), secs: samples.length, dist: Math.round(ride.dist), avg: ride.n ? Math.round(ride.sum / ride.n) : 0, kj: Math.round(ride.kj),
-    max: Math.max(...samples.map(x => x[0])), name: 'Free ride', locked: true, samples: samples.slice() };
+    max: Math.max(...samples.map(x => x[0])), name: ride.woName || 'Free ride', locked: !isPro(), samples: samples.slice() };
   try { await dbPut(r); if (!keptThis) { keptThis = true; ping('kept-ride'); } await keptStats(); } catch (e) {}
 }
 const hm = s => s >= 3600 ? `${Math.floor(s / 3600)} h ${Math.floor(s % 3600 / 60)} min` : `${Math.floor(s / 60)} min`;
@@ -902,7 +926,10 @@ function trialEnd(done) {
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = X3.buy;
   offerOpen = true; $('pro').classList.remove('hidden'); renderPro();
 }
-$('pro-trial').onclick = () => { $('pro-trial').classList.add('hidden'); $('pro').classList.add('hidden'); ping('trial-pick'); nudged.add(10);
+$('pro-trial').onclick = () => { $('pro-trial').classList.add('hidden'); $('pro').classList.add('hidden'); nudged.add(10);
+  if (!trainer && !ride.demo) { toast(X3.need, 6000); ping('trial-notrainer'); return; }
+  if (trainer && !ride.demo && !trainer.canErg) { toast(X3.noerg, 8000); ping('trial-noerg'); return; }
+  ping('trial-pick');
   const n = parseInt(prompt(X3.ftp, ride.ftp), 10); if (n >= 60 && n <= 600) { ride.ftp = n; store.set('pc_ftp', n); ping('trial-ftp'); }
   pickMin = 20; showPicker(); };
 function showPro(f) {
@@ -922,7 +949,7 @@ function showPro(f) {
   let extra = '';
   if (f === 'save') extra = ride.elapsed > 0 ? `${Math.floor(ride.elapsed / 60)} min, ${(ride.dist / 1000).toFixed(1)} km, ${Math.round(ride.kj)} kJ.` : 'still empty, start pedalling.';
   $('pro-text').textContent = txt + extra;
-  $('pro-key').classList.add('hidden'); $('pro-buy').classList.remove('hidden');
+  $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
   $('pro-buy').href = BUY; $('pro-buy').textContent = 'Get PedalCraft Pro · $29 launch price'; offerOpen = false;
   $('pro').classList.remove('hidden');
   ping('pro-' + f);
@@ -943,7 +970,7 @@ function showRideOffer() {
   $('pro-share-row').classList.add('hidden');
   $('pro-title').textContent = 'It works with your trainer.';
   $('pro-text').textContent = "You've been riding for 3 minutes. Keep every ride, train with ERG workouts and track your FTP with PedalCraft Pro: $24 with code RIDE10 instead of $39. One-time, no subscription, Mac app included.";
-  $('pro-key').classList.add('hidden'); $('pro-buy').classList.remove('hidden');
+  $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = 'Get it for $24';
   offerOpen = true;
   $('pro').classList.remove('hidden');
@@ -1001,7 +1028,7 @@ function showWall() {
   $('pro').classList.remove('hidden');
   ping('wall-20');
 }
-$('pro-close').onclick = () => { if ($('pro-close').disabled) return; if (capped) { ping('cap-restart'); location.reload(); return; } if (wallOpen) { wallOpen = false; ping('wall-continue'); } $('pro').classList.add('hidden'); $('pro-share-row').classList.add('hidden'); $('pro-close').textContent = 'Keep riding free'; endOffer = false; };
+$('pro-close').onclick = () => { if ($('pro-close').disabled) return; if (capped) { ping('cap-restart'); leaving = true; location.reload(); return; } if (wallOpen) { wallOpen = false; ping('wall-continue'); } $('pro').classList.add('hidden'); $('pro-share-row').classList.add('hidden'); $('pro-close').textContent = isPro() ? 'Close' : 'Keep riding free'; endOffer = false; };
 for (const id of ['head-buy', 'upsell-buy']) $(id)?.addEventListener('click', () => ping('buy-click'));
 $('pro-buy').onclick = () => { ping('buy-click'); if (offerOpen) ping('buy-ride10'); if (endOffer) ping('buy-end'); if (wallOpen) ping('buy-wall'); if (capped) ping('buy-cap'); };
 $('upsell-unlock').onclick = showUnlock;
@@ -1017,19 +1044,20 @@ $('pro-key-in').onkeydown = e => { if (e.key === 'Enter') $('pro-key-go').click(
 renderPro();
 if (location.hostname === 'localhost') window.__pc = { Controller, samples, saveRide, tcx, dbAll, ride, startWorkout, FTP_TEST, get wo() { return wo; } };   // nur zum Testen
 // Nach 10 und 30 Minuten echter Fahrt freundlich daran erinnern, dass die Fahrt nicht gespeichert wird
-let nudged = new Set(), lastEl = -1, stillSince = 0;
+let nudged = new Set(), lastEl = -1, stillSince = 0, leaving = false;
+const dlgOpen = () => !$('pro').classList.contains('hidden');
 setInterval(() => {
   // Anonyme Fahrdauer-Stufen (nur echte Fahrten): zeigt, wie lange Leute wirklich trainieren
   for (const m of [1, 3, 5, 10, 20, 30, 60]) if (!ride.demo && ride.elapsed >= m * 60) ping('ride-' + m + 'm');
   // Nach 10 s echter Fahrt auf das Angebot neugierig machen (Diego 03.11.2026)
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 10 && ride.elapsed < 180 && !nudged.has(0)) { nudged.add(0); toast(trialLeft() ? X3.tease : 'Ride 3 min and get a surprise offer 🎁', 6000); ping('teaser-10s'); }
-  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 180 && !wo && !nudged.has(10)) { nudged.add(10); if (trialLeft()) showTrial(); else showRideOffer(); }
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 180 && !wo && !capped && !dlgOpen() && !nudged.has(10)) { nudged.add(10); if (trialLeft()) showTrial(); else showRideOffer(); }
   if (ride.elapsed !== lastEl) { lastEl = ride.elapsed; stillSince = performance.now(); }
-  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 300 && performance.now() - stillSince >= 60000 && !nudged.has('end')) { nudged.add('end'); showEndOffer(); }
-  if (!isPro() && !ride.demo && samples.length >= 300 && samples.length - (keepRide.at || 0) >= 60) { keepRide.at = samples.length; keepRide(); }
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 300 && performance.now() - stillSince >= 60000 && !wo && !capped && !dlgOpen() && !nudged.has('end')) { nudged.add('end'); showEndOffer(); }
+  if (!ride.demo && samples.length >= 300 && samples.length - (keepRide.at || 0) >= 60) { keepRide.at = samples.length; keepRide(); }
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 1800 && !wo && performance.now() - trialEndAt > 60000 && !capped) showCap();
   if (false) { const b = 'w' + Math.floor(ride.elapsed / 1200); if (!nudged.has(b) && !wallOpen && ($('pro').classList.contains('hidden') || offerOpen) && document.activeElement !== $('pro-key')) { nudged.add(b); endOffer = false; showWall(); } }
-  if (!ride.demo && !isPro() && ride.elapsed >= 1500 && !wo && !nudged.has(30)) { nudged.add(30); toast(T.left5, 8000); ping('cap-25'); }
+  if (!ride.demo && !isPro() && ride.elapsed >= 1500 && ride.elapsed < 1740 && !wo && !nudged.has(30)) { nudged.add(30); toast(T.left5, 8000); ping('cap-25'); }
 }, 5000);
 
 // ---------- Wire up ----------
@@ -1103,9 +1131,9 @@ if (!hasBT) {
   }
 }
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
-window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
+window.addEventListener('beforeunload', e => { if (!leaving && ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 46; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 47; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.

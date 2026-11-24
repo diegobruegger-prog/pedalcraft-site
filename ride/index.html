@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PedalCraft Ride · free in your browser</title>
-<meta name="description" content="Ride your smart trainer in the browser for free. Shift with Zwift Click, see your watts, cadence and heart rate live. No account, nothing is saved.">
+<meta name="description" content="Ride your smart trainer in the browser for free. Shift with Zwift Click, see your watts, cadence and heart rate live. Free 30 minute rides, no account.">
 <link rel="icon" href="../img/icon.png">
 <link rel="canonical" href="https://pedalcraft.online/ride/">
 <meta property="og:title" content="PedalCraft Ride · free in your browser">
@@ -67,8 +67,8 @@
   .upsell ul { margin: 0; padding-left: 18px; color: var(--soft); font-size: 13.5px; line-height: 1.55; }
   footer.bottom { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .note { color: var(--soft); font-size: 12.5px; }
-  .overlay { position: fixed; inset: 0; background: rgba(10,11,13,.82); display: grid; place-items: center; z-index: 10; padding: 16px; }
-  .overlay .box { max-width: 560px; padding: 26px; }
+  .overlay { position: fixed; inset: 0; background: rgba(10,11,13,.82); display: flex; overflow-y: auto; z-index: 10; padding: 16px; }
+  .overlay .box { max-width: 560px; padding: 26px; margin: auto; }
   .overlay h2 { margin: 0 0 8px; }
   .overlay p { color: var(--soft); line-height: 1.55; }
   .overlay .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
@@ -95,7 +95,7 @@
   @media (max-width: 980px) { main { grid-template-columns: 1fr; } footer.bottom { grid-template-columns: 1fr 1fr; } }
   .app { grid-template-columns: minmax(0, 1fr); }
   @media (max-width: 980px) { main { grid-template-columns: minmax(0, 1fr); } .gear { min-width: 0; } .dots i { flex: 0 1 6px; min-width: 2px; } }
-  @media (max-width: 560px) { .dots { gap: 2px; } .gearbar { gap: 10px; padding: 14px 12px 18px; } .tile { padding-left: 14px; padding-right: 14px; } .grade .round { flex: none; } .grade { gap: 6px; }
+  @media (max-width: 560px) { .toast { left: 16px; right: 16px; transform: none; text-align: center; } .dots { gap: 2px; } .gearbar { gap: 10px; padding: 14px 12px 18px; } .tile { padding-left: 14px; padding-right: 14px; } .grade .round { flex: none; } .grade { gap: 6px; }
     .big .val { font-size: 52px; } .gear .num { font-size: 46px; } .shift { width: 72px; } header .brand span { display: none; } }
 
   #pro-buy:not(.hidden) ~ #pro-trial { display: none; }
@@ -194,7 +194,7 @@
     </div>
     <div id="nobt-actions" class="actions hidden">
       <button class="btn primary" id="sendlink">Send this link to my computer</button>
-      <a class="btn" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH" id="nobt-buy">Get the Mac app · $29</a>
+      <a class="btn" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH" id="nobt-buy">Get Pro · $29</a>
     </div>
     <div id="nobt-sub" class="hidden"><form class="sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{mode:'no-cors',keepalive:true})}catch(e){}" data-src="ride">
   <input type="hidden" name="seller_id" value="7781126287159">
@@ -266,6 +266,6 @@
 </div>
 <div class="toast hidden" id="toast"></div>
 
-<script type="module" src="app.js?v=46"></script>
+<script type="module" src="app.js?v=47"></script>
 </body>
 </html>
