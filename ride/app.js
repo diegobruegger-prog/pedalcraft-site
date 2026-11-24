@@ -435,7 +435,7 @@ async function connectTrainer() {
   trainer = new Trainer(dev);
   setChip('c-trainer', false, 'Connecting …');
   try { await trainer.connect(); } catch (e) { trainer.dead = true; trainer = null; setChip('c-trainer', false, 'Connect trainer'); throw e; }
-  ping('trainer');
+  ping('trainer'); ping('tname-' + trainerKey(dev.name));
 }
 async function connectController() {
   const dev = await pickDevice({
@@ -445,7 +445,7 @@ async function connectController() {
   const c = new Controller(dev);
   controllers.push(c); updateCtrlChip();
   try { await c.connect(); } catch (e) { c.dead = true; controllers.splice(controllers.indexOf(c), 1); updateCtrlChip(); throw e; }
-  ping('click');
+  ping('click'); ping('ctrl-' + (/click/i.test(dev.name) ? 'click' : /play/i.test(dev.name) ? 'play' : /ride/i.test(dev.name) ? 'ride' : 'other'));
 }
 
 // ---------- Helpers ----------
@@ -1139,7 +1139,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (!leaving && ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 48; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 49; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
