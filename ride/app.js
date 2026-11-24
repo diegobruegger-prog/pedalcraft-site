@@ -629,9 +629,9 @@ const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ==
 let pro = store.get('pc_pro', null);
 ride.ftp = store.get('pc_ftp', 200);
 const X3 = ({
-  en: { tag: '1 FREE', tease: 'Your first ERG workout is free 🎁', title: 'Your first ERG workout is free.', text: 'Pick a 20 minute workout. Your trainer sets the watts, you just pedal. No card, no account.', go: 'Pick my free workout', done: 'Workout done. Well ridden!', stop: 'That was your free workout.', after: 'Want more? PedalCraft Pro has workouts from 20 minutes to 2 hours, an FTP test, unlimited ride time and every ride for Strava. $24 with code RIDE10 instead of $39. One-time, no subscription. It runs right here in your browser. Doesn’t work with your trainer? Money back within 30 days.', buy: 'Unlock all workouts · $24' },
-  de: { tag: '1x GRATIS', tease: 'Dein erstes ERG-Training ist gratis 🎁', title: 'Dein erstes ERG-Training ist gratis.', text: 'Wähle ein 20-Minuten-Training. Dein Trainer stellt die Watt ein, du trittst nur. Keine Karte, kein Konto.', go: 'Gratis-Training wählen', done: 'Training geschafft. Stark!', stop: 'Das war dein Gratis-Training.', after: 'Lust auf mehr? PedalCraft Pro hat Trainings von 20 Minuten bis 2 Stunden, einen FTP-Test, unbegrenzte Fahrzeit und jede Fahrt für Strava. 24 $ mit Code RIDE10 statt 39 $. Einmal zahlen, kein Abo. Läuft direkt hier im Browser. Geht nicht mit deinem Trainer? Geld zurück innert 30 Tagen.', buy: 'Alle Trainings freischalten · 24 $' },
-  it: { tag: '1 GRATIS', tease: 'Il tuo primo allenamento ERG è gratis 🎁', title: 'Il tuo primo allenamento ERG è gratis.', text: 'Scegli un allenamento di 20 minuti. Il rullo regola i watt, tu devi solo pedalare. Niente carta, niente account.', go: 'Scegli il mio allenamento', done: 'Allenamento finito. Grande!', stop: 'Questo era il tuo allenamento gratis.', after: 'Ne vuoi ancora? PedalCraft Pro offre allenamenti da 20 minuti a 2 ore, un test FTP, tempo illimitato e ogni uscita per Strava. 24 $ con il codice RIDE10 invece di 39 $. Pagamento unico, nessun abbonamento. Funziona qui nel browser. Non va con il tuo rullo? Rimborso entro 30 giorni.', buy: 'Sblocca tutti gli allenamenti · 24 $' },
+  en: { tag: '1 FREE', tease: 'Your first ERG workout is free 🎁', title: 'Your first ERG workout is free.', text: 'Pick a 20 minute workout. Your trainer sets the watts, you just pedal. No card, no account.', go: 'Pick my free workout', ftp: 'Your FTP in watts sets how hard the workout is. Not sure? 150 is easy, 200 is medium, 250 is strong.', done: 'Workout done. Well ridden!', stop: 'That was your free workout.', after: 'Want more? PedalCraft Pro has workouts from 20 minutes to 2 hours, an FTP test, unlimited ride time and every ride for Strava. $24 with code RIDE10 instead of $39. One-time, no subscription. It runs right here in your browser. Doesn’t work with your trainer? Money back within 30 days.', buy: 'Unlock all workouts · $24' },
+  de: { tag: '1x GRATIS', tease: 'Dein erstes ERG-Training ist gratis 🎁', title: 'Dein erstes ERG-Training ist gratis.', text: 'Wähle ein 20-Minuten-Training. Dein Trainer stellt die Watt ein, du trittst nur. Keine Karte, kein Konto.', go: 'Gratis-Training wählen', ftp: 'Deine FTP in Watt bestimmt, wie hart das Training wird. Unsicher? 150 ist locker, 200 mittel, 250 stark.', done: 'Training geschafft. Stark!', stop: 'Das war dein Gratis-Training.', after: 'Lust auf mehr? PedalCraft Pro hat Trainings von 20 Minuten bis 2 Stunden, einen FTP-Test, unbegrenzte Fahrzeit und jede Fahrt für Strava. 24 $ mit Code RIDE10 statt 39 $. Einmal zahlen, kein Abo. Läuft direkt hier im Browser. Geht nicht mit deinem Trainer? Geld zurück innert 30 Tagen.', buy: 'Alle Trainings freischalten · 24 $' },
+  it: { tag: '1 GRATIS', tease: 'Il tuo primo allenamento ERG è gratis 🎁', title: 'Il tuo primo allenamento ERG è gratis.', text: 'Scegli un allenamento di 20 minuti. Il rullo regola i watt, tu devi solo pedalare. Niente carta, niente account.', go: 'Scegli il mio allenamento', ftp: 'La tua FTP in watt decide quanto è duro l’allenamento. Non la sai? 150 è facile, 200 medio, 250 forte.', done: 'Allenamento finito. Grande!', stop: 'Questo era il tuo allenamento gratis.', after: 'Ne vuoi ancora? PedalCraft Pro offre allenamenti da 20 minuti a 2 ore, un test FTP, tempo illimitato e ogni uscita per Strava. 24 $ con il codice RIDE10 invece di 39 $. Pagamento unico, nessun abbonamento. Funziona qui nel browser. Non va con il tuo rullo? Rimborso entro 30 giorni.', buy: 'Sblocca tutti gli allenamenti · 24 $' },
 })[['de', 'it'].includes((navigator.language || 'en').slice(0, 2)) ? navigator.language.slice(0, 2) : 'en'];
 const isPro = () => !!(pro && pro.key);
 async function checkKey(key) {
@@ -799,7 +799,7 @@ function endRamp() {
 }
 function finishWorkout() { toast(wo.w.name + ' done. Well ridden!', 5000); ping('workout-done'); stopWorkout(); if (!isPro()) trialEnd(true); }
 function stopWorkout() { wo = null; trainer?.setTarget(null); $('wbar').classList.add('hidden'); }
-$('wbar-end').onclick = () => { if (wo && wo.w.test && !wo.done) endRamp(); else { const used = wo && !isPro() && wo.t >= TRIAL_USE; stopWorkout(); if (used) trialEnd(false); } };
+$('wbar-end').onclick = () => { if (wo && wo.w.test && !wo.done) endRamp(); else { const used = wo && !isPro() && !ride.demo && wo.t >= TRIAL_USE; stopWorkout(); if (used) trialEnd(false); } };
 $('wbar-minus').onclick = () => setIntensity(wo.intensity - 5);
 $('wbar-plus').onclick = () => setIntensity(wo.intensity + 5);
 $('pick-close').onclick = () => $('pick').classList.add('hidden');
@@ -886,6 +886,7 @@ const PRO = {
 // Ein ERG-Training (20 Min) gratis (Diego 24.11.2026): Leute sollen Pro erleben, bevor sie kaufen. Verbraucht ab 2 Min echtem Training.
 const trialLeft = () => !isPro() && !EMBED && !store.get('pc_trial', null);
 const TRIAL_USE = 120;
+let trialEndAt = -1e9;
 function showTrial() {
   $('pro-share-row').classList.add('hidden');
   $('pro-title').textContent = X3.title; $('pro-text').textContent = X3.text;
@@ -894,14 +895,16 @@ function showTrial() {
   offerOpen = false; $('pro').classList.remove('hidden'); ping('trial-offer');
 }
 function trialEnd(done) {
-  ping(done ? 'trial-done' : 'trial-stop');
+  ping(done ? 'trial-done' : 'trial-stop'); nudged.add(10); trialEndAt = performance.now(); if (!ride.demo && !store.get('pc_trial', null)) store.set('pc_trial', { t: Date.now() });
   $('pro-title').textContent = done ? X3.done : X3.stop;
   $('pro-text').textContent = X3.after;
   $('pro-key').classList.remove('hidden'); $('pro-buy').classList.remove('hidden');
   $('pro-buy').href = 'https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/RIDE10'; $('pro-buy').textContent = X3.buy;
   offerOpen = true; $('pro').classList.remove('hidden'); renderPro();
 }
-$('pro-trial').onclick = () => { $('pro-trial').classList.add('hidden'); $('pro').classList.add('hidden'); ping('trial-pick'); pickMin = 20; showPicker(); };
+$('pro-trial').onclick = () => { $('pro-trial').classList.add('hidden'); $('pro').classList.add('hidden'); ping('trial-pick'); nudged.add(10);
+  const n = parseInt(prompt(X3.ftp, ride.ftp), 10); if (n >= 60 && n <= 600) { ride.ftp = n; store.set('pc_ftp', n); ping('trial-ftp'); }
+  pickMin = 20; showPicker(); };
 function showPro(f) {
   if (f === 'workout' && trialLeft()) return showTrial();
   if (isPro()) {
@@ -1024,7 +1027,7 @@ setInterval(() => {
   if (ride.elapsed !== lastEl) { lastEl = ride.elapsed; stillSince = performance.now(); }
   if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 300 && performance.now() - stillSince >= 60000 && !nudged.has('end')) { nudged.add('end'); showEndOffer(); }
   if (!isPro() && !ride.demo && samples.length >= 300 && samples.length - (keepRide.at || 0) >= 60) { keepRide.at = samples.length; keepRide(); }
-  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 1800 && !wo && !capped) showCap();
+  if (!ride.demo && !EMBED && !isPro() && ride.elapsed >= 1800 && !wo && performance.now() - trialEndAt > 60000 && !capped) showCap();
   if (false) { const b = 'w' + Math.floor(ride.elapsed / 1200); if (!nudged.has(b) && !wallOpen && ($('pro').classList.contains('hidden') || offerOpen) && document.activeElement !== $('pro-key')) { nudged.add(b); endOffer = false; showWall(); } }
   if (!ride.demo && !isPro() && ride.elapsed >= 1500 && !wo && !nudged.has(30)) { nudged.add(30); toast(T.left5, 8000); ping('cap-25'); }
 }, 5000);
@@ -1102,7 +1105,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 44; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 45; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
