@@ -12,3 +12,4 @@ for Q in ('pinterest','tiktok'):
     print(f'{Q} {n} Tage: {len(P)} Besuche, {len(real)} echt (mit Aktion/Dauer)')
     print('Länder',dict(c.Counter(x.get('cc') for x in real)),'| Seiten',dict(c.Counter(next((e for e in ev(x) if e.startswith('page:')),'?') for x in real)))
     print({k:f(k) for k in ('page:/ride','app:demo','app:connect-tap','app:trainer','app:trial-pick','app:trial-done','buy:')})
+    if Q=='pinterest': print('Pins',c.Counter(e for x in real for e in ev(x) if e.startswith('pin:')).most_common(10))
