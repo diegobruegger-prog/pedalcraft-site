@@ -53,7 +53,7 @@
         : /Macintosh/.test(ua) ? 'mac' : /Windows/.test(ua) ? 'win' : /CrOS/.test(ua) ? 'chromeos' : 'other';
       var br = /Edg\//.test(ua) ? 'edge' : /Chrome\//.test(ua) ? 'chrome' : /Firefox\//.test(ua) ? 'firefox' : /Safari\//.test(ua) ? 'safari' : 'other';
       j('start:' + os + ':' + br + ':' + (navigator.language || 'x').slice(0, 5) + ':w' + Math.round(innerWidth / 100) * 100);
-      j('from:' + (sessionStorage.getItem('pc_kw') ? 'ad:' + sessionStorage.getItem('pc_kw') : /[?&]pc=pin(&|$)/.test(location.search) ? 'pinterest' : ref || 'direct'));
+      j('from:' + (sessionStorage.getItem('pc_kw') ? 'ad:' + sessionStorage.getItem('pc_kw') : /[?&]pc=pin(&|$)/.test(location.search) ? 'pinterest' : /[?&]pc=tiktok(&|$)/.test(location.search) ? 'tiktok' : /musical_ly|BytedanceWebview|trill_/i.test(navigator.userAgent) ? 'tiktok' : ref || 'direct'));
       // Tägliche Nutzer: ein Zähler pro Tag (UTC) und Besuch, dazu wie viele die Fahrseite öffnen
       var day = new Date().toISOString().slice(0, 10);
       try { sessionStorage.setItem('pc_day', day); } catch (e) {}
