@@ -93,7 +93,7 @@
   .keyrow { display: flex; gap: 8px; flex-wrap: wrap; } .keyrow input { flex: 1; min-width: 220px; padding: 10px 12px; border-radius: 10px; background: var(--raise); border: 1px solid var(--line); color: var(--ink); font: 600 14px ui-monospace, monospace; }
   .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--raise); border: 1px solid var(--line); padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 14px; z-index: 20; }
   @media (max-width: 980px) { main { grid-template-columns: 1fr; } footer.bottom { grid-template-columns: 1fr 1fr; } }
-  .app { grid-template-columns: minmax(0, 1fr); }
+  .app { grid-template-columns: minmax(0, 1fr); } .side { min-width: 0; } .row2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   @media (max-width: 980px) { main { grid-template-columns: minmax(0, 1fr); } .gear { min-width: 0; } .dots i { flex: 0 1 6px; min-width: 2px; } }
   @media (max-width: 560px) { .toast { left: 16px; right: 16px; transform: none; text-align: center; } .dots { gap: 2px; } .gearbar { gap: 10px; padding: 14px 12px 18px; } .tile { padding-left: 14px; padding-right: 14px; } .grade .round { flex: none; } .grade { gap: 6px; }
     .big .val { font-size: 52px; } .gear .num { font-size: 46px; } .shift { width: 72px; } header .brand span { display: none; } }

@@ -105,6 +105,8 @@
   .stage iframe { position: absolute; top: 0; left: 0; width: 1440px; height: 900px; border: 0; transform-origin: 0 0; }
   .demohint .t { display: none; } @media (hover: none) { .demohint .k { display: none; } .demohint .t { display: inline; } }
   .demohint { text-align: center; font-size: 15px; color: var(--faint); margin: 22px 0 0; }
+  .phonedemo, .phonehint { display: none; } @media (max-width: 699px) { .frame.live, .deskhint { display: none; } .phonehint { display: block; } .phonehint a { color: var(--accent); } .phonedemo { display: block; width: min(300px, 82%); margin: 0 auto; border: 9px solid #26262A; border-radius: 40px; overflow: hidden; } .phonedemo video { display: block; width: 100%; height: auto; } }
+  .cmp { width: 100%; border-collapse: collapse; margin-top: 72px; font-size: 17px; } .cmp th, .cmp td { padding: 15px 8px; border-top: 1px solid var(--line); text-align: center; color: var(--soft); font-weight: 400; } .cmp th:first-child, .cmp td:first-child { text-align: left; padding-left: 0; } .cmp td:first-child { color: var(--ink); } .cmp thead th { border-top: 0; font-weight: 600; color: var(--ink); } .cmp .y { color: var(--accent); font-weight: 600; } @media (max-width: 560px) { .cmp { font-size: 15px; } .cmp th, .cmp td { padding: 13px 4px; } .price > div { padding-right: 0; } }
   kbd { font-family: inherit; border: 1px solid var(--faint); border-radius: 6px; padding: 1px 7px; font-size: 13px; color: var(--soft); }
 
   .bars { max-width: 860px; margin: 72px auto 0; display: grid; gap: 18px; text-align: left; }
@@ -165,9 +167,11 @@
     <div class="shot reveal">
       <div class="frame live">
         <div class="bar"><i></i><i></i><i></i><span>pedalcraft.online/ride</span><b class="livetag">Live demo</b></div>
-        <div class="stage" id="stage"><iframe id="demo" src="ride/?embed=1&amp;v=12" title="PedalCraft live demo" loading="eager" tabindex="-1"></iframe></div>
+        <div class="stage" id="stage"><iframe id="demo" data-src="ride/?embed=1&amp;v=47" title="PedalCraft live demo" loading="eager" tabindex="-1"></iframe></div>
       </div>
-      <p class="demohint">This is the real app running a demo ride. <span class="k">Shift with <kbd>↑</kbd> <kbd>↓</kbd> or the + and − buttons.</span><span class="t">Tap + or − to shift.</span></p>
+      <a class="phonedemo" href="ride/?demo" aria-label="Try the demo"><video id="phonevid" poster="media/ride-phone.jpg" muted loop playsinline preload="none" width="720" height="1200"></video></a>
+      <p class="demohint phonehint">The real app on a phone, demo ride. <a href="ride/?demo">Tap to try it yourself</a>.</p>
+      <p class="demohint deskhint">This is the real app running a demo ride. <span class="k">Shift with <kbd>↑</kbd> <kbd>↓</kbd> or the + and − buttons.</span><span class="t">Tap + or − to shift.</span></p>
     </div>
   </header>
 
@@ -230,6 +234,7 @@
         <a class="btn" id="buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH">Buy for $29</a>
       </div>
     </div>
+    <table class="cmp reveal"><thead><tr><th></th><th>Free</th><th>Pro</th></tr></thead><tbody><tr><td>Ride time</td><td>30 min per ride</td><td class="y">Unlimited</td></tr><tr><td>Watts, cadence, speed, heart rate</td><td>Yes</td><td class="y">Yes</td></tr><tr><td>Shift with Zwift Click, keys or buttons</td><td>Yes</td><td class="y">Yes</td></tr><tr><td>ERG workouts</td><td>One, 20 min</td><td class="y">20 min to 2 h</td></tr><tr><td>FTP ramp test</td><td>No</td><td class="y">Yes</td></tr><tr><td>Rides as .tcx files for Strava</td><td>No</td><td class="y">Yes</td></tr><tr><td>Native Mac app, auto Strava upload</td><td>No</td><td class="y">Yes</td></tr><tr><td>Account or subscription</td><td>None</td><td class="y">None</td></tr></tbody></table>
     <div class="subwrap reveal"><h3>Not at your computer right now?</h3><form class="sub" action="https://app.gumroad.com/follow_from_embed_form" method="post" target="_blank" onsubmit="try{fetch('https://pedalcraft-stats.pages.dev/hit/subscribe-'+(this.dataset.src||'x'),{mode:'no-cors',keepalive:true})}catch(e){}" data-src="home">
   <input type="hidden" name="seller_id" value="7781126287159">
   <input type="email" name="email" required placeholder="you@example.com" aria-label="Email">
@@ -273,6 +278,8 @@
   // Live-Demo: echte App skalieren, Pfeiltasten weitergeben
   (function () {
     var stage = document.getElementById('stage'), f = document.getElementById('demo');
+    if (matchMedia('(max-width: 699px)').matches) { var v = document.getElementById('phonevid'); v.src = 'media/ride-phone.mp4'; if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { var pl = v.play(); if (pl) pl.catch(function () {}); } return; }
+    f.src = f.getAttribute('data-src');
     function fit() { f.style.transform = 'scale(' + (stage.clientWidth / 1440) + ')'; }
     fit(); window.addEventListener('resize', fit);
     var visible = false;
