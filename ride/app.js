@@ -905,7 +905,7 @@ function renderPro() {
   document.querySelectorAll('.lock .pro').forEach(i => i.textContent = on ? '' : 'PRO');
   $('lock-ftpset').classList.toggle('hidden', !on); $('lock-ftpset').querySelector('.t').textContent = 'FTP: ' + ride.ftp + ' W (change)';
   $('upsell-buy').classList.toggle('hidden', on); $('upsell-unlock').classList.toggle('hidden', on); $('head-buy').classList.toggle('hidden', on);
-  $('upsell-note').textContent = on ? 'Rides are saved in this browser only. Download them as .tcx and upload at strava.com/upload.' : 'Free: 30 minutes per ride, as often as you like. Pro: unlimited ride time, every ride to Strava, ERG workouts and an FTP test.';
+  $('upsell-note').textContent = on ? 'Rides are saved in this browser only. Download them as .tcx and upload at strava.com/upload.' : 'Pro runs right here in this browser, no Mac needed. Pay once, no subscription. Free: 30 minutes per ride, as often as you like. Pro: unlimited ride time, every ride to Strava, ERG workouts and an FTP test.';
 }
 // Angebot nach 3 Minuten echter Fahrt (Diego 28.10.2026): Trainer und Click funktionieren nachweislich, bester Moment fürs Angebot
 let offerOpen = false;
@@ -1075,7 +1075,7 @@ if (!hasBT) {
 if (/Bluefy/i.test(navigator.userAgent)) ping('bluefy-open');
 window.addEventListener('beforeunload', e => { if (ride.elapsed > 60 && !ride.demo && !saved) { e.preventDefault(); e.returnValue = ''; } });
 ping('visit');
-const APP_VERSION = 41; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
+const APP_VERSION = 42; ping('v-' + APP_VERSION);   // zeigt im Besuchsverlauf, welche Version der Besucher geladen hat
 if (!hasBT) ping(/iPhone|iPad/.test(navigator.userAgent) ? 'nobt-ios' : 'nobt');
 if (EMBED) {
   // Embedded on the home page: links and connect buttons open the real app in the main window.
