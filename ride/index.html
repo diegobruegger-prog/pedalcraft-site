@@ -98,6 +98,8 @@
   @media (max-width: 560px) { .toast { left: 16px; right: 16px; transform: none; text-align: center; } .dots { gap: 2px; } .gearbar { gap: 10px; padding: 14px 12px 18px; } .tile { padding-left: 14px; padding-right: 14px; } .grade .round { flex: none; } .grade { gap: 6px; }
     .big .val { font-size: 52px; } .gear .num { font-size: 46px; } .shift { width: 72px; } header .brand span { display: none; } }
 
+  .deal { margin: 4px 0 12px; } .deal-price b { font-size: 34px; } .deal-price s { color: var(--soft); margin-left: 6px; font-size: 18px; } .deal ul { list-style: none; margin: 8px 0 0; padding: 0; line-height: 1.7; } .deal li { position: relative; padding-left: 24px; line-height: 1.4; margin: 5px 0; } .deal li::before { content: '✓'; position: absolute; left: 0; }
+  .linkbtn { background: none; border: 0; padding: 6px 0; color: var(--soft); text-decoration: underline; font: inherit; font-size: 14px; cursor: pointer; }
   #pro-buy:not(.hidden) ~ #pro-trial { display: none; }
   .sub { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 6px; }
   .sub input { flex:1 1 200px; min-width:0; height:46px; padding:0 16px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:#141416; color:#F5F5F7; font:inherit; font-size:16px; }
@@ -113,7 +115,7 @@
     <button class="chip connect" id="c-trainer"><i class="dot"></i><span>Connect trainer</span></button>
     <button class="chip connect" id="c-ctrl"><i class="dot"></i><span>Connect Click</span></button>
     <button class="chip connect" id="c-hr"><i class="dot"></i><span>Heart rate</span></button>
-    <a class="btn primary" id="head-buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH" target="_blank" rel="noopener">Get Pro · $29</a>
+    <button class="btn primary" id="head-buy">Get Pro · $29</button>
   </header>
 
   <main>
@@ -159,7 +161,7 @@
           <button class="lock hidden" data-f="ftpset" id="lock-ftpset"><span class="ic">›</span><span class="t">FTP</span><span class="pro"></span></button>
         </div>
         <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap">
-          <a class="btn primary" id="upsell-buy" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH" target="_blank" rel="noopener">Get Pro · $29 launch price</a>
+          <button class="btn primary" id="upsell-buy">Get Pro · $29 launch price</button>
           <button class="btn" id="upsell-unlock">Unlock Pro (I have a key)</button>
         </div>
         <button class="btn" id="share" style="align-self:flex-start">Share with a friend who has a Zwift Click</button>
@@ -215,14 +217,17 @@
   <div class="panel box">
     <h2 id="pro-title">Workouts with ERG</h2>
     <p id="pro-text"></p>
-    <div id="pro-key" class="hidden keyrow"><input id="pro-key-in" placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX" aria-label="License key" autocomplete="off" spellcheck="false"><button class="btn primary" id="pro-key-go">Unlock</button></div>
+    <div id="deal" class="deal hidden"><div class="deal-price"><b id="deal-now">$29</b> <s>$39</s></div><ul id="deal-list"></ul></div>
     <div class="actions">
       <a class="btn primary" href="https://pedalcraftapp.gumroad.com/l/pedalcraft-mac/LAUNCH" id="pro-buy" target="_blank" rel="noopener">Get Pro · $29 launch price</a>
       <button class="btn primary hidden" id="pro-trial"></button>
       <button class="btn" id="pro-close">Keep riding free</button>
     </div>
+    <p class="note hidden" id="pro-tax"></p>
+    <p id="pro-key-label" class="hidden" style="margin:8px 0 0"></p>
+    <div id="pro-key" class="hidden keyrow"><input id="pro-key-in" placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX" aria-label="License key" autocomplete="off" spellcheck="false"><button class="btn primary" id="pro-key-go">Unlock</button></div>
+    <button class="linkbtn hidden" id="pro-have"></button>
     <p class="note hidden" id="pro-share-row">Know someone with a Zwift Click? <a href="#" id="pro-share">Send them PedalCraft</a></p>
-    <p class="note">One-time purchase, all future updates included. No Mac needed: works in Chrome and Edge on Windows, Mac, Android and Chromebook, plus the native Mac app (macOS 14+).</p>
   </div>
 </div>
 <div class="overlay hidden" id="notfound">
@@ -267,6 +272,6 @@
 </div>
 <div class="toast hidden" id="toast"></div>
 
-<script type="module" src="app.js?v=49"></script>
+<script type="module" src="app.js?v=50"></script>
 </body>
 </html>
